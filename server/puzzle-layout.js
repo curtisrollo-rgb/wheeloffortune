@@ -123,6 +123,11 @@ export function layoutPuzzle(category, answer) {
   return { category, answer: answer.toUpperCase(), rows };
 }
 
+/** Empty WoF grid (green slots only in used rows). */
+export function emptyBoardRows() {
+  return ROW_WIDTHS.map((w) => "#".repeat(w));
+}
+
 export function buildLetterMap(rows, answer) {
   const map = [];
   const chars = answer.toUpperCase().split("");
@@ -141,4 +146,25 @@ export function buildLetterMap(rows, answer) {
     }
   }
   return map;
+}
+
+export function revealWithMap(rows, map, letter) {
+  const upper = letter.toUpperCase();
+  const indices = [];
+  const next = rows.map((r) => r.split(""));
+  for (const slot of map) {
+    if (slot.letter === upper && next[slot.row][slot.col] === "_") {
+      next[slot.row][slot.col] = upper;
+      indices.push({ row: slot.row, col: slot.col });
+    }
+  }
+  return { rows: next.map((r) => r.join("")), indices, count: indices.length };
+}
+
+export function isSolved(rows) {
+  return !rows.some((r) => r.includes("_"));
+}
+
+export function guessesMatch(guess, answer) {
+  return guess.toUpperCase().trim().replace(/\s+/g, " ") === answer.toUpperCase().trim().replace(/\s+/g, " ");
 }

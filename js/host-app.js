@@ -12,6 +12,27 @@ import { loadWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
 import { loadSolveCongratsVo } from "./solve-congrats-vo.js?v=2";
 import { loadCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
+import { playHitVo } from "./hit-vo.js?v=1";
+import { playMissVo } from "./miss-vo.js?v=4";
+import { playCategoryVo } from "./category-vo.js?v=5";
+import { ROW_WIDTHS } from "./puzzle-layout.js?v=3";
+import { stampVersion } from "./version.js?v=1";
+
+function emptyBoardRows() {
+  return ROW_WIDTHS.map((w) => "#".repeat(w));
+}
+
+function applyGameState(state, players = []) {
+  if (!state) return;
+  if (state.category) els.category.textContent = state.category;
+  if (state.message) setMessage(state.message);
+  if (state.wedgeLabel) els.wedgeResult.textContent = state.wedgeLabel;
+  if (state.rows?.length) board.render(state.rows);
+  if (typeof state.roundMoney === "number") {
+    els.roundMoney.textContent = state.roundMoney > 0 ? `$${state.roundMoney.toLocaleString()}` : "—";
+  }
+  renderScoreboard(players, state.activeSeat);
+}
 
 const $ = (id) => document.getElementById(id);
 
@@ -65,12 +86,16 @@ async function buildRoundOneWheel() {
 
 function onMessage(msg) {
   switch (msg.op) {
+    case "hello":
+      stampVersion("#app-version", msg.version);
+      break;
     case "hostAttached":
       els.hostRoomCode.textContent = msg.code;
       els.score.textContent = msg.code;
       setMessage("Room connected. Waiting for players…");
       els.btnStartGame.disabled = false;
       renderScoreboard(msg.players || []);
+      applyGameState(msg.preview, msg.players);
       break;
     case "lobbyUpdate":
       renderScoreboard(msg.players || [], msg.activeSeat);
@@ -82,11 +107,7 @@ function onMessage(msg) {
       setMessage(msg.message || `It's ${msg.seat}'s turn.`);
       break;
     case "gameUpdate":
-      if (msg.state?.category) els.category.textContent = msg.state.category;
-      if (msg.state?.message) setMessage(msg.state.message);
-      if (msg.state?.wedgeLabel) els.wedgeResult.textContent = msg.state.wedgeLabel;
-      if (msg.state?.rows) board.render(msg.state.rows);
-      renderScoreboard(msg.players || [], msg.state?.activeSeat);
+      applyGameState(msg.state, msg.players);
       break;
     case "spinResult":
       wheelApi?.spinToIndex?.(msg.index)?.then?.(() => {
@@ -94,13 +115,24 @@ function onMessage(msg) {
       });
       break;
     case "letterResult":
-      if (msg.indices?.length) {
-        board.revealTiles(msg.indices, msg.rows);
+      if (msg.hit && msg.indices?.length) {
+        board.revealTiles(msg.indices, msg.rows).then(() => {
+          if (msg.count >= 1 && msg.count <= 3) playHitVo(msg.letter, msg.count);
+        });
+      } else {
+        playMissVo(msg.letter);
+      }
+      if (msg.rows?.length) {
+        // Keep local row state in sync after reveal animation.
+        setTimeout(() => {
+          board.rows = msg.rows;
+        }, 100);
       }
       break;
     case "gameStarted":
       setMessage("Game started!");
       els.btnNewPuzzle.disabled = false;
+      if (msg.state) applyGameState(msg.state, msg.players);
       break;
     case "error":
       setMessage(msg.message || msg.error || "Connection error.");
@@ -149,6 +181,8 @@ els.btnNewPuzzle.addEventListener("click", () => {
 });
 
 async function init() {
+  stampVersion();
+  board.render(emptyBoardRows());
   const loading = createLoadingProgress(els.loadingScreen);
   await runLoadingTasks(loading, [
     ["Loading sounds…", preloadAll()],

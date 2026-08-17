@@ -21,6 +21,8 @@ import {
   handleGuessLetter,
   handleSolve,
   handleSpin,
+  ensurePreviewBoard,
+  letterResultPayload,
   newPuzzle,
   publicGameState,
   startGame,
@@ -29,7 +31,7 @@ import {
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.0";
+const VERSION = "0.2.1";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -147,11 +149,18 @@ wss.on("connection", (ws) => {
       connections.set(ws, { code, role: "host", seat: null });
       appendLog(room, "TV host attached");
 
+      const preview = ensurePreviewBoard(room);
       send(ws, {
         op: "hostAttached",
         code,
         players: playerSummaries(room),
         gameStarted: !!room.game?.started,
+        preview,
+      });
+      send(ws, {
+        op: "gameUpdate",
+        state: preview,
+        players: playerSummaries(room),
       });
       broadcastLobby(room, "TV display connected.");
       return;
@@ -282,15 +291,10 @@ wss.on("connection", (ws) => {
       const result = handleGuessLetter(room, info.seat, msg.letter);
       if (result.error) return error(ws, result.error);
 
-      broadcast(room, {
-        op: "letterResult",
-        seat: info.seat,
-        letter: result.letter,
-        hit: result.hit,
-        count: result.count,
-        indices: result.indices,
-        rows: room.game?.rows ?? [],
-      });
+      broadcast(room, letterResultPayload(room, info.seat, result));
+      if (result.broadcastTurn) {
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+      }
       broadcastGameState(room);
       return;
     }
@@ -303,6 +307,11 @@ wss.on("connection", (ws) => {
 
       const result = handleBuyVowel(room, info.seat, msg.letter);
       if (result.error) return error(ws, result.error);
+
+      broadcast(room, letterResultPayload(room, info.seat, result));
+      if (result.broadcastTurn) {
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+      }
       broadcastGameState(room);
       return;
     }
@@ -315,6 +324,9 @@ wss.on("connection", (ws) => {
 
       const result = handleSolve(room, info.seat, msg.text);
       if (result.error) return error(ws, result.error);
+      if (result.broadcastTurn) {
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+      }
       broadcastGameState(room);
       return;
     }

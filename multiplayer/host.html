@@ -4,8 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wheel of Fortune — TV Display</title>
-  <link rel="stylesheet" href="../css/game.css?v=40" />
-  <link rel="stylesheet" href="css/multiplayer.css?v=1" />
+  <script>
+    // Repo root base — fixes assets/data paths when hosted in a subdirectory.
+    (function () {
+      var base = document.createElement("base");
+      base.href = new URL("../", location.href).href;
+      document.head.appendChild(base);
+    })();
+  </script>
+  <link rel="stylesheet" href="css/game.css?v=40" />
+  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=1" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page is-loading">
@@ -67,6 +75,7 @@
     <p class="host-room-code">Room code: <strong id="host-room-code">------</strong></p>
     <button id="btn-start-game" type="button" class="btn btn-primary" disabled>Start Game</button>
     <button id="btn-new-puzzle" type="button" class="btn btn-secondary" disabled>New Puzzle</button>
+    <p id="app-version" class="app-version"></p>
   </section>
 
   <div id="envelope-reveal-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="envelope-reveal-title">
@@ -85,6 +94,6 @@
     </div>
   </div>
 
-  <script type="module" src="../js/host-app.js?v=1"></script>
+  <script type="module" src="js/host-app.js?v=3"></script>
 </body>
 </html>
