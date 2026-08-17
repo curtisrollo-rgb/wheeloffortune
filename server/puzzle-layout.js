@@ -168,3 +168,15 @@ export function isSolved(rows) {
 export function guessesMatch(guess, answer) {
   return guess.toUpperCase().trim().replace(/\s+/g, " ") === answer.toUpperCase().trim().replace(/\s+/g, " ");
 }
+
+/** Return rows with every letter revealed (for solve animation). */
+export function revealAllRows(rows, answer) {
+  const map = buildLetterMap(rows, answer);
+  const next = rows.map((r) => r.split(""));
+  for (const slot of map) {
+    if (next[slot.row][slot.col] === "_") {
+      next[slot.row][slot.col] = slot.letter;
+    }
+  }
+  return next.map((r) => r.join(""));
+}

@@ -23,6 +23,7 @@ import {
   handleSpin,
   ensurePreviewBoard,
   letterResultPayload,
+  playerActionPayload,
   newPuzzle,
   publicGameState,
   startGame,
@@ -31,7 +32,7 @@ import {
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.1";
+const VERSION = "0.2.8";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -210,14 +211,15 @@ wss.on("connection", (ws) => {
         return error(ws, "Invalid seat.");
       }
 
-      room.players = room.players.filter((p) => {
-        if (p.seat !== seat) return true;
-        return p.ws.readyState === ws.OPEN && p.ws !== ws;
-      });
-
-      if (room.players.some((p) => p.seat === seat)) {
-        return error(ws, `${seat} is already connected.`);
+      const existing = room.players.find((p) => p.seat === seat);
+      if (existing && existing.ws !== ws) {
+        try {
+          existing.ws.close(4000, "Replaced by controller");
+        } catch {
+          /* ignore */
+        }
       }
+      room.players = room.players.filter((p) => p.seat !== seat);
 
       addPlayer(room, ws, seat, name);
       connections.set(ws, { code, role: "player", seat, name });
@@ -272,12 +274,16 @@ wss.on("connection", (ws) => {
       const result = handleSpin(room, info.seat, msg.power);
       if (result.error) return error(ws, result.error);
 
+      broadcast(room, playerActionPayload(room, info.seat, "spin"));
       broadcast(room, {
         op: "spinResult",
         seat: info.seat,
         index: result.index,
         wedge: result.wedge,
       });
+      if (result.broadcastTurn) {
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+      }
       broadcastGameState(room);
       return;
     }
@@ -291,6 +297,7 @@ wss.on("connection", (ws) => {
       const result = handleGuessLetter(room, info.seat, msg.letter);
       if (result.error) return error(ws, result.error);
 
+      broadcast(room, playerActionPayload(room, info.seat, "pick", { letter: msg.letter }));
       broadcast(room, letterResultPayload(room, info.seat, result));
       if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
@@ -308,6 +315,7 @@ wss.on("connection", (ws) => {
       const result = handleBuyVowel(room, info.seat, msg.letter);
       if (result.error) return error(ws, result.error);
 
+      broadcast(room, playerActionPayload(room, info.seat, "buyVowel", { letter: msg.letter }));
       broadcast(room, letterResultPayload(room, info.seat, result));
       if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
@@ -324,7 +332,19 @@ wss.on("connection", (ws) => {
 
       const result = handleSolve(room, info.seat, msg.text);
       if (result.error) return error(ws, result.error);
-      if (result.broadcastTurn) {
+
+      broadcast(room, playerActionPayload(room, info.seat, "solve"));
+      if (result.solved) {
+        broadcast(room, {
+          op: "solveResult",
+          seat: info.seat,
+          name: result.name,
+          rows: result.rows,
+          answer: result.answer,
+          roundWin: result.roundWin,
+          message: result.message,
+        });
+      } else if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       }
       broadcastGameState(room);

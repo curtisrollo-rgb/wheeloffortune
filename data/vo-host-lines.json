@@ -1,0 +1,41 @@
+{
+  "tag_prefix": "[excitedly]",
+  "welcome": [
+    { "id": "welcome_01", "text": "Welcome to Wheel of Fortune!" },
+    { "id": "welcome_02", "text": "Ladies and gentlemen, welcome to Wheel of Fortune!" },
+    { "id": "welcome_03", "text": "Get ready — it's Wheel of Fortune!" },
+    { "id": "welcome_04", "text": "Here we go — welcome to Wheel of Fortune!" }
+  ],
+  "turn_spin": [
+    { "id": "turn_01", "text": "Spin the wheel!" },
+    { "id": "turn_02", "text": "Step up and spin the wheel!" },
+    { "id": "turn_03", "text": "It's your turn — spin the wheel!" },
+    { "id": "turn_04", "text": "Give that wheel a spin!" },
+    { "id": "turn_05", "text": "Up to the wheel — let's spin!" }
+  ],
+  "solve_attempt": [
+    { "id": "solve_01", "text": "Attempting to solve the puzzle!" },
+    { "id": "solve_02", "text": "They're going to try and solve it!" },
+    { "id": "solve_03", "text": "Here comes a solve attempt!" },
+    { "id": "solve_04", "text": "Let's see if they've got it!" }
+  ],
+  "buy_vowel": [
+    { "id": "vowel_buy_01", "text": "I'd like to buy a vowel!" },
+    { "id": "vowel_buy_02", "text": "Buying a vowel!" },
+    { "id": "vowel_buy_03", "text": "Time to buy a vowel!" }
+  ],
+  "pick_prefix": "[excitedly]",
+  "pick_templates": [
+    "The letter {L}.",
+    "{L}!",
+    "We have a {L}."
+  ],
+  "pick_variants_per_letter": 2,
+  "letters": "BCDFGHJKLMNPQRSTVWXYZ",
+  "vowel_prefix": "[excitedly]",
+  "vowel_templates": [
+    "I'd like to buy an {L}.",
+    "Buying the vowel {L}."
+  ],
+  "vowels": "AEIOU"
+}

@@ -1,5 +1,8 @@
 import { WofClient } from "./net/client.js?v=1";
 import { getWsUrl, getRoomFromUrl, getSeatFromUrl, getNameFromUrl } from "./net/config.js?v=1";
+import { stampVersion } from "./version.js?v=1";
+
+const VOWELS = "AEIOU";
 
 const $ = (id) => document.getElementById(id);
 
@@ -30,26 +33,87 @@ let vowelMode = false;
 let spinPower = 0;
 let spinDirection = 1;
 let spinAnim = null;
+/** @type {null | Record<string, unknown>} */
+let gameState = null;
+
+function isVowel(letter) {
+  return VOWELS.includes(letter);
+}
 
 function setStatus(text) {
   els.controllerStatus.textContent = text;
+}
+
+function setVowelMode(on) {
+  vowelMode = on;
+  els.btnVowel.classList.toggle("btn-vowel-active", vowelMode);
+  els.btnVowel.textContent = vowelMode ? "Cancel Vowel" : "Buy Vowel ($250)";
+  els.letterGrid.classList.toggle("vowel-mode", vowelMode);
+  updateControls();
 }
 
 function setTurnActive(active) {
   isMyTurn = active;
   els.turnBanner.textContent = active ? "Your turn!" : "Waiting for other players…";
   els.turnBanner.classList.toggle("is-your-turn", active);
+  if (!active) setVowelMode(false);
   updateControls();
   if (active && navigator.vibrate) navigator.vibrate([80, 40, 80]);
 }
 
-function updateControls() {
-  const enabled = isMyTurn && client?.connected;
-  els.btnSpinHold.disabled = !enabled || vowelMode;
-  els.btnVowel.disabled = !enabled;
-  els.btnSolve.disabled = !enabled;
+function syncCalledLetters(called = []) {
+  const used = new Set(called);
   for (const btn of els.letterGrid.querySelectorAll(".letter-btn")) {
-    btn.disabled = !enabled || btn.dataset.used === "1";
+    btn.dataset.used = used.has(btn.dataset.letter) ? "1" : "";
+  }
+}
+
+function updateControls() {
+  const connected = client?.connected;
+  const mine = isMyTurn && connected;
+  const canSpin = mine && !!gameState?.canSpin && !vowelMode;
+  const canBuy = mine && !!gameState?.canBuyVowel;
+  const canGuess = mine && !!gameState?.canGuess;
+  const canSolve = mine && !!gameState?.canSolve;
+
+  if (vowelMode && !canBuy) setVowelMode(false);
+
+  els.btnSpinHold.disabled = !canSpin;
+  els.btnVowel.disabled = !mine || (!vowelMode && !canBuy);
+  els.btnSolve.disabled = !canSolve;
+
+  const called = new Set(gameState?.called || []);
+  const inVowelMode = vowelMode && canBuy;
+
+  for (const btn of els.letterGrid.querySelectorAll(".letter-btn")) {
+    const letter = btn.dataset.letter;
+    const used = called.has(letter) || btn.dataset.used === "1";
+    const vowel = isVowel(letter);
+
+    btn.classList.remove("vowel-pick", "vowel-hidden");
+
+    if (!mine) {
+      btn.disabled = true;
+      continue;
+    }
+
+    if (inVowelMode) {
+      if (vowel && !used) {
+        btn.classList.add("vowel-pick");
+        btn.disabled = false;
+      } else {
+        if (!vowel) btn.classList.add("vowel-hidden");
+        btn.disabled = true;
+      }
+      continue;
+    }
+
+    btn.disabled =
+      used ||
+      vowel ||
+      !canGuess ||
+      gameState?.phase === "ended" ||
+      gameState?.phase === "spinning";
   }
 }
 
@@ -68,29 +132,68 @@ function buildLetterGrid() {
   }
 }
 
-function markLetterUsed(letter) {
-  const btn = els.letterGrid.querySelector(`[data-letter="${letter}"]`);
-  if (btn) {
-    btn.dataset.used = "1";
-    btn.disabled = true;
-  }
-}
-
 function handleLetter(letter) {
   if (!isMyTurn || !client?.connected) return;
+
   if (vowelMode) {
+    if (!isVowel(letter)) return;
     client.buyVowel(letter);
-    vowelMode = false;
-    els.btnVowel.textContent = "Buy Vowel ($250)";
-  } else {
-    client.guessLetter(letter);
+    setStatus(`Buying vowel ${letter}…`);
+    return;
   }
-  markLetterUsed(letter);
+
+  if (isVowel(letter)) return;
+  client.guessLetter(letter);
   setStatus(`Called ${letter}.`);
 }
 
+function syncTurnFromState(state) {
+  if (!mySeat || !state?.started || !state.activeSeat) return;
+  const mine = state.activeSeat === mySeat;
+  if (mine === isMyTurn) return;
+  setTurnActive(mine);
+}
+
+function actionFlags(state) {
+  if (!state?.started) {
+    return { canSpin: false, canGuess: false, canBuyVowel: false, canSolve: false };
+  }
+  const called = new Set(state.called || []);
+  const canSpin = state.canSpin ?? (state.phase === "idle" || state.phase === "guess");
+  const canGuess = state.canGuess ?? (state.phase === "guess" && (state.roundMoney ?? 0) > 0);
+  const canBuyVowel =
+    state.canBuyVowel ??
+    (state.phase === "guess" &&
+      (state.roundBank ?? 0) >= 250 &&
+      "AEIOU".split("").some((letter) => !called.has(letter)));
+  const canSolve = state.canSolve ?? (state.phase === "guess" || state.phase === "idle");
+  return { canSpin, canGuess, canBuyVowel, canSolve };
+}
+
+function applyGameState(state) {
+  gameState = state ? { ...state, ...actionFlags(state) } : null;
+  syncCalledLetters(state?.called || []);
+  syncTurnFromState(state);
+  if (vowelMode && !gameState?.canBuyVowel) setVowelMode(false);
+  updateControls();
+
+  if (!isMyTurn || !state) return;
+
+  if (state.roundMoney > 0 && state.roundBank > 0) {
+    setStatus(`$${state.roundBank.toLocaleString()} bank · $${state.roundMoney}/letter`);
+  } else if (state.roundMoney > 0) {
+    setStatus(`$${state.roundMoney} per letter — pick a consonant.`);
+  } else if (state.roundBank > 0) {
+    setStatus(`Round bank: $${state.roundBank.toLocaleString()}`);
+  } else if (state.phase === "idle") {
+    setStatus("Spin the wheel!");
+  } else if (state.message) {
+    setStatus(state.message);
+  }
+}
+
 function startSpinGauge() {
-  if (!isMyTurn || spinAnim) return;
+  if (!isMyTurn || spinAnim || vowelMode || !gameState?.canSpin) return;
   spinPower = 0;
   spinDirection = 1;
   els.btnSpinHold.classList.add("is-holding");
@@ -112,7 +215,7 @@ function stopSpinGauge() {
   window.clearInterval(spinAnim);
   spinAnim = null;
   els.btnSpinHold.classList.remove("is-holding");
-  if (!isMyTurn || !client?.connected) return;
+  if (!isMyTurn || !client?.connected || vowelMode) return;
   client.spin(Number(spinPower.toFixed(3)));
   setStatus(`Spin sent (${Math.round(spinPower * 100)}% power).`);
   els.spinGaugeFill.style.width = "0%";
@@ -120,6 +223,7 @@ function stopSpinGauge() {
 }
 
 function openSolveModal() {
+  setVowelMode(false);
   els.solveModal.classList.remove("is-hidden");
   els.solveInput.value = "";
   els.solveInput.focus();
@@ -139,6 +243,9 @@ function submitSolve() {
 
 function onMessage(msg) {
   switch (msg.op) {
+    case "hello":
+      stampVersion("#app-version", msg.version);
+      break;
     case "joined":
     case "rejoined":
       mySeat = msg.seat;
@@ -146,21 +253,24 @@ function onMessage(msg) {
       myName = msg.name || myName;
       els.playerTitle.textContent = myName;
       els.controllerMeta.textContent = `Room ${roomCode} · ${mySeat.toUpperCase()}`;
-      setStatus("Connected. Waiting for host…");
+      if (msg.gameStarted) setStatus("Game in progress — waiting for state…");
+      else setStatus("Connected. Waiting for host…");
+      break;
+    case "gameStarted":
+      setStatus("Game started!");
       break;
     case "turnChanged":
+      if (msg.seat) mySeat = mySeat || msg.seat;
       setTurnActive(msg.seat === mySeat);
       if (msg.seat === mySeat) setStatus(msg.message || "Your turn!");
       break;
     case "gameUpdate":
+      applyGameState(msg.state);
       if (msg.state?.phase === "tossUpReveal") {
         els.btnBuzz.classList.remove("is-hidden");
         els.btnBuzz.disabled = false;
       } else {
         els.btnBuzz.classList.add("is-hidden");
-      }
-      if (typeof msg.state?.roundMoney === "number") {
-        setStatus(`Round value: $${msg.state.roundMoney.toLocaleString()}`);
       }
       break;
     case "buzzWinner":
@@ -174,6 +284,7 @@ function onMessage(msg) {
     case "letterResult":
       if (msg.seat === mySeat) {
         setStatus(msg.hit ? `${msg.count} ${msg.letter}'s!` : `No ${msg.letter}'s.`);
+        if (vowelMode && isVowel(msg.letter)) setVowelMode(false);
       }
       break;
     case "error":
@@ -219,9 +330,18 @@ els.btnSpinHold.addEventListener("pointercancel", stopSpinGauge);
 
 els.btnVowel.addEventListener("click", () => {
   if (!isMyTurn) return;
-  vowelMode = !vowelMode;
-  els.btnVowel.textContent = vowelMode ? "Cancel Vowel" : "Buy Vowel ($250)";
-  setStatus(vowelMode ? "Pick a vowel ($250)." : "Consonant mode.");
+  if (vowelMode) {
+    setVowelMode(false);
+    setStatus("Consonant mode.");
+    return;
+  }
+  if (!gameState?.canBuyVowel) {
+    const bank = gameState?.roundBank ?? 0;
+    setStatus(`Need $250 in your round bank (you have $${bank}).`);
+    return;
+  }
+  setVowelMode(true);
+  setStatus("Pick a vowel ($250).");
 });
 
 els.btnSolve.addEventListener("click", openSolveModal);
@@ -236,4 +356,5 @@ els.solveInput.addEventListener("keydown", (e) => {
 
 buildLetterGrid();
 updateControls();
+stampVersion();
 connect().catch(() => {});

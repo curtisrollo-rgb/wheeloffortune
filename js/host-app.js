@@ -1,20 +1,26 @@
 import { WofClient } from "./net/client.js?v=1";
 import { getWsUrl, getRoomFromUrl, dataUrl } from "./net/config.js?v=1";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
-import { PuzzleBoard } from "./board.js?v=2";
+import { PuzzleBoard } from "./board.js?v=3";
 import { createWheel } from "./wheel.js?v=15";
-import { preloadAll } from "./audio.js?v=8";
+import { preloadAll, playSound } from "./audio.js?v=8";
 import { loadCategoryVo } from "./category-vo.js?v=5";
 import { loadMissVo } from "./miss-vo.js?v=4";
 import { loadHitVo } from "./hit-vo.js?v=1";
-import { loadPenaltyVo } from "./penalty-vo.js?v=2";
-import { loadWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
-import { loadSolveCongratsVo } from "./solve-congrats-vo.js?v=2";
+import { loadPenaltyVo, playPenaltyVo } from "./penalty-vo.js?v=2";
+import { loadWedgeAmountVo, playWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
+import { loadSolveCongratsVo, playRandomSolveCongrats } from "./solve-congrats-vo.js?v=2";
 import { loadCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
 import { playHitVo } from "./hit-vo.js?v=1";
 import { playMissVo } from "./miss-vo.js?v=4";
 import { playCategoryVo } from "./category-vo.js?v=5";
+import {
+  loadHostVo,
+  playWelcomeVo,
+  playTurnCueVo,
+  playPlayerActionVo,
+} from "./host-vo.js?v=2";
 import { ROW_WIDTHS } from "./puzzle-layout.js?v=3";
 import { stampVersion } from "./version.js?v=1";
 
@@ -22,16 +28,129 @@ function emptyBoardRows() {
   return ROW_WIDTHS.map((w) => "#".repeat(w));
 }
 
+function puzzleLayoutKey(rows) {
+  if (!rows?.length) return "";
+  return rows
+    .map((row) =>
+      [...row]
+        .map((ch) => (ch === "#" || ch === " " ? ch : "_"))
+        .join(""),
+    )
+    .join("|");
+}
+
+let boardRevealBusy = false;
+let lastPuzzleLayout = "";
+let lastPuzzleId = null;
+let welcomePlayed = false;
+let hostVoChain = Promise.resolve();
+
+function queueHostVo(task) {
+  hostVoChain = hostVoChain.then(task).catch((err) => console.warn("Host VO:", err));
+  return hostVoChain;
+}
+
+function announceAction(msg) {
+  const name = msg.name || msg.seat || "Player";
+  if (msg.action === "pick" && msg.letter) {
+    setMessage(`${name} picks ${String(msg.letter).toUpperCase()}.`);
+  } else if (msg.action === "buyVowel" && msg.letter) {
+    setMessage(`${name} buys a vowel — ${String(msg.letter).toUpperCase()}.`);
+  } else if (msg.action === "solve") {
+    setMessage(`${name} is attempting to solve!`);
+  } else if (msg.action === "spin") {
+    setMessage(`${name} spins the wheel!`);
+  }
+  return playPlayerActionVo(msg);
+}
+
 function applyGameState(state, players = []) {
   if (!state) return;
+
   if (state.category) els.category.textContent = state.category;
+  if (state.puzzleId && state.puzzleId !== lastPuzzleId) {
+    lastPuzzleId = state.puzzleId;
+    if (state.category) playCategoryVo(state.category);
+  }
   if (state.message) setMessage(state.message);
   if (state.wedgeLabel) els.wedgeResult.textContent = state.wedgeLabel;
-  if (state.rows?.length) board.render(state.rows);
+
+  if (state.rows?.length && !boardRevealBusy) {
+    const layoutKey = puzzleLayoutKey(state.rows);
+    if (!lastPuzzleLayout || layoutKey !== lastPuzzleLayout) {
+      board.render(state.rows);
+      lastPuzzleLayout = layoutKey;
+    } else {
+      board.rows = state.rows;
+    }
+  }
+
   if (typeof state.roundMoney === "number") {
     els.roundMoney.textContent = state.roundMoney > 0 ? `$${state.roundMoney.toLocaleString()}` : "—";
   }
   renderScoreboard(players, state.activeSeat);
+}
+
+async function handleLetterResult(msg) {
+  if (msg.hit && msg.indices?.length) {
+    boardRevealBusy = true;
+    try {
+      await board.revealTiles(msg.indices, msg.rows);
+      if (msg.solved && msg.rows?.length) {
+        await board.revealAll(msg.rows);
+        playSound("solve", { volume: 0.55 });
+        await playRandomSolveCongrats();
+      } else if (msg.count >= 1 && msg.count <= 3) {
+        await playHitVo(msg.letter, msg.count);
+      }
+      if (msg.rows?.length) {
+        board.rows = msg.rows;
+        lastPuzzleLayout = puzzleLayoutKey(msg.rows);
+      }
+    } finally {
+      boardRevealBusy = false;
+    }
+    return;
+  }
+
+  playMissVo(msg.letter);
+}
+
+function boardHasHiddenTiles() {
+  return !!els.board.querySelector(".letter-slot");
+}
+
+async function maybeRevealSolvedBoard(rows, message) {
+  if (!rows?.length || boardRevealBusy) return;
+  if (rows.some((row) => row.includes("_"))) return;
+  if (!boardHasHiddenTiles()) return;
+
+  boardRevealBusy = true;
+  try {
+    if (message) setMessage(message);
+    await board.revealAll(rows);
+    playSound("solve", { volume: 0.55 });
+    await playRandomSolveCongrats();
+    board.rows = rows;
+    lastPuzzleLayout = puzzleLayoutKey(rows);
+  } finally {
+    boardRevealBusy = false;
+  }
+}
+
+async function handleSolveResult(msg) {
+  if (!msg.rows?.length) return;
+  boardRevealBusy = true;
+  try {
+    if (msg.message) setMessage(msg.message);
+    await board.revealAll(msg.rows);
+    playSound("solve", { volume: 0.55 });
+    await playRandomSolveCongrats();
+    board.rows = msg.rows;
+    lastPuzzleLayout = puzzleLayoutKey(msg.rows);
+  } finally {
+    boardRevealBusy = false;
+  }
 }
 
 const $ = (id) => document.getElementById(id);
@@ -104,35 +223,53 @@ function onMessage(msg) {
       break;
     case "turnChanged":
       renderScoreboard(msg.players || [], msg.seat);
-      setMessage(msg.message || `It's ${msg.seat}'s turn.`);
+      setMessage(msg.message || `It's ${msg.name || msg.seat}'s turn.`);
+      queueHostVo(async () => {
+        await playTurnCueVo(msg.name || msg.seat);
+      });
+      break;
+    case "playerAction":
+      queueHostVo(async () => {
+        await announceAction(msg);
+      });
       break;
     case "gameUpdate":
       applyGameState(msg.state, msg.players);
+      if (msg.state?.phase === "ended") {
+        maybeRevealSolvedBoard(msg.state.rows, msg.state.message);
+      }
       break;
     case "spinResult":
       wheelApi?.spinToIndex?.(msg.index)?.then?.(() => {
         els.wedgeResult.textContent = msg.wedge?.label ?? "—";
+        if (msg.wedge?.type === "bankrupt" || msg.wedge?.type === "loseTurn") {
+          playPenaltyVo(msg.wedge.type);
+        } else if (msg.wedge?.value > 0) {
+          playWedgeAmountVo(msg.wedge.value);
+        }
       });
       break;
     case "letterResult":
-      if (msg.hit && msg.indices?.length) {
-        board.revealTiles(msg.indices, msg.rows).then(() => {
-          if (msg.count >= 1 && msg.count <= 3) playHitVo(msg.letter, msg.count);
-        });
-      } else {
-        playMissVo(msg.letter);
-      }
-      if (msg.rows?.length) {
-        // Keep local row state in sync after reveal animation.
-        setTimeout(() => {
-          board.rows = msg.rows;
-        }, 100);
-      }
+      queueHostVo(async () => {
+        await handleLetterResult(msg);
+      });
+      break;
+    case "solveResult":
+      queueHostVo(async () => {
+        await handleSolveResult(msg);
+      });
       break;
     case "gameStarted":
       setMessage("Game started!");
       els.btnNewPuzzle.disabled = false;
       if (msg.state) applyGameState(msg.state, msg.players);
+      if (!welcomePlayed) {
+        welcomePlayed = true;
+        queueHostVo(async () => {
+          setMessage("Welcome to Wheel of Fortune!");
+          await playWelcomeVo();
+        });
+      }
       break;
     case "error":
       setMessage(msg.message || msg.error || "Connection error.");
@@ -186,7 +323,7 @@ async function init() {
   const loading = createLoadingProgress(els.loadingScreen);
   await runLoadingTasks(loading, [
     ["Loading sounds…", preloadAll()],
-    ["Loading voice…", Promise.all([loadCategoryVo(), loadMissVo(), loadHitVo(), loadPenaltyVo(), loadWedgeAmountVo(), loadSolveCongratsVo(), loadCarPrizeVo()])],
+    ["Loading voice…", Promise.all([loadCategoryVo(), loadMissVo(), loadHitVo(), loadPenaltyVo(), loadWedgeAmountVo(), loadSolveCongratsVo(), loadCarPrizeVo(), loadHostVo()])],
     ["Loading bonus wheel…", loadFinalEnvelopeAmounts()],
     ["Building wheel…", buildRoundOneWheel()],
     ["Connecting…", connectToRoom()],

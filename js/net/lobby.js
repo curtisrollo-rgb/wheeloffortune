@@ -1,5 +1,6 @@
 import { WofClient } from "./client.js?v=1";
 import { getWsUrl, setWsUrl, pageUrl, shareJoinUrl } from "./config.js?v=1";
+import { stampVersion } from "../version.js?v=1";
 
 const $ = (id) => document.getElementById(id);
 
@@ -45,6 +46,9 @@ function renderPlayers(players = []) {
 
 function onMessage(msg) {
   switch (msg.op) {
+    case "hello":
+      stampVersion("#app-version", msg.version);
+      break;
     case "roomCreated":
       roomCode = msg.code;
       els.roomCode.textContent = roomCode;
@@ -119,3 +123,4 @@ if (els.wsUrl.value) {
 }
 
 renderPlayers([]);
+stampVersion();

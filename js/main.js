@@ -73,6 +73,7 @@ import {
   playRandomFinalGoodLuckVo,
 } from "./final-good-luck-vo.js?v=2";
 import { isVowel, isSolved, revealAllRows } from "./puzzle-layout.js?v=3";
+import { stampVersion } from "./version.js?v=1";
 
 const $ = (sel) => document.querySelector(sel);
 
@@ -833,6 +834,7 @@ function wireEvents() {
 }
 
 async function init() {
+  stampVersion();
   buildLetterGrid();
   wireEvents();
 

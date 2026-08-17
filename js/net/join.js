@@ -1,5 +1,6 @@
 import { WofClient } from "./client.js?v=1";
 import { getWsUrl, setWsUrl, getRoomFromUrl, pageUrl } from "./config.js?v=1";
+import { stampVersion } from "../version.js?v=1";
 
 const $ = (id) => document.getElementById(id);
 
@@ -35,6 +36,7 @@ function updateJoinButton() {
 
 function openController() {
   if (!joined.room || !joined.seat) return;
+  client?.disconnect();
   location.href = pageUrl("controller.html", {
     room: joined.room,
     seat: joined.seat,
@@ -45,6 +47,9 @@ function openController() {
 
 function onMessage(msg) {
   switch (msg.op) {
+    case "hello":
+      stampVersion("#app-version", msg.version);
+      break;
     case "joined":
     case "rejoined":
       joined = { room: msg.code, seat: msg.seat, name: msg.name || els.playerName.value.trim() };
@@ -112,3 +117,4 @@ if (els.wsUrl.value) {
 }
 
 updateJoinButton();
+stampVersion();

@@ -105,10 +105,11 @@
 
   <p class="footer-links" style="text-align:center;margin:0.75rem 0 0;font-size:0.82rem;color:#9eb4d0">
     <a href="multiplayer/" style="color:#ffd700">Play online (multiplayer)</a>
+    <span id="app-version" class="app-version"></span>
   </p>
 
   <script type="module">
-    import("./js/main.js?v=20").catch((err) => {
+    import("./js/main.js?v=21").catch((err) => {
       console.error(err);
       const bar = document.getElementById("message-bar");
       if (bar) {

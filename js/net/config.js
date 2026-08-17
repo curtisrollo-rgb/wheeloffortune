@@ -31,7 +31,7 @@ export function getRoomFromUrl() {
 }
 
 export function getSeatFromUrl() {
-  const seat = new URLSearchParams(location.search).get("seat");
+  const seat = new URLSearchParams(location.search).get("seat")?.toLowerCase();
   return seat === "p1" || seat === "p2" || seat === "p3" ? seat : null;
 }
 
@@ -55,9 +55,22 @@ export function shareJoinUrl(room, ws) {
   return `${origin}${path}`;
 }
 
-/** Resolve repo-root data/ from modules under js/net/. */
+/** App root URL (handles /multiplayer/ pages in subdirectories). */
+export function appBase() {
+  if (location.pathname.includes("/multiplayer/")) {
+    return new URL("../", location.href);
+  }
+  return new URL("./", location.href);
+}
+
+/** Resolve repo-root data/ paths. */
 export function dataUrl(filename) {
-  return new URL(`../../data/${filename}`, import.meta.url).href;
+  return new URL(`data/${filename}`, appBase()).href;
+}
+
+/** Resolve repo-root assets/ paths. */
+export function assetUrl(relativePath) {
+  return new URL(relativePath.replace(/^\//, ""), appBase()).href;
 }
 
 export function isOnlinePage() {

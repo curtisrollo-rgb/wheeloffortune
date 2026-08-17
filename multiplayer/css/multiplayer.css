@@ -211,6 +211,15 @@ input.code-input {
   color: var(--accent);
 }
 
+.app-version {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  opacity: 0.85;
+}
+
 /* ——— TV host page ——— */
 body.host-page {
   overflow-x: hidden;
@@ -395,6 +404,32 @@ body.controller-page {
 
 .controller-letter-grid .letter-btn:disabled {
   opacity: 0.35;
+}
+
+.btn-vowel-active {
+  background: #e91e8c;
+  color: #fff;
+  border: 2px solid #ff6ec7;
+  box-shadow: 0 0 14px rgba(233, 30, 140, 0.55);
+}
+
+.controller-letter-grid.vowel-mode .letter-btn.vowel-hidden {
+  opacity: 0.2;
+  pointer-events: none;
+  filter: grayscale(0.6);
+}
+
+.controller-letter-grid.vowel-mode .letter-btn.vowel-pick {
+  background: rgba(233, 30, 140, 0.28);
+  border-color: #e91e8c;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(233, 30, 140, 0.45);
+  opacity: 1;
+}
+
+.controller-letter-grid.vowel-mode .letter-btn.vowel-pick:hover:not(:disabled) {
+  background: rgba(233, 30, 140, 0.45);
+  border-color: #ff6ec7;
 }
 
 .action-panel {

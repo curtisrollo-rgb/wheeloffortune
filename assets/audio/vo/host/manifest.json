@@ -1,0 +1,350 @@
+{
+  "voice_id": "",
+  "model_id": "eleven_v3",
+  "tag_prefix": "[excitedly]",
+  "welcome": [
+    {
+      "id": "welcome_01",
+      "text": "Welcome to Wheel of Fortune!",
+      "spoken": "[excitedly] Welcome to Wheel of Fortune!",
+      "file": "assets/audio/vo/host/welcome_01.mp3"
+    },
+    {
+      "id": "welcome_02",
+      "text": "Ladies and gentlemen, welcome to Wheel of Fortune!",
+      "spoken": "[excitedly] Ladies and gentlemen, welcome to Wheel of Fortune!",
+      "file": "assets/audio/vo/host/welcome_02.mp3"
+    },
+    {
+      "id": "welcome_03",
+      "text": "Get ready — it's Wheel of Fortune!",
+      "spoken": "[excitedly] Get ready — it's Wheel of Fortune!",
+      "file": "assets/audio/vo/host/welcome_03.mp3"
+    },
+    {
+      "id": "welcome_04",
+      "text": "Here we go — welcome to Wheel of Fortune!",
+      "spoken": "[excitedly] Here we go — welcome to Wheel of Fortune!",
+      "file": "assets/audio/vo/host/welcome_04.mp3"
+    }
+  ],
+  "turnSpin": [
+    {
+      "id": "turn_01",
+      "text": "Spin the wheel!",
+      "spoken": "[excitedly] Spin the wheel!",
+      "file": "assets/audio/vo/host/turn_01.mp3"
+    },
+    {
+      "id": "turn_02",
+      "text": "Step up and spin the wheel!",
+      "spoken": "[excitedly] Step up and spin the wheel!",
+      "file": "assets/audio/vo/host/turn_02.mp3"
+    },
+    {
+      "id": "turn_03",
+      "text": "It's your turn — spin the wheel!",
+      "spoken": "[excitedly] It's your turn — spin the wheel!",
+      "file": "assets/audio/vo/host/turn_03.mp3"
+    },
+    {
+      "id": "turn_04",
+      "text": "Give that wheel a spin!",
+      "spoken": "[excitedly] Give that wheel a spin!",
+      "file": "assets/audio/vo/host/turn_04.mp3"
+    },
+    {
+      "id": "turn_05",
+      "text": "Up to the wheel — let's spin!",
+      "spoken": "[excitedly] Up to the wheel — let's spin!",
+      "file": "assets/audio/vo/host/turn_05.mp3"
+    }
+  ],
+  "solveAttempt": [
+    {
+      "id": "solve_01",
+      "text": "Attempting to solve the puzzle!",
+      "spoken": "[excitedly] Attempting to solve the puzzle!",
+      "file": "assets/audio/vo/host/solve_01.mp3"
+    },
+    {
+      "id": "solve_02",
+      "text": "They're going to try and solve it!",
+      "spoken": "[excitedly] They're going to try and solve it!",
+      "file": "assets/audio/vo/host/solve_02.mp3"
+    },
+    {
+      "id": "solve_03",
+      "text": "Here comes a solve attempt!",
+      "spoken": "[excitedly] Here comes a solve attempt!",
+      "file": "assets/audio/vo/host/solve_03.mp3"
+    },
+    {
+      "id": "solve_04",
+      "text": "Let's see if they've got it!",
+      "spoken": "[excitedly] Let's see if they've got it!",
+      "file": "assets/audio/vo/host/solve_04.mp3"
+    }
+  ],
+  "buyVowel": [
+    {
+      "id": "vowel_buy_01",
+      "text": "I'd like to buy a vowel!",
+      "spoken": "[excitedly] I'd like to buy a vowel!",
+      "file": "assets/audio/vo/host/vowel_buy_01.mp3"
+    },
+    {
+      "id": "vowel_buy_02",
+      "text": "Buying a vowel!",
+      "spoken": "[excitedly] Buying a vowel!",
+      "file": "assets/audio/vo/host/vowel_buy_02.mp3"
+    },
+    {
+      "id": "vowel_buy_03",
+      "text": "Time to buy a vowel!",
+      "spoken": "[excitedly] Time to buy a vowel!",
+      "file": "assets/audio/vo/host/vowel_buy_03.mp3"
+    }
+  ],
+  "pickByLetter": {
+    "B": [
+      {
+        "id": "pick_B_01",
+        "text": "The letter B.",
+        "spoken": "[excitedly] The letter B.",
+        "file": "assets/audio/vo/host/pick_B_01.mp3"
+      },
+      {
+        "id": "pick_B_02",
+        "text": "B!",
+        "spoken": "[excitedly] B!",
+        "file": "assets/audio/vo/host/pick_B_02.mp3"
+      }
+    ],
+    "C": [
+      {
+        "id": "pick_C_01",
+        "text": "The letter C.",
+        "spoken": "[excitedly] The letter C.",
+        "file": "assets/audio/vo/host/pick_C_01.mp3"
+      },
+      {
+        "id": "pick_C_02",
+        "text": "C!",
+        "spoken": "[excitedly] C!",
+        "file": "assets/audio/vo/host/pick_C_02.mp3"
+      }
+    ],
+    "D": [
+      {
+        "id": "pick_D_01",
+        "text": "The letter D.",
+        "spoken": "[excitedly] The letter D.",
+        "file": "assets/audio/vo/host/pick_D_01.mp3"
+      },
+      {
+        "id": "pick_D_02",
+        "text": "D!",
+        "spoken": "[excitedly] D!",
+        "file": "assets/audio/vo/host/pick_D_02.mp3"
+      }
+    ],
+    "F": [
+      {
+        "id": "pick_F_01",
+        "text": "The letter F.",
+        "spoken": "[excitedly] The letter F.",
+        "file": "assets/audio/vo/host/pick_F_01.mp3"
+      },
+      {
+        "id": "pick_F_02",
+        "text": "F!",
+        "spoken": "[excitedly] F!",
+        "file": "assets/audio/vo/host/pick_F_02.mp3"
+      }
+    ],
+    "G": [
+      {
+        "id": "pick_G_01",
+        "text": "The letter G.",
+        "spoken": "[excitedly] The letter G.",
+        "file": "assets/audio/vo/host/pick_G_01.mp3"
+      },
+      {
+        "id": "pick_G_02",
+        "text": "G!",
+        "spoken": "[excitedly] G!",
+        "file": "assets/audio/vo/host/pick_G_02.mp3"
+      }
+    ],
+    "H": [
+      {
+        "id": "pick_H_01",
+        "text": "The letter H.",
+        "spoken": "[excitedly] The letter H.",
+        "file": "assets/audio/vo/host/pick_H_01.mp3"
+      },
+      {
+        "id": "pick_H_02",
+        "text": "H!",
+        "spoken": "[excitedly] H!",
+        "file": "assets/audio/vo/host/pick_H_02.mp3"
+      }
+    ],
+    "J": [
+      {
+        "id": "pick_J_01",
+        "text": "The letter J.",
+        "spoken": "[excitedly] The letter J.",
+        "file": "assets/audio/vo/host/pick_J_01.mp3"
+      },
+      {
+        "id": "pick_J_02",
+        "text": "J!",
+        "spoken": "[excitedly] J!",
+        "file": "assets/audio/vo/host/pick_J_02.mp3"
+      }
+    ],
+    "K": [
+      {
+        "id": "pick_K_01",
+        "text": "The letter K.",
+        "spoken": "[excitedly] The letter K.",
+        "file": "assets/audio/vo/host/pick_K_01.mp3"
+      },
+      {
+        "id": "pick_K_02",
+        "text": "K!",
+        "spoken": "[excitedly] K!",
+        "file": "assets/audio/vo/host/pick_K_02.mp3"
+      }
+    ],
+    "L": [
+      {
+        "id": "pick_L_01",
+        "text": "The letter L.",
+        "spoken": "[excitedly] The letter L.",
+        "file": "assets/audio/vo/host/pick_L_01.mp3"
+      },
+      {
+        "id": "pick_L_02",
+        "text": "L!",
+        "spoken": "[excitedly] L!",
+        "file": "assets/audio/vo/host/pick_L_02.mp3"
+      }
+    ],
+    "M": [
+      {
+        "id": "pick_M_01",
+        "text": "The letter M.",
+        "spoken": "[excitedly] The letter M.",
+        "file": "assets/audio/vo/host/pick_M_01.mp3"
+      },
+      {
+        "id": "pick_M_02",
+        "text": "M!",
+        "spoken": "[excitedly] M!",
+        "file": "assets/audio/vo/host/pick_M_02.mp3"
+      }
+    ],
+    "N": [
+      {
+        "id": "pick_N_01",
+        "text": "The letter N.",
+        "spoken": "[excitedly] The letter N.",
+        "file": "assets/audio/vo/host/pick_N_01.mp3"
+      },
+      {
+        "id": "pick_N_02",
+        "text": "N!",
+        "spoken": "[excitedly] N!",
+        "file": "assets/audio/vo/host/pick_N_02.mp3"
+      }
+    ],
+    "P": [
+      {
+        "id": "pick_P_01",
+        "text": "The letter P.",
+        "spoken": "[excitedly] The letter P.",
+        "file": "assets/audio/vo/host/pick_P_01.mp3"
+      },
+      {
+        "id": "pick_P_02",
+        "text": "P!",
+        "spoken": "[excitedly] P!",
+        "file": "assets/audio/vo/host/pick_P_02.mp3"
+      }
+    ],
+    "Q": [
+      {
+        "id": "pick_Q_01",
+        "text": "The letter Q.",
+        "spoken": "[excitedly] The letter Q.",
+        "file": "assets/audio/vo/host/pick_Q_01.mp3"
+      },
+      {
+        "id": "pick_Q_02",
+        "text": "Q!",
+        "spoken": "[excitedly] Q!",
+        "file": "assets/audio/vo/host/pick_Q_02.mp3"
+      }
+    ],
+    "R": [
+      {
+        "id": "pick_R_01",
+        "text": "The letter R.",
+        "spoken": "[excitedly] The letter R.",
+        "file": "assets/audio/vo/host/pick_R_01.mp3"
+      },
+      {
+        "id": "pick_R_02",
+        "text": "R!",
+        "spoken": "[excitedly] R!",
+        "file": "assets/audio/vo/host/pick_R_02.mp3"
+      }
+    ],
+    "S": [
+      {
+        "id": "pick_S_01",
+        "text": "The letter S.",
+        "spoken": "[excitedly] The letter S.",
+        "file": "assets/audio/vo/host/pick_S_01.mp3"
+      },
+      {
+        "id": "pick_S_02",
+        "text": "S!",
+        "spoken": "[excitedly] S!",
+        "file": "assets/audio/vo/host/pick_S_02.mp3"
+      }
+    ],
+    "T": [
+      {
+        "id": "pick_T_01",
+        "text": "The letter T.",
+        "spoken": "[excitedly] The letter T.",
+        "file": "assets/audio/vo/host/pick_T_01.mp3"
+      },
+      {
+        "id": "pick_T_02",
+        "text": "T!",
+        "spoken": "[excitedly] T!",
+        "file": "assets/audio/vo/host/pick_T_02.mp3"
+      }
+    ],
+    "V": [
+      {
+        "id": "pick_V_01",
+        "text": "The letter V.",
+        "spoken": "[excitedly] The letter V.",
+        "file": "assets/audio/vo/host/pick_V_01.mp3"
+      },
+      {
+        "id": "pick_V_02",
+        "text": "V!",
+        "spoken": "[excitedly] V!",
+        "file": "assets/audio/vo/host/pick_V_02.mp3"
+      }
+    ]
+  },
+  "vowelByLetter": {}
+}
