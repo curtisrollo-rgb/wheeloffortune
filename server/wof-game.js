@@ -57,37 +57,45 @@ export function resumeTossUpReveal(room, emit) {
   room.game.tossUpRevealPaused = false;
 }
 
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit @returns {boolean} */
+function emitNextTossUpTile(room, emit) {
+  const hidden = getHiddenTossUpSlots(room.game);
+  if (!hidden.length) {
+    stopTossUpTimer(room.code);
+    room.game.message = "Toss-Up complete — no one solved it.";
+    room.game.phase = "ended";
+    emit(room, { op: "tossUpComplete", allRevealed: true });
+    emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+    return false;
+  }
+
+  const slot = hidden[randomBytes(1)[0] % hidden.length];
+  const result = revealTossUpTile(room.game, slot);
+  if (result.ok) {
+    emit(room, {
+      op: "tossUpTile",
+      letter: result.letter,
+      indices: result.indices,
+      rows: result.rows,
+    });
+    emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+  }
+  return true;
+}
+
 /** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
 export function startTossUpRevealLoop(room, emit) {
   stopTossUpTimer(room.code);
+  if (room.game?.phase === "tossUpReveal") {
+    emitNextTossUpTile(room, emit);
+  }
   const timer = setInterval(() => {
     if (!room.game || room.game.phase !== "tossUpReveal") {
       stopTossUpTimer(room.code);
       return;
     }
     if (room.game.tossUpRevealPaused) return;
-
-    const hidden = getHiddenTossUpSlots(room.game);
-    if (!hidden.length) {
-      stopTossUpTimer(room.code);
-      room.game.message = "Toss-Up complete — no one solved it.";
-      room.game.phase = "ended";
-      emit(room, { op: "tossUpComplete", allRevealed: true });
-      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
-      return;
-    }
-
-    const slot = hidden[randomBytes(1)[0] % hidden.length];
-    const result = revealTossUpTile(room.game, slot);
-    if (result.ok) {
-      emit(room, {
-        op: "tossUpTile",
-        letter: result.letter,
-        indices: result.indices,
-        rows: result.rows,
-      });
-      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
-    }
+    emitNextTossUpTile(room, emit);
   }, 900);
   tossUpTimers.set(room.code, timer);
 }

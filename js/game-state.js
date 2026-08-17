@@ -308,7 +308,8 @@ function bankRoundAndEnd(state) {
 }
 
 export function beginTossUpReveal(state) {
-  if (state.roundType !== "tossup" || state.phase !== "tossUpAnnounce") {
+  if (state.roundType !== "tossup") return false;
+  if (state.phase !== "tossUpAnnounce" && state.phase !== "tossUpCountdown") {
     return false;
   }
   state.phase = "tossUpReveal";

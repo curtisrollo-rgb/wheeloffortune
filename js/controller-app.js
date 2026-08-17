@@ -101,13 +101,13 @@ function applyTossUpLayout() {
   els.spinPanel?.classList.toggle("is-hidden", tossup);
   els.letterPanel?.classList.toggle("is-hidden", tossup);
   els.actionPanel?.classList.toggle("is-hidden", tossup);
-  els.tossupPanel?.classList.toggle("is-hidden", !tossup || countdown || solving);
+  els.tossupPanel?.classList.toggle("is-hidden", !tossup || solving);
   els.tossupSolvePanel?.classList.toggle("is-hidden", !solving);
 
   if (els.btnBuzzLarge) els.btnBuzzLarge.disabled = !canRing;
 
   if (tossup && countdown) {
-    els.tossupHint.textContent = "Get ready — wait for letters to reveal…";
+    els.tossupHint.textContent = "Get ready…";
   } else if (tossup && reveal && !solving) {
     els.tossupHint.textContent = locked.has(mySeat)
       ? "You're locked out for this Toss-Up."

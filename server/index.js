@@ -40,7 +40,7 @@ import { getWedgeManifestForRound } from "./wedges.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.13";
+const VERSION = "0.2.14";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();

@@ -61,7 +61,8 @@ export function revealTossUpTile(game, slot) {
 
 /** @param {object} game */
 export function beginTossUpReveal(game) {
-  if (game.roundType !== "tossup" || game.phase !== "tossUpAnnounce") {
+  if (game.roundType !== "tossup") return false;
+  if (game.phase !== "tossUpAnnounce" && game.phase !== "tossUpCountdown") {
     return false;
   }
   game.phase = "tossUpReveal";
