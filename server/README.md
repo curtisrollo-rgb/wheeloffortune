@@ -13,6 +13,26 @@ WebSocket server for Wheel of Fortune online play (TV host + up to 3 phone contr
 5. WebSocket URL: `wss://YOUR-DOMAIN.up.railway.app`
 6. Test: `GET https://YOUR-DOMAIN.up.railway.app/health`
 
+## Puzzle bank
+
+Multiplayer uses **`server/data/puzzles-cdrom.json`** — ~8,000 Hasbro CD-ROM era puzzles:
+
+| Source | Game |
+|--------|------|
+| `hasbro-1998` | PS1 / Windows / Mac (1998) — extracted via [Game-Rave](https://game-rave.com/?p=27337) |
+| `hasbro-2000` | Wheel of Fortune: 2nd Edition (2000) — [Game-Rave](https://game-rave.com/?p=29020) |
+| `hasbro-1998-supplement` | Community PS1-style phrase dump |
+
+Rebuild after updating sources:
+
+```bash
+python3 scripts/build_cdrom_puzzles.py
+```
+
+Check loaded count: `GET /health` → `"puzzleCount": 8030`
+
+For solo/TV static site, upload `data/puzzles-cdrom.json` to Bluehost (or use `?tv` on index for the old TV-scraped bank).
+
 ## Local run
 
 ```bash

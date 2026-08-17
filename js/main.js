@@ -184,11 +184,21 @@ function setVowelMode(on) {
 }
 
 async function loadPuzzleData() {
-  const useFull = new URLSearchParams(location.search).has("full");
-  const url = useFull ? "data/puzzles.json" : "data/puzzles.sample.json";
-  const res = await fetch(url);
-  const data = await res.json();
-  puzzles = data.puzzles || data;
+  const useTv = new URLSearchParams(location.search).has("tv");
+  const candidates = useTv
+    ? ["data/puzzles.json", "data/puzzles.sample.json"]
+    : ["data/puzzles-cdrom.json", "data/puzzles.json", "data/puzzles.sample.json"];
+  for (const url of candidates) {
+    try {
+      const res = await fetch(url);
+      if (!res.ok) continue;
+      const data = await res.json();
+      puzzles = data.puzzles || data;
+      if (puzzles.length) return;
+    } catch {
+      /* try next */
+    }
+  }
 }
 
 function pickRandomPuzzle() {

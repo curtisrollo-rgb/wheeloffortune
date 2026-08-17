@@ -15,8 +15,10 @@ const FALLBACK_PUZZLES = [
   { id: "fallback2", category: "PHRASE", answer: "SPIN THE WHEEL" },
 ];
 
-/** Prefer the largest puzzle bank available (full set > sample > tiny dev file). */
+/** Hasbro CD-ROM era bank first; TV-scraped banks are fallback only. */
 const PUZZLE_CANDIDATES = [
+  join(__dirname, "data/puzzles-cdrom.json"),
+  join(__dirname, "../data/puzzles-cdrom.json"),
   join(__dirname, "../data/puzzles.json"),
   join(__dirname, "data/puzzles.sample.json"),
   join(__dirname, "../data/puzzles.sample.json"),
@@ -37,19 +39,12 @@ function tryLoadFile(path) {
 }
 
 function loadPuzzleBank() {
-  let best = null;
   for (const path of PUZZLE_CANDIDATES) {
     const loaded = tryLoadFile(path);
     if (!loaded) continue;
-    if (!best || loaded.list.length > best.list.length) {
-      best = loaded;
-    }
-  }
-
-  if (best) {
-    puzzles = best.list;
-    puzzleSource = best.path;
-    console.log(`Puzzle bank: ${puzzles.length} puzzles from ${best.path}`);
+    puzzles = loaded.list;
+    puzzleSource = loaded.path;
+    console.log(`Puzzle bank: ${puzzles.length} puzzles from ${loaded.path}`);
     return;
   }
 
