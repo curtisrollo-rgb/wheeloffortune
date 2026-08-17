@@ -5,8 +5,10 @@ const SOUND_VERSION = "8";
 const SOUNDS = {
   /** Wheel peg tick — PlayingCards_DealFlip_03 */
   tick: `assets/audio/tick.mp3?v=${SOUND_VERSION}`,
-  /** Wedge landed — Jumps Up 01 */
+  /** Wedge landed / toss-up ring-in — Jumps Up 01 */
   land: `assets/audio/land.mp3?v=${SOUND_VERSION}`,
+  /** Toss-up buzz-in (same clip as land) */
+  buzz: `assets/audio/land.mp3?v=${SOUND_VERSION}`,
   /** Letter revealed — Arcade Pickup Item (light cha-ching) */
   reveal: `assets/audio/reveal.mp3?v=${SOUND_VERSION}`,
   /** Wrong guess sting — Arcade Ominous Hit */
@@ -26,9 +28,17 @@ const SOUNDS = {
 const cache = new Map();
 let muted = false;
 
+/** Resolve asset paths from /multiplayer/ pages (controller, host). */
+function resolveSoundUrl(relative) {
+  if (typeof location !== "undefined" && location.pathname.includes("/multiplayer/")) {
+    return new URL(relative.replace(/^\//, ""), new URL("../", location.href)).href;
+  }
+  return relative;
+}
+
 function load(name) {
   if (!cache.has(name)) {
-    const url = SOUNDS[name];
+    const url = resolveSoundUrl(SOUNDS[name]);
     if (!url) return null;
     const audio = new Audio(url);
     audio.preload = "auto";

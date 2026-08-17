@@ -1,6 +1,7 @@
 import { WofClient } from "./net/client.js?v=1";
 import { getWsUrl, getRoomFromUrl, getSeatFromUrl, getNameFromUrl } from "./net/config.js?v=1";
 import { stampVersion } from "./version.js?v=1";
+import { preloadAll, playSound } from "./audio.js?v=8";
 
 const VOWELS = "AEIOU";
 
@@ -43,6 +44,19 @@ let spinDirection = 1;
 let spinAnim = null;
 /** @type {null | Record<string, unknown>} */
 let gameState = null;
+let audioReady = false;
+let awaitingSolveResult = false;
+
+function unlockAudio() {
+  if (audioReady) return;
+  audioReady = true;
+  preloadAll().catch(() => {});
+}
+
+function sfx(name, opts = {}) {
+  unlockAudio();
+  playSound(name, opts);
+}
 
 function isVowel(letter) {
   return VOWELS.includes(letter);
@@ -201,6 +215,7 @@ function handleLetter(letter) {
   if (!client?.connected) return;
 
   if (gameState?.canPickFinal && isMyTurn) {
+    sfx("tick", { volume: 0.45 });
     client.guessLetter(letter);
     setStatus(`Picked ${letter} for Final Round.`);
     return;
@@ -210,12 +225,14 @@ function handleLetter(letter) {
 
   if (vowelMode) {
     if (!isVowel(letter)) return;
+    sfx("vowel", { volume: 0.5 });
     client.buyVowel(letter);
     setStatus(`Buying vowel ${letter}…`);
     return;
   }
 
   if (isVowel(letter)) return;
+  sfx("tick", { volume: 0.45 });
   client.guessLetter(letter);
   setStatus(`Called ${letter}.`);
 }
@@ -304,6 +321,7 @@ function stopSpinGauge() {
   spinAnim = null;
   els.btnSpinHold.classList.remove("is-holding");
   if (!isMyTurn || !client?.connected || vowelMode) return;
+  sfx("spin", { volume: 0.55 });
   client.spin(Number(spinPower.toFixed(3)));
   setStatus(`Spin sent (${Math.round(spinPower * 100)}% power).`);
   els.spinGaugeFill.style.width = "0%";
@@ -327,6 +345,7 @@ function closeSolveModal() {
 function submitSolve() {
   const text = els.solveInput.value.trim();
   if (!text || !client?.connected) return;
+  awaitingSolveResult = true;
   client.solve(text);
   closeSolveModal();
   setStatus("Solve submitted.");
@@ -335,6 +354,7 @@ function submitSolve() {
 function submitTossUpSolve() {
   const text = els.tossupSolveInput?.value.trim();
   if (!text || !client?.connected) return;
+  awaitingSolveResult = true;
   client.solve(text);
   els.tossupSolveInput.value = "";
   setStatus("Answer submitted.");
@@ -342,6 +362,7 @@ function submitTossUpSolve() {
 
 function ringIn() {
   if (!client?.connected || !gameState?.canRingIn) return;
+  sfx("buzz", { volume: 0.65 });
   client.buzz();
   setStatus("Ringing in…");
   if (navigator.vibrate) navigator.vibrate(120);
@@ -367,6 +388,10 @@ function onMessage(msg) {
       break;
     case "turnChanged":
       if (msg.seat) mySeat = mySeat || msg.seat;
+      if (awaitingSolveResult && msg.seat !== mySeat) {
+        awaitingSolveResult = false;
+        sfx("miss", { volume: 0.5 });
+      }
       setTurnActive(msg.seat === mySeat);
       if (msg.seat === mySeat) setStatus(msg.message || "Your turn!");
       break;
@@ -378,6 +403,10 @@ function onMessage(msg) {
       }
       break;
     case "gameUpdate":
+      if (awaitingSolveResult && msg.state?.tossUpLockedSeats?.includes(mySeat)) {
+        awaitingSolveResult = false;
+        sfx("miss", { volume: 0.5 });
+      }
       applyGameState(msg.state);
       break;
     case "buzzWinner":
@@ -391,9 +420,25 @@ function onMessage(msg) {
       break;
     case "letterResult":
       if (msg.seat === mySeat) {
+        if (msg.hit) sfx("reveal", { volume: 0.5 });
+        else sfx("miss", { volume: 0.45 });
         setStatus(msg.hit ? `${msg.count} ${msg.letter}'s!` : `No ${msg.letter}'s.`);
         if (vowelMode && isVowel(msg.letter)) setVowelMode(false);
       }
+      break;
+    case "spinResult":
+      if (msg.seat === mySeat) {
+        const wedge = msg.wedge;
+        if (wedge?.type === "bankrupt" || wedge?.type === "loseTurn") {
+          sfx("bankrupt", { volume: 0.5 });
+        } else {
+          sfx("land", { volume: 0.45 });
+        }
+      }
+      break;
+    case "solveResult":
+      awaitingSolveResult = false;
+      if (msg.seat === mySeat) sfx("solve", { volume: 0.55 });
       break;
     case "error":
       setStatus(msg.message || msg.error || "Error.");
@@ -427,8 +472,11 @@ async function connect() {
   }
 }
 
+document.body.addEventListener("pointerdown", unlockAudio, { once: true, passive: true });
+
 els.btnSpinHold.addEventListener("pointerdown", (e) => {
   e.preventDefault();
+  unlockAudio();
   startSpinGauge();
 });
 
