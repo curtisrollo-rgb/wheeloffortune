@@ -347,6 +347,17 @@ function applyGameState(state) {
     return;
   }
 
+  if (state?.roundType === "final") {
+    if (state.phase === "finalEnvelope" && isMyTurn) {
+      setStatus("Spin to seal your bonus envelope!");
+    } else if (state.phase === "finalPuzzleReveal" || state.phase === "finalRevealFree") {
+      setStatus("Watch the board — R, S, T, L, N, and E are being revealed…");
+    } else if (state.phase === "finalPick" && isMyTurn) {
+      setStatus("Pick 3 consonants and 1 vowel.");
+    }
+    return;
+  }
+
   if (!isMyTurn || !state) return;
 
   if (state.roundMoney > 0 && state.roundBank > 0) {
@@ -547,6 +558,9 @@ function onMessage(msg) {
         setStatus(msg.message || "Time's up!");
         setTurnActive(false);
       }
+      break;
+    case "finalRstlneStart":
+      setStatus("R, S, T, L, N, and E coming up on the board…");
       break;
     case "finalPickStart":
       if (isMyTurn) setStatus("Pick 3 consonants and 1 vowel.");

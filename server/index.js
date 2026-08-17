@@ -33,6 +33,7 @@ import {
   beginTossUp,
   beginFinalRstlne,
   advanceFinalRstlne,
+  startFinalRstlneSequence,
   startFinalSolveTimer,
   resumeFinalTimer,
   startTossUpRevealLoop,
@@ -44,7 +45,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.26";
+const VERSION = "0.2.27";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -300,6 +301,9 @@ wss.on("connection", (ws) => {
       });
       if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+      }
+      if (result.wedge?.type === "bonusEnvelope") {
+        startFinalRstlneSequence(room, (r, payload) => broadcast(r, payload));
       }
       broadcastGameState(room);
       return;

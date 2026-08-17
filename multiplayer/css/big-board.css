@@ -2,6 +2,7 @@
 
 body.big-board-page {
   --tile-size: clamp(36px, 5.4vw, 78px);
+  --tile-font-size: clamp(1.35rem, 3.4vw, 2.35rem);
   min-height: 100vh;
   min-height: 100dvh;
   display: flex;
@@ -113,6 +114,10 @@ body.big-board-page.is-loading .host-dock {
   z-index: 1;
   width: 100%;
   padding: clamp(12px, 1.6vw, 22px);
+}
+
+.big-board-page .tile {
+  font-size: var(--tile-font-size);
 }
 
 .big-board-page .prize-banner,

@@ -87,8 +87,6 @@ let round2AssetsLoaded = false;
 let finalAssetsLoaded = false;
 let messageClearTimer = null;
 let wheelHideTimer = null;
-let finalLetterWaiter = null;
-let finalIntroRunning = false;
 
 const AUTO_ADVANCE_MS = 5500;
 
@@ -114,52 +112,27 @@ function hideFinalTimer() {
   els.finalTimer?.classList.add("is-hidden");
 }
 
-function waitForFinalLetterAdvance() {
-  return new Promise((resolve) => {
-    finalLetterWaiter = resolve;
-    client?.advanceFinalRstlne();
-  });
-}
-
-async function runFinalRoundIntro() {
-  if (finalIntroRunning) return;
-  finalIntroRunning = true;
+async function animateFinalFreeLetter(msg) {
+  boardRevealBusy = true;
   try {
-    flushPendingGameState();
-    await hostVoChain;
-    await sleep(400);
-    setMessage("Let's get you R, S, T, L, N, and E!");
-    client?.beginFinalRstlne();
-    await sleep(700);
-
-    for (let i = 0; i < 6; i++) {
-      const msg = await waitForFinalLetterAdvance();
-      boardRevealBusy = true;
-      try {
-        setMessage(`Revealing ${msg.letter}…`);
-        if (msg.indices?.length) {
-          await board.revealTiles(msg.indices, msg.rows);
-        } else {
-          playSound("miss", { volume: 0.22 });
-        }
-        if (msg.rows?.length) {
-          board.rows = msg.rows;
-          lastPuzzleLayout = puzzleLayoutKey(msg.rows);
-        }
-        await sleep(360);
-        if (msg.autoSolved) {
-          await board.revealAll(msg.rows);
-          playSound("solve", { volume: 0.55 });
-          await playRandomSolveCongrats();
-          stopBgm();
-          return;
-        }
-      } finally {
-        boardRevealBusy = false;
-      }
+    setMessage(`Revealing ${msg.letter}…`);
+    if (msg.indices?.length) {
+      await board.revealTiles(msg.indices, msg.rows);
+    } else {
+      playSound("miss", { volume: 0.22 });
+    }
+    if (msg.rows?.length) {
+      board.rows = msg.rows;
+      lastPuzzleLayout = puzzleLayoutKey(msg.rows);
+    }
+    if (msg.autoSolved) {
+      await board.revealAll(msg.rows);
+      playSound("solve", { volume: 0.55 });
+      await playRandomSolveCongrats();
+      stopBgm();
     }
   } finally {
-    finalIntroRunning = false;
+    boardRevealBusy = false;
   }
 }
 
@@ -991,7 +964,6 @@ function onMessage(msg) {
           playWedgeAmountVo(wedge.value);
         } else if (wedge?.type === "bonusEnvelope") {
           playSound("land", { volume: 0.55 });
-          await runFinalRoundIntro();
         }
       })().catch((err) => {
         console.warn("Spin animation:", err);
@@ -1047,11 +1019,19 @@ function onMessage(msg) {
         await handleTossUpTile(msg);
       });
       break;
-    case "finalFreeLetter":
-      if (finalLetterWaiter) {
-        finalLetterWaiter(msg);
-        finalLetterWaiter = null;
+    case "finalRstlneStart":
+      if (spinAnimating) {
+        spinAnimating = false;
+        pendingSpinWedge = null;
+        flushPendingGameState();
+        hideWheelDock(0);
       }
+      setMessage(msg.message || "Let's get you R, S, T, L, N, and E!");
+      break;
+    case "finalFreeLetter":
+      queueHostVo(async () => {
+        await animateFinalFreeLetter(msg);
+      });
       break;
     case "finalPickStart":
       fadeInBgm({ volume: 0.2 });
