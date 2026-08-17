@@ -57,6 +57,10 @@ function onMessage(msg) {
       renderPlayers(msg.players || []);
       setStatus(els.roomStatus, msg.message || "Waiting for players…", "ok");
       break;
+    case "playerJoined":
+      renderPlayers(msg.players || []);
+      setStatus(els.roomStatus, `${msg.name || msg.seat} joined.`, "ok");
+      break;
     case "gameStarted":
       setStatus(els.roomStatus, "Game started on the TV display.", "ok");
       break;

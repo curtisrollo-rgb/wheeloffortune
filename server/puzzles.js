@@ -10,8 +10,8 @@ let puzzles = [];
 
 function loadPuzzleBank() {
   const candidates = [
-    join(__dirname, "../data/puzzles.json"),
-    join(__dirname, "../data/puzzles.sample.json"),
+    join(__dirname, "data/puzzles.json"),
+    join(__dirname, "data/puzzles.sample.json"),
   ];
   for (const path of candidates) {
     try {

@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "count": 8,
+  "puzzles": [
+    { "id": "wof1", "category": "PHRASE", "answer": "WHEEL OF FORTUNE" },
+    { "id": "wof2", "category": "PHRASE", "answer": "SPIN THE WHEEL" },
+    { "id": "wof3", "category": "PHRASE", "answer": "BUY A VOWEL" },
+    { "id": "wof4", "category": "FOOD & DRINK", "answer": "ROOT BEER FLOAT" },
+    { "id": "wof5", "category": "PLACE", "answer": "LAS VEGAS NEVADA" },
+    { "id": "wof6", "category": "THING", "answer": "GOLDEN TROPHY" },
+    { "id": "wof7", "category": "PERSON", "answer": "PAT SAJAK" },
+    { "id": "wof8", "category": "EVENT", "answer": "GAME NIGHT" }
+  ]
+}

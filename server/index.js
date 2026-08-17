@@ -13,6 +13,7 @@ import {
   roomStatus,
   listRooms,
   setHost,
+  setLobby,
 } from "./rooms.js";
 import {
   handleBuzz,
@@ -28,9 +29,9 @@ import {
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.1.0";
+const VERSION = "0.2.0";
 
-/** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
+/** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
 
 function send(ws, payload) {
@@ -45,6 +46,9 @@ function error(ws, message) {
 
 /** @param {import('./rooms.js').Room} room */
 function broadcast(room, payload, exceptWs = null) {
+  if (room.lobby?.ws && room.lobby.ws !== exceptWs) {
+    send(room.lobby.ws, payload);
+  }
   if (room.host?.ws && room.host.ws !== exceptWs) {
     send(room.host.ws, payload);
   }
@@ -122,6 +126,8 @@ wss.on("connection", (ws) => {
     if (op === "createRoom") {
       const code = createRoom();
       const room = getRoom(code);
+      setLobby(room, ws);
+      connections.set(ws, { code, role: "lobby", seat: null });
       appendLog(room, "Room created");
       send(ws, {
         op: "roomCreated",
@@ -232,6 +238,9 @@ wss.on("connection", (ws) => {
     if (op === "startGame") {
       const info = connections.get(ws);
       if (!info) return error(ws, "Join or attach to a room first.");
+      if (info.role !== "host" && info.role !== "lobby") {
+        return error(ws, "Only the lobby or TV can start the game.");
+      }
       const room = getRoom(info.code);
       if (!room) return error(ws, "Room not found.");
 

@@ -1,6 +1,6 @@
 /** Authoritative Wheel of Fortune game state (v0.2 — puzzles + 1-player start). */
 
-import { layoutPuzzle, buildLetterMap } from "../js/puzzle-layout.js";
+import { layoutPuzzle, buildLetterMap } from "./puzzle-layout.js";
 import { getPlayerBySeat, playerSummaries } from "./rooms.js";
 import { pickRandomPuzzle } from "./puzzles.js";
 

@@ -15,9 +15,14 @@ import { ROOM_CODES } from "./room-words.js";
  * @property {import('ws').WebSocket} ws
  */
 
+/** @typedef {object} LobbyConn
+ * @property {import('ws').WebSocket} ws
+ */
+
 /** @typedef {object} Room
  * @property {string} code
  * @property {number} createdAt
+ * @property {LobbyConn|null} lobby
  * @property {HostConn|null} host
  * @property {PlayerConn[]} players
  * @property {string[]} log
@@ -43,6 +48,7 @@ export function createRoom() {
   rooms.set(code, {
     code,
     createdAt: Date.now(),
+    lobby: null,
     host: null,
     players: [],
     log: [],
@@ -75,6 +81,11 @@ export function addPlayer(room, ws, seat, name) {
 }
 
 /** @param {import('ws').WebSocket} ws @param {Room} room */
+export function setLobby(room, ws) {
+  room.lobby = { ws };
+}
+
+/** @param {import('ws').WebSocket} ws @param {Room} room */
 export function setHost(room, ws) {
   room.host = { ws };
 }
@@ -85,7 +96,7 @@ export function removeConnection(ws) {
     const idx = room.players.findIndex((p) => p.ws === ws);
     if (idx >= 0) {
       const [removed] = room.players.splice(idx, 1);
-      if (room.players.length === 0 && !room.host) {
+      if (room.players.length === 0 && !room.host && !room.lobby) {
         rooms.delete(room.code);
       }
       return { room, seat: removed.seat, role: "player", name: removed.name };
@@ -93,10 +104,18 @@ export function removeConnection(ws) {
 
     if (room.host?.ws === ws) {
       room.host = null;
-      if (room.players.length === 0) {
+      if (room.players.length === 0 && !room.lobby) {
         rooms.delete(room.code);
       }
       return { room, seat: null, role: "host", name: null };
+    }
+
+    if (room.lobby?.ws === ws) {
+      room.lobby = null;
+      if (room.players.length === 0 && !room.host) {
+        rooms.delete(room.code);
+      }
+      return { room, seat: null, role: "lobby", name: null };
     }
   }
   return null;
@@ -135,6 +154,7 @@ export function listRooms() {
 
 /** @param {Room} room @param {import('ws').WebSocket} ws */
 export function getConnectionRole(room, ws) {
+  if (room.lobby?.ws === ws) return { role: "lobby", seat: null };
   if (room.host?.ws === ws) return { role: "host", seat: null };
   const player = room.players.find((p) => p.ws === ws);
   if (player) return { role: "player", seat: player.seat, name: player.name };
