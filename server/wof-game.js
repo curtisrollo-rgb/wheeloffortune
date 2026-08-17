@@ -201,7 +201,7 @@ export function playerActionPayload(room, seat, action, extra = {}) {
   };
 }
 
-function letterResultPayload(room, seat, result) {
+export function letterResultPayload(room, seat, result) {
   return {
     op: "letterResult",
     seat,
@@ -478,5 +478,3 @@ export function handleBuzz(room, seat) {
   if (!player) return { error: "Player not found." };
   return { ok: true, seat, name: player.name };
 }
-
-export { letterResultPayload, playerActionPayload };
