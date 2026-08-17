@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { randomBytes } from "crypto";
@@ -7,41 +7,87 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /** @type {{ id?: string, category: string, answer: string }[]} */
 let puzzles = [];
+/** @type {string | null} */
+let puzzleSource = null;
+
+const FALLBACK_PUZZLES = [
+  { id: "fallback1", category: "PHRASE", answer: "WHEEL OF FORTUNE" },
+  { id: "fallback2", category: "PHRASE", answer: "SPIN THE WHEEL" },
+];
+
+/** Prefer the largest puzzle bank available (full set > sample > tiny dev file). */
+const PUZZLE_CANDIDATES = [
+  join(__dirname, "../data/puzzles.json"),
+  join(__dirname, "data/puzzles.sample.json"),
+  join(__dirname, "../data/puzzles.sample.json"),
+  join(__dirname, "data/puzzles.json"),
+];
+
+function tryLoadFile(path) {
+  if (!existsSync(path)) return null;
+  try {
+    const raw = readFileSync(path, "utf8");
+    const data = JSON.parse(raw);
+    const list = (data.puzzles || data).filter((p) => p?.answer && p?.category);
+    if (!list.length) return null;
+    return { path, list };
+  } catch {
+    return null;
+  }
+}
 
 function loadPuzzleBank() {
-  const candidates = [
-    join(__dirname, "data/puzzles.json"),
-    join(__dirname, "data/puzzles.sample.json"),
-  ];
-  for (const path of candidates) {
-    try {
-      const raw = readFileSync(path, "utf8");
-      const data = JSON.parse(raw);
-      const list = data.puzzles || data;
-      if (Array.isArray(list) && list.length) {
-        puzzles = list.filter((p) => p?.answer && p?.category);
-        return;
-      }
-    } catch {
-      /* try next */
+  let best = null;
+  for (const path of PUZZLE_CANDIDATES) {
+    const loaded = tryLoadFile(path);
+    if (!loaded) continue;
+    if (!best || loaded.list.length > best.list.length) {
+      best = loaded;
     }
   }
-  puzzles = [
-    { category: "PHRASE", answer: "WHEEL OF FORTUNE" },
-    { category: "PHRASE", answer: "SPIN THE WHEEL" },
-  ];
+
+  if (best) {
+    puzzles = best.list;
+    puzzleSource = best.path;
+    console.log(`Puzzle bank: ${puzzles.length} puzzles from ${best.path}`);
+    return;
+  }
+
+  puzzles = FALLBACK_PUZZLES;
+  puzzleSource = "fallback";
+  console.warn("Puzzle bank: using built-in fallback (2 puzzles)");
 }
 
 loadPuzzleBank();
 
+/** Unbiased random index for pool selection. */
+function randomIndex(length) {
+  if (length <= 1) return 0;
+  const max = 0xffffffff - (0xffffffff % length);
+  let value;
+  do {
+    value = randomBytes(4).readUInt32BE(0);
+  } while (value >= max);
+  return value % length;
+}
+
 /** @param {Set<string>} [excludeIds] */
 export function pickRandomPuzzle(excludeIds = new Set()) {
-  const pool = puzzles.filter((p) => !excludeIds.has(p.id || p.answer));
-  const list = pool.length ? pool : puzzles;
-  const i = randomBytes(2)[0] % list.length;
-  return list[i];
+  if (!puzzles.length) return FALLBACK_PUZZLES[0];
+
+  let pool = puzzles.filter((p) => !excludeIds.has(p.id || p.answer));
+  if (!pool.length) {
+    // Full deck seen — start a new cycle (caller may clear usedPuzzleIds).
+    pool = puzzles;
+  }
+
+  return pool[randomIndex(pool.length)];
 }
 
 export function puzzleCount() {
   return puzzles.length;
+}
+
+export function getPuzzleSource() {
+  return puzzleSource;
 }

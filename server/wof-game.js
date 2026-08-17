@@ -11,7 +11,7 @@ import {
   emptyBoardRows,
 } from "./puzzle-layout.js";
 import { getPlayerBySeat, playerSummaries } from "./rooms.js";
-import { pickRandomPuzzle } from "./puzzles.js";
+import { pickRandomPuzzle, puzzleCount } from "./puzzles.js";
 import { getWedgesForRound } from "./wedges.js";
 import { randomBytes } from "crypto";
 import {
@@ -137,7 +137,13 @@ export function createInitialGame() {
 
 /** @param {import('./rooms.js').Room} room @param {string} roundType @param {{ preview?: boolean }} [opts] */
 function loadPuzzleForRound(room, roundType, { preview = false } = {}) {
-  const entry = pickRandomPuzzle(room.game.usedPuzzleIds);
+  let exclude = room.game.usedPuzzleIds;
+  if (exclude.size >= puzzleCount()) {
+    exclude = new Set();
+    room.game.usedPuzzleIds = exclude;
+  }
+
+  const entry = pickRandomPuzzle(exclude);
   const layout = layoutPuzzle(entry.category, entry.answer);
   const id = entry.id || entry.answer;
   room.game.usedPuzzleIds.add(id);

@@ -37,10 +37,11 @@ import {
   startTossUpCountdown,
 } from "./wof-game.js";
 import { getWedgeManifestForRound } from "./wedges.js";
+import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.14";
+const VERSION = "0.2.15";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -106,6 +107,8 @@ const server = http.createServer((req, res) => {
       version: VERSION,
       connections: connections.size,
       rooms: listRooms().length,
+      puzzleCount: puzzleCount(),
+      puzzleSource: getPuzzleSource(),
     });
   }
   jsonResponse(res, 404, { error: "Not found" });
