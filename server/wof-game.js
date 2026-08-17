@@ -839,6 +839,22 @@ export function handleSolve(room, seat, text) {
 }
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
+export function handleSolveIntent(room, seat) {
+  if (!room.game?.started) return { error: "Game not started." };
+  if (room.game.roundType === "tossup") return { error: "Use Buzz In during Toss-Up." };
+
+  const flags = playerActionFlags(room);
+  if (room.game.activeSeat !== seat) return { error: "Not your turn." };
+  if (!flags.canSolve) return { error: "You cannot solve right now." };
+
+  const player = getPlayerBySeat(room, seat);
+  if (!player) return { error: "Player not found." };
+
+  room.game.message = `${player.name} is attempting to solve!`;
+  return { ok: true, seat, name: player.name };
+}
+
+/** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
 export function handleBuzz(room, seat) {
   if (!room.game?.started) return { error: "Game not started." };
   if (room.game.phase === "tossUpCountdown") return { error: "Wait for the countdown." };

@@ -117,6 +117,10 @@ export class WofClient {
     this.send({ op: "buyVowel", letter: String(letter).toUpperCase() });
   }
 
+  solveIntent() {
+    this.send({ op: "solveIntent" });
+  }
+
   solve(text) {
     this.send({ op: "solve", text: String(text).trim() });
   }

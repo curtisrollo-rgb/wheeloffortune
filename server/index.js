@@ -20,6 +20,7 @@ import {
   handleBuyVowel,
   handleGuessLetter,
   handleSolve,
+  handleSolveIntent,
   handleSpin,
   ensurePreviewBoard,
   letterResultPayload,
@@ -39,7 +40,7 @@ import { getWedgeManifestForRound } from "./wedges.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.12";
+const VERSION = "0.2.13";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -342,6 +343,27 @@ wss.on("connection", (ws) => {
       return;
     }
 
+    if (op === "solveIntent") {
+      const info = connections.get(ws);
+      if (!info || info.role !== "player" || !info.seat) return error(ws, "Players only.");
+      const room = getRoom(info.code);
+      if (!room) return error(ws, "Room not found");
+
+      const result = handleSolveIntent(room, info.seat);
+      if (result.error) return error(ws, result.error);
+
+      broadcast(room, playerActionPayload(room, info.seat, "solve"));
+      broadcast(room, {
+        op: "turnChanged",
+        seat: info.seat,
+        name: result.name,
+        players: playerSummaries(room),
+        message: `${result.name} is attempting to solve!`,
+      });
+      broadcastGameState(room);
+      return;
+    }
+
     if (op === "solve") {
       const info = connections.get(ws);
       if (!info || info.role !== "player" || !info.seat) return error(ws, "Players only.");
@@ -351,9 +373,6 @@ wss.on("connection", (ws) => {
       const result = handleSolve(room, info.seat, msg.text);
       if (result.error) return error(ws, result.error);
 
-      if (room.game.roundType !== "tossup") {
-        broadcast(room, playerActionPayload(room, info.seat, "solve"));
-      }
       if (result.solved) {
         broadcast(room, {
           op: "solveResult",

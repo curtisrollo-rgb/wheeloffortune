@@ -2,7 +2,7 @@ import { WofClient } from "./net/client.js?v=1";
 import { getWsUrl, getRoomFromUrl, dataUrl } from "./net/config.js?v=1";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
 import { PuzzleBoard } from "./board.js?v=3";
-import { createWheel } from "./wheel.js?v=16";
+import { createWheel } from "./wheel.js?v=17";
 import { preloadAll, playSound } from "./audio.js?v=8";
 import { loadCategoryVo } from "./category-vo.js?v=6";
 import { loadMissVo } from "./miss-vo.js?v=4";
@@ -488,11 +488,11 @@ function onMessage(msg) {
         if (msg.roundType && msg.roundType !== currentRoundType) {
           await loadWheelForRound(msg.roundType);
         }
-        let rest = await wheelApi?.spinToIndex?.(msg.index);
-        if (rest && rest.index !== msg.index && wheelApi?.ensureIndex) {
-          rest = await wheelApi.ensureIndex(msg.index);
+        await wheelApi?.spinToIndex?.(msg.index);
+        if (wheelApi?.getCurrentIndex?.() !== msg.index && wheelApi?.snapToIndex) {
+          await wheelApi.snapToIndex(msg.index);
         }
-        const wedge = msg.wedge ?? rest?.wedge;
+        const wedge = msg.wedge;
         const state = pendingGameState?.state ?? latestGameState;
         applySpinWedgeToHud(wedge, {
           ...state,

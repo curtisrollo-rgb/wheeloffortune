@@ -311,10 +311,13 @@ function stopSpinGauge() {
 }
 
 function openSolveModal() {
+  if (!client?.connected || !gameState?.canSolve) return;
   setVowelMode(false);
+  client.solveIntent();
   els.solveModal.classList.remove("is-hidden");
   els.solveInput.value = "";
   els.solveInput.focus();
+  setStatus("Attempting to solve…");
 }
 
 function closeSolveModal() {

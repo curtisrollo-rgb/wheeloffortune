@@ -110,8 +110,8 @@ function canvasToImage(canvas) {
   });
 }
 
-/** spin-wheel: 0=right, 90=bottom, 180=left, 270=top (matches .wheel-pointer CSS). */
-const DEFAULT_POINTER_ANGLE = 270;
+/** spin-wheel library: pointerAngle 0 = top (north), matching .wheel-pointer CSS. */
+const DEFAULT_POINTER_ANGLE = 0;
 
 /** @param {HTMLElement} container @param {object[]} wedges @param {{ pointerAngle?: number }} [opts] */
 export async function createWheel(container, wedges, opts = {}) {
@@ -157,21 +157,24 @@ export async function createWheel(container, wedges, opts = {}) {
       playSound("tick", { volume: 0.22 });
     },
     onRest: () => {
-      if (spinPhase !== "spinning" && spinPhase !== "nudging") return;
+      if (spinPhase !== "spinning" && spinPhase !== "nudging" && spinPhase !== "snapping") return;
 
       const wasNudging = spinPhase === "nudging";
+      const wasSnapping = spinPhase === "snapping";
       spinPhase = "idle";
       const index = wheel.getCurrentIndex();
       const wedge = wedges[index];
 
-      if (wasNudging) {
-        playSound("tick", { volume: 0.2 });
-      } else if (wedge.type === "bankrupt" || wedge.type === "loseTurn") {
-        // Sad sting + announcer VO handled in main.js after spin resolves.
-      } else if (wedge.type === "prize" || wedge.type === "bonusEnvelope") {
-        playSound("land", { volume: 0.55 });
-      } else {
-        playSound("land", { volume: 0.65 });
+      if (!wasSnapping) {
+        if (wasNudging) {
+          playSound("tick", { volume: 0.2 });
+        } else if (wedge.type === "bankrupt" || wedge.type === "loseTurn") {
+          // Sad sting + announcer VO handled in main.js after spin resolves.
+        } else if (wedge.type === "prize" || wedge.type === "bonusEnvelope") {
+          playSound("land", { volume: 0.55 });
+        } else {
+          playSound("land", { volume: 0.65 });
+        }
       }
 
       if (restResolve) {
@@ -197,6 +200,22 @@ export async function createWheel(container, wedges, opts = {}) {
     return spinToIndex(index);
   }
 
+  /** Snap to server index with no visible re-spin (fallback only). */
+  function snapToIndex(index) {
+    if (wheel.getCurrentIndex() === index) {
+      return Promise.resolve({ index, wedge: wedges[index] });
+    }
+    return new Promise((resolve) => {
+      restResolve = resolve;
+      spinPhase = "snapping";
+      wheel.spinToItem(index, 0, true, 0, 1);
+    });
+  }
+
+  function getCurrentIndex() {
+    return wheel.getCurrentIndex();
+  }
+
   /** One-wedge test cheat — short step left (-1) or right (+1). */
   function nudgeWedge(delta) {
     const len = wedges.length;
@@ -213,31 +232,5 @@ export async function createWheel(container, wedges, opts = {}) {
     });
   }
 
-  function getCurrentIndex() {
-    return wheel.getCurrentIndex();
-  }
-
-  /** Snap to exact server index if the animation landed one wedge off. */
-  async function ensureIndex(target) {
-    const len = wedges.length;
-    let current = wheel.getCurrentIndex();
-    if (current === target) {
-      return { index: target, wedge: wedges[target] };
-    }
-
-    let guard = 0;
-    while (current !== target && guard < len) {
-      let delta = (target - current + len) % len;
-      if (delta > len / 2) delta -= len;
-      if (delta === 0) break;
-      const step = delta > 0 ? 1 : -1;
-      const result = await nudgeWedge(step);
-      current = result.index;
-      guard += 1;
-    }
-
-    return { index: current, wedge: wedges[current] };
-  }
-
-  return { wheel, spinToIndex, spinRandom, nudgeWedge, ensureIndex, getCurrentIndex, wedges };
+  return { wheel, spinToIndex, spinRandom, nudgeWedge, snapToIndex, getCurrentIndex, wedges };
 }
