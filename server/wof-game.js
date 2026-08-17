@@ -242,8 +242,42 @@ export function setRound(room, roundType) {
 export function beginTossUp(room) {
   if (!room.game?.started) return { error: "Game not started." };
   if (room.game.roundType !== "tossup") return { error: "Not a Toss-Up round." };
-  if (!beginTossUpReveal(room.game)) return { error: "Toss-Up already started." };
-  return { ok: true, startRevealLoop: true };
+  if (room.game.phase !== "tossUpAnnounce") return { error: "Toss-Up already started." };
+  return { ok: true, startCountdown: true };
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
+export function startTossUpCountdown(room, emit) {
+  stopTossUpTimer(room.code);
+  room.game.phase = "tossUpCountdown";
+  room.game.message = "Get ready for the Toss-Up!";
+  let step = 0;
+  const counts = [3, 2, 1];
+
+  const advance = () => {
+    if (!room.game || room.game.roundType !== "tossup") {
+      stopTossUpTimer(room.code);
+      return;
+    }
+    if (step < counts.length) {
+      const count = counts[step];
+      room.game.message = step === 0 ? "Get ready…" : String(count);
+      emit(room, { op: "tossUpCountdown", count });
+      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+      step += 1;
+      return;
+    }
+    stopTossUpTimer(room.code);
+    beginTossUpReveal(room.game);
+    room.game.message = "Toss-Up! Ring in when you know it!";
+    emit(room, { op: "tossUpCountdown", count: 0 });
+    emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+    startTossUpRevealLoop(room, emit);
+  };
+
+  advance();
+  const timer = setInterval(advance, 1000);
+  tossUpTimers.set(room.code, timer);
 }
 
 /** @param {import('./rooms.js').Room} room */
@@ -272,12 +306,13 @@ export function playerActionFlags(room) {
   const g = room.game;
 
   if (g.roundType === "tossup") {
+    const hiddenLeft = getHiddenTossUpSlots(g).length > 0;
     return {
       canSpin: false,
       canGuess: false,
       canBuyVowel: false,
       canSolve: g.phase === "tossUpReveal" && g.activeSeat != null,
-      canRingIn: isTossUpReveal(room) && !g.activeSeat,
+      canRingIn: isTossUpReveal(room) && !g.activeSeat && hiddenLeft,
       canPickFinal: false,
       tossUpLockedSeats: [...g.tossUpLockedSeats],
     };
@@ -806,16 +841,20 @@ export function handleSolve(room, seat, text) {
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
 export function handleBuzz(room, seat) {
   if (!room.game?.started) return { error: "Game not started." };
+  if (room.game.phase === "tossUpCountdown") return { error: "Wait for the countdown." };
   if (!isTossUpReveal(room)) return { error: "Buzz only during Toss-Up." };
   if (room.game.activeSeat) return { error: "Someone already rang in." };
   if (room.game.tossUpLockedSeats.has(seat)) return { error: "You are locked out." };
+
+  const hidden = getHiddenTossUpSlots(room.game);
+  if (!hidden.length) return { error: "Too late — puzzle fully revealed." };
 
   const player = getPlayerBySeat(room, seat);
   if (!player) return { error: "Player not found." };
 
   room.game.activeSeat = seat;
   room.game.tossUpRevealPaused = true;
-  room.game.message = `${player.name} rang in!`;
+  room.game.message = `${player.name} is attempting to solve!`;
   return { ok: true, seat, name: player.name, pauseTossUp: true };
 }
 

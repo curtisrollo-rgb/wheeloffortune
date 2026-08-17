@@ -1,5 +1,5 @@
 /** Client build version — keep in sync with server/package.json. */
-export const APP_VERSION = "0.2.10";
+export const APP_VERSION = "0.2.11";
 
 /** @param {string} [selector] @param {string} [serverVersion] */
 export function stampVersion(selector = "#app-version", serverVersion = "") {

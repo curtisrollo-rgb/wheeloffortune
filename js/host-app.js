@@ -143,6 +143,8 @@ function updateRoundMoneyPill(state) {
   if (state.roundType === "tossup") {
     if (state.phase === "tossUpAnnounce") {
       els.roundMoney.textContent = "Category…";
+    } else if (state.phase === "tossUpCountdown") {
+      els.roundMoney.textContent = "Get ready…";
     } else if (state.phase === "tossUpReveal") {
       els.roundMoney.textContent = "$1,000 Toss-Up";
     } else {
@@ -345,6 +347,7 @@ const els = {
   btnRound2: $("btn-round2"),
   btnFinal: $("btn-final"),
   btnNextRound: $("btn-next-round"),
+  tossupCountdown: $("tossup-countdown"),
 };
 
 let client = null;
@@ -490,6 +493,17 @@ function onMessage(msg) {
         spinAnimating = false;
         flushPendingGameState();
       });
+      break;
+    case "tossUpCountdown":
+      if (msg.count > 0) {
+        els.tossupCountdown.textContent = String(msg.count);
+        els.tossupCountdown.classList.remove("is-hidden");
+        setMessage(msg.count === 3 ? "Get ready…" : `${msg.count}…`);
+        playSound("tick", { volume: 0.45 });
+      } else {
+        els.tossupCountdown.classList.add("is-hidden");
+        setMessage("Toss-Up! Ring in when you know it!");
+      }
       break;
     case "tossUpTile":
       queueHostVo(async () => {

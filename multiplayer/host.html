@@ -13,7 +13,7 @@
     })();
   </script>
   <link rel="stylesheet" href="css/game.css?v=40" />
-  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=2" />
+  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=3" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page is-loading">
@@ -43,6 +43,8 @@
   <div id="scoreboard" class="scoreboard" aria-live="polite"></div>
 
   <p id="message-bar" class="message-bar">Connect to a room to begin.</p>
+
+  <div id="tossup-countdown" class="tossup-countdown is-hidden" aria-live="assertive">3</div>
 
   <main class="layout">
     <section class="board-section">
@@ -102,6 +104,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=9"></script>
+  <script type="module" src="js/host-app.js?v=10"></script>
 </body>
 </html>

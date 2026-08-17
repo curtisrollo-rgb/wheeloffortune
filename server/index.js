@@ -33,12 +33,13 @@ import {
   revealFinalFreeLetters,
   startTossUpRevealLoop,
   resumeTossUpReveal,
+  startTossUpCountdown,
 } from "./wof-game.js";
 import { getWedgeManifestForRound } from "./wedges.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.10";
+const VERSION = "0.2.11";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -350,7 +351,9 @@ wss.on("connection", (ws) => {
       const result = handleSolve(room, info.seat, msg.text);
       if (result.error) return error(ws, result.error);
 
-      broadcast(room, playerActionPayload(room, info.seat, "solve"));
+      if (room.game.roundType !== "tossup") {
+        broadcast(room, playerActionPayload(room, info.seat, "solve"));
+      }
       if (result.solved) {
         broadcast(room, {
           op: "solveResult",
@@ -379,12 +382,19 @@ wss.on("connection", (ws) => {
       const result = handleBuzz(room, info.seat);
       if (result.error) return error(ws, result.error);
 
+      broadcast(room, playerActionPayload(room, info.seat, "solve"));
       broadcast(room, {
         op: "buzzWinner",
         seat: info.seat,
         name: result.name,
       });
-      broadcast(room, turnChangedPayload(room, info.seat));
+      broadcast(room, {
+        op: "turnChanged",
+        seat: info.seat,
+        name: result.name,
+        players: playerSummaries(room),
+        message: `${result.name} is attempting to solve!`,
+      });
       broadcastGameState(room);
       return;
     }
@@ -421,8 +431,11 @@ wss.on("connection", (ws) => {
       if (!room) return error(ws, "Room not found.");
       const result = beginTossUp(room);
       if (result.error) return error(ws, result.error);
-      startTossUpRevealLoop(room, (r, payload) => broadcast(r, payload));
-      broadcastGameState(room);
+      if (result.startCountdown) {
+        startTossUpCountdown(room, (r, payload) => broadcast(r, payload));
+      } else {
+        broadcastGameState(room);
+      }
       return;
     }
 
