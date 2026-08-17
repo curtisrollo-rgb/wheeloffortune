@@ -1,4 +1,4 @@
-/** Authoritative Wheel of Fortune game state (v0.2 — puzzles + letter guesses). */
+/** Authoritative Wheel of Fortune game state (multiplayer — full game rounds). */
 
 import {
   layoutPuzzle,
@@ -14,9 +14,83 @@ import { getPlayerBySeat, playerSummaries } from "./rooms.js";
 import { pickRandomPuzzle } from "./puzzles.js";
 import { getWedgesForRound } from "./wedges.js";
 import { randomBytes } from "crypto";
+import {
+  TOSS_UP_WIN,
+  FINAL_FREE_LETTERS,
+  onlyVowelsRemain,
+  hasHiddenConsonants,
+  getHiddenTossUpSlots,
+  revealTossUpTile,
+  beginTossUpReveal,
+  sealFinalEnvelope,
+  revealFinalFreeLetter,
+  beginFinalPickPhase,
+  pickFinalLetter,
+  revealFinalPendingLetters,
+  resetRoundFields,
+  setupRoundPhase,
+  bankFinalWin,
+  revealAllForAnswer,
+} from "./round-helpers.js";
 
 export const VOWEL_COST = 250;
 export const MIN_ROUND_WIN = 1000;
+
+/** @type {Map<string, NodeJS.Timeout>} */
+const tossUpTimers = new Map();
+
+function stopTossUpTimer(code) {
+  const timer = tossUpTimers.get(code);
+  if (timer) clearInterval(timer);
+  tossUpTimers.delete(code);
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
+export function pauseTossUpReveal(room, emit) {
+  if (!room.game || room.game.roundType !== "tossup") return;
+  room.game.tossUpRevealPaused = true;
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
+export function resumeTossUpReveal(room, emit) {
+  if (!room.game || room.game.roundType !== "tossup") return;
+  room.game.tossUpRevealPaused = false;
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
+export function startTossUpRevealLoop(room, emit) {
+  stopTossUpTimer(room.code);
+  const timer = setInterval(() => {
+    if (!room.game || room.game.phase !== "tossUpReveal") {
+      stopTossUpTimer(room.code);
+      return;
+    }
+    if (room.game.tossUpRevealPaused) return;
+
+    const hidden = getHiddenTossUpSlots(room.game);
+    if (!hidden.length) {
+      stopTossUpTimer(room.code);
+      room.game.message = "Toss-Up complete — no one solved it.";
+      room.game.phase = "ended";
+      emit(room, { op: "tossUpComplete", allRevealed: true });
+      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+      return;
+    }
+
+    const slot = hidden[randomBytes(1)[0] % hidden.length];
+    const result = revealTossUpTile(room.game, slot);
+    if (result.ok) {
+      emit(room, {
+        op: "tossUpTile",
+        letter: result.letter,
+        indices: result.indices,
+        rows: result.rows,
+      });
+      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+    }
+  }, 900);
+  tossUpTimers.set(room.code, timer);
+}
 
 /** @param {import('./rooms.js').Room} room */
 export function createInitialGame() {
@@ -35,11 +109,26 @@ export function createInitialGame() {
     letterMap: [],
     called: new Set(),
     usedPuzzleIds: new Set(),
+    roundPrize: null,
+    pendingPrizeKind: null,
+    carPrize: null,
+    solveBlocked: false,
+    finalConsonantsLeft: 0,
+    finalVowelsLeft: 0,
+    finalPendingPicks: [],
+    finalEnvelopeAmount: null,
+    finalEnvelopePrize: null,
+    finalEnvelopeIndex: null,
+    finalEnvelopeRevealed: false,
+    finalWon: null,
+    tossUpLockedOut: false,
+    tossUpLockedSeats: new Set(),
+    tossUpRevealPaused: false,
   };
 }
 
-/** @param {import('./rooms.js').Room} room @param {{ preview?: boolean }} [opts] */
-function loadRandomPuzzle(room, { preview = false } = {}) {
+/** @param {import('./rooms.js').Room} room @param {string} roundType @param {{ preview?: boolean }} [opts] */
+function loadPuzzleForRound(room, roundType, { preview = false } = {}) {
   const entry = pickRandomPuzzle(room.game.usedPuzzleIds);
   const layout = layoutPuzzle(entry.category, entry.answer);
   const id = entry.id || entry.answer;
@@ -49,13 +138,16 @@ function loadRandomPuzzle(room, { preview = false } = {}) {
   room.game.rows = layout.rows;
   room.game.letterMap = buildLetterMap(layout.rows, layout.answer);
   room.game.called = new Set();
-  room.game.roundMoney = 0;
-  room.game.roundBank = 0;
-  room.game.wedgeLabel = "—";
-  room.game.phase = preview ? "lobby" : "idle";
-  room.game.message = preview
-    ? "Preview puzzle — waiting to start…"
-    : "Spin the wheel!";
+  room.game.roundType = roundType;
+  resetRoundFields(room.game);
+
+  if (preview) {
+    room.game.phase = "lobby";
+    room.game.message = "Preview puzzle — waiting to start…";
+    return entry;
+  }
+
+  setupRoundPhase(room.game, roundType, room);
   return entry;
 }
 
@@ -66,7 +158,7 @@ export function ensurePreviewBoard(room) {
   }
   const hasPuzzleTiles = room.game.rows?.some((row) => row.includes("_"));
   if (!room.game.started && !hasPuzzleTiles) {
-    loadRandomPuzzle(room, { preview: true });
+    loadPuzzleForRound(room, room.game.roundType || "round1", { preview: true });
   }
   return publicGameState(room);
 }
@@ -74,7 +166,9 @@ export function ensurePreviewBoard(room) {
 /** @param {import('./rooms.js').Room} room */
 function advanceTurn(room) {
   if (room.players.length <= 1) {
-    room.game.phase = "idle";
+    room.game.phase = room.game.roundType === "final" && room.game.phase === "finalEnvelope"
+      ? "finalEnvelope"
+      : "idle";
     room.game.roundMoney = 0;
     const player = getPlayerBySeat(room, room.game.activeSeat);
     room.game.message = player ? `${player.name} — spin again.` : "Spin the wheel!";
@@ -86,6 +180,9 @@ function advanceTurn(room) {
   room.game.activeSeat = nextSeat;
   room.game.phase = "idle";
   room.game.roundMoney = 0;
+  if (room.game.pendingPrizeKind === "car") {
+    room.game.pendingPrizeKind = null;
+  }
   const next = getPlayerBySeat(room, nextSeat);
   room.game.message = `${next?.name}'s turn — spin the wheel!`;
 }
@@ -105,21 +202,19 @@ export function startGame(room) {
 
   const hasPuzzleTiles = room.game.rows?.some((row) => row.includes("_"));
   if (!hasPuzzleTiles) {
-    loadRandomPuzzle(room);
+    loadPuzzleForRound(room, room.game.roundType || "round1");
   } else {
     room.game.started = true;
-    room.game.phase = "idle";
-    room.game.called = new Set();
-    room.game.roundMoney = 0;
-    room.game.roundBank = 0;
-    room.game.wedgeLabel = "—";
+    setupRoundPhase(room.game, room.game.roundType || "round1", room);
+    resetRoundFields(room.game);
   }
 
   room.game.started = true;
-  room.game.phase = "idle";
-  room.game.activeSeat = room.players[0].seat;
-  const first = room.players[0];
-  room.game.message = `${first.name}'s turn — spin the wheel!`;
+  if (room.game.roundType !== "tossup" && room.game.roundType !== "final") {
+    room.game.activeSeat = room.players[0].seat;
+    const first = room.players[0];
+    room.game.message = `${first.name}'s turn — spin the wheel!`;
+  }
 
   for (const player of room.players) {
     player.score = player.score || 0;
@@ -128,12 +223,36 @@ export function startGame(room) {
   return { ok: true };
 }
 
+/** @param {import('./rooms.js').Room} room @param {"round1"|"round2"|"final"|"tossup"} roundType */
+export function setRound(room, roundType) {
+  if (!room.game?.started) {
+    return { error: "Start the game first." };
+  }
+  if (!["round1", "round2", "final", "tossup"].includes(roundType)) {
+    return { error: "Invalid round type." };
+  }
+
+  stopTossUpTimer(room.code);
+  loadPuzzleForRound(room, roundType);
+
+  return { ok: true, roundType };
+}
+
+/** @param {import('./rooms.js').Room} room */
+export function beginTossUp(room) {
+  if (!room.game?.started) return { error: "Game not started." };
+  if (room.game.roundType !== "tossup") return { error: "Not a Toss-Up round." };
+  if (!beginTossUpReveal(room.game)) return { error: "Toss-Up already started." };
+  return { ok: true, startRevealLoop: true };
+}
+
 /** @param {import('./rooms.js').Room} room */
 export function newPuzzle(room) {
   if (!room.game?.started) {
     return { error: "Start the game first." };
   }
-  loadRandomPuzzle(room);
+  stopTossUpTimer(room.code);
+  loadPuzzleForRound(room, room.game.roundType);
   const player = getPlayerBySeat(room, room.game.activeSeat);
   room.game.message = player
     ? `${player.name}'s turn — spin the wheel!`
@@ -141,20 +260,62 @@ export function newPuzzle(room) {
   return { ok: true };
 }
 
+function isTossUpReveal(room) {
+  return room.game?.roundType === "tossup" && room.game.phase === "tossUpReveal";
+}
+
 /** @param {import('./rooms.js').Room} room */
 export function playerActionFlags(room) {
   if (!room.game?.started) {
-    return { canSpin: false, canGuess: false, canBuyVowel: false, canSolve: false };
+    return { canSpin: false, canGuess: false, canBuyVowel: false, canSolve: false, canRingIn: false, canPickFinal: false };
   }
   const g = room.game;
-  const canSpin = g.phase === "idle" || g.phase === "guess";
-  const canGuess = g.phase === "guess" && g.roundMoney > 0;
-  const canBuyVowel =
+
+  if (g.roundType === "tossup") {
+    return {
+      canSpin: false,
+      canGuess: false,
+      canBuyVowel: false,
+      canSolve: g.phase === "tossUpReveal" && g.activeSeat != null,
+      canRingIn: isTossUpReveal(room) && !g.activeSeat,
+      canPickFinal: false,
+      tossUpLockedSeats: [...g.tossUpLockedSeats],
+    };
+  }
+
+  if (g.roundType === "final") {
+    const canSpin = g.phase === "finalEnvelope";
+    const canPickFinal = g.phase === "finalPick";
+    return {
+      canSpin,
+      canGuess: false,
+      canBuyVowel: false,
+      canSolve: g.phase === "finalSolve",
+      canRingIn: false,
+      canPickFinal,
+      finalConsonantsLeft: g.finalConsonantsLeft,
+      finalVowelsLeft: g.finalVowelsLeft,
+    };
+  }
+
+  const canSpin =
+    (g.phase === "idle" || g.phase === "guess") &&
+    !onlyVowelsRemain(g) &&
+    g.phase !== "ended";
+  const canGuess =
     g.phase === "guess" &&
+    (g.roundMoney > 0 || g.roundPrize || g.pendingPrizeKind === "car") &&
+    hasHiddenConsonants(g);
+  const canBuyVowel =
+    (g.phase === "guess" || (g.phase === "idle" && onlyVowelsRemain(g))) &&
     g.roundBank >= VOWEL_COST &&
     "AEIOU".split("").some((letter) => !g.called.has(letter));
-  const canSolve = g.phase === "guess" || g.phase === "idle";
-  return { canSpin, canGuess, canBuyVowel, canSolve };
+  const canSolve =
+    !g.solveBlocked &&
+    (g.phase === "guess" || g.phase === "idle") &&
+    g.phase !== "ended";
+
+  return { canSpin, canGuess, canBuyVowel, canSolve, canRingIn: false, canPickFinal: false };
 }
 
 /** @param {import('./rooms.js').Room} room */
@@ -171,8 +332,15 @@ export function publicGameState(room) {
     rows: room.game.rows,
     roundMoney: room.game.roundMoney,
     roundBank: room.game.roundBank,
+    roundPrize: room.game.roundPrize,
+    pendingPrizeKind: room.game.pendingPrizeKind,
+    carPrize: room.game.carPrize,
     puzzleId: room.game.puzzle?.id ?? null,
     called: [...room.game.called],
+    finalConsonantsLeft: room.game.finalConsonantsLeft,
+    finalVowelsLeft: room.game.finalVowelsLeft,
+    finalEnvelopeAmount: room.game.finalEnvelopeRevealed ? room.game.finalEnvelopeAmount : null,
+    finalWon: room.game.finalWon,
     ...playerActionFlags(room),
   };
 }
@@ -215,12 +383,30 @@ export function letterResultPayload(room, seat, result) {
   };
 }
 
-/** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {number} power */
+/** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {number} _power */
 export function handleSpin(room, seat, _power) {
   if (!room.game?.started) return { error: "Game not started." };
   if (room.game.activeSeat !== seat) return { error: "Not your turn." };
+
+  if (room.game.roundType === "final" && room.game.phase === "finalEnvelope") {
+    const wedges = getWedgesForRound("final");
+    const index = randomBytes(2).readUInt16BE(0) % wedges.length;
+    const wedge = wedges[index];
+    sealFinalEnvelope(room.game, index, wedge);
+    return {
+      ok: true,
+      index,
+      wedge: { label: wedge.label, value: wedge.value ?? 0, type: "bonusEnvelope", prizeType: wedge.prizeType },
+      state: publicGameState(room),
+      revealFinalFree: true,
+    };
+  }
+
   if (room.game.phase !== "idle" && room.game.phase !== "guess") {
     return { error: "You cannot spin right now." };
+  }
+  if (onlyVowelsRemain(room.game)) {
+    return { error: "Only vowels remain — buy a vowel or solve." };
   }
 
   const wedges = getWedgesForRound(room.game.roundType);
@@ -232,6 +418,8 @@ export function handleSpin(room, seat, _power) {
   if (wedge.type === "bankrupt") {
     room.game.roundBank = 0;
     room.game.roundMoney = 0;
+    room.game.roundPrize = null;
+    room.game.pendingPrizeKind = null;
     room.game.wedgeLabel = wedge.label;
     room.game.message = `${name} hit BANKRUPT! Round earnings wiped.`;
     advanceTurn(room);
@@ -262,7 +450,15 @@ export function handleSpin(room, seat, _power) {
     room.game.phase = "guess";
     room.game.roundMoney = 0;
     room.game.wedgeLabel = wedge.label;
-    room.game.message = `${name} landed on ${wedge.label}! Guess a consonant.`;
+    if (wedge.prizeKind === "car") {
+      room.game.pendingPrizeKind = "car";
+      room.game.roundPrize = null;
+      room.game.message = `${name} landed on CAR! Call a consonant to claim it.`;
+    } else {
+      room.game.pendingPrizeKind = null;
+      room.game.roundPrize = wedge.prize || wedge.label;
+      room.game.message = `${name} landed on ${room.game.roundPrize}! Guess a consonant.`;
+    }
     return {
       ok: true,
       index,
@@ -290,6 +486,27 @@ export function handleSpin(room, seat, _power) {
   };
 }
 
+/** @param {import('./rooms.js').Room} room */
+export function revealFinalFreeLetters(room) {
+  const allIndices = [];
+  for (const letter of FINAL_FREE_LETTERS) {
+    const result = revealFinalFreeLetter(room.game, letter);
+    if (result.ok && result.indices?.length) {
+      allIndices.push(...result.indices);
+    }
+  }
+  const pickPhase = beginFinalPickPhase(room.game);
+  if (pickPhase.autoSolved) {
+    const seat = room.game.activeSeat;
+    const player = getPlayerBySeat(room, seat);
+    const amount = room.game.finalEnvelopeAmount ?? 0;
+    bankFinalWin(room.game, seat, player, amount);
+    revealAllForAnswer(room.game);
+    return { ok: true, indices: allIndices, autoSolved: true, rows: room.game.rows };
+  }
+  return { ok: true, indices: allIndices, autoSolved: false, rows: room.game.rows };
+}
+
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
 function bankRoundOnSolve(room, seat) {
   const player = getPlayerBySeat(room, seat);
@@ -306,12 +523,25 @@ function bankRoundOnSolve(room, seat) {
 }
 
 function finishSolveByLetters(room, seat) {
+  if (room.game.roundType === "final") {
+    const player = getPlayerBySeat(room, seat);
+    const amount = room.game.finalEnvelopeAmount ?? 0;
+    bankFinalWin(room.game, seat, player, amount);
+    return amount;
+  }
+
   const roundWin = bankRoundOnSolve(room, seat);
   const name = getPlayerBySeat(room, seat)?.name ?? seat;
-  room.game.message =
+  let message =
     roundWin > 0
       ? `Correct! ${name} solved the puzzle for $${roundWin.toLocaleString()}!`
       : `Correct! ${name} solved the puzzle!`;
+  if (room.game.roundPrize) {
+    message += ` Plus: ${room.game.roundPrize}!`;
+  } else if (room.game.carPrize) {
+    message += ` Plus: ${room.game.carPrize.name}!`;
+  }
+  room.game.message = message;
   room.game.phase = "ended";
   return roundWin;
 }
@@ -320,6 +550,33 @@ function finishSolveByLetters(room, seat) {
 export function handleGuessLetter(room, seat, letter) {
   if (!room.game?.started) return { error: "Game not started." };
   if (room.game.activeSeat !== seat) return { error: "Not your turn." };
+
+  if (room.game.roundType === "final" && room.game.phase === "finalPick") {
+    const pick = pickFinalLetter(room.game, letter);
+    if (!pick.ok) return { error: "Invalid letter pick." };
+    if (pick.readyToReveal) {
+      const reveal = revealFinalPendingLetters(room.game);
+      return {
+        ok: true,
+        hit: reveal.indices.length > 0,
+        count: reveal.indices.length,
+        letter,
+        indices: reveal.indices,
+        solved: reveal.solved,
+        rows: room.game.rows,
+        finalReveal: true,
+      };
+    }
+    return {
+      ok: true,
+      hit: false,
+      count: 0,
+      letter,
+      indices: [],
+      finalPick: true,
+    };
+  }
+
   if (room.game.phase !== "guess") return { error: "Spin the wheel first." };
 
   const upper = String(letter || "").toUpperCase();
@@ -351,6 +608,13 @@ export function handleGuessLetter(room, seat, letter) {
       const player = getPlayerBySeat(room, seat);
       if (player) player.score += earned;
     }
+
+    if (room.game.pendingPrizeKind === "car") {
+      room.game.pendingPrizeKind = null;
+      room.game.carPrize = { id: "car-round2", name: "Bonus Car" };
+      room.game.roundPrize = room.game.carPrize.name;
+    }
+
     room.game.message =
       earned > 0
         ? `${count} ${upper}'s — $${earned.toLocaleString()}! Spin, buy a vowel, or solve.`
@@ -360,6 +624,10 @@ export function handleGuessLetter(room, seat, letter) {
     if (isSolved(room.game.rows)) {
       finishSolveByLetters(room, seat);
       return { ok: true, hit: true, count, letter: upper, indices, solved: true, rows: room.game.rows };
+    }
+
+    if (onlyVowelsRemain(room.game)) {
+      room.game.message = `${count} ${upper}'s. Only vowels left — buy a vowel or solve.`;
     }
 
     return { ok: true, hit: true, count, letter: upper, indices, rows: room.game.rows };
@@ -382,7 +650,10 @@ export function handleGuessLetter(room, seat, letter) {
 export function handleBuyVowel(room, seat, letter) {
   if (!room.game?.started) return { error: "Game not started." };
   if (room.game.activeSeat !== seat) return { error: "Not your turn." };
-  if (room.game.phase !== "guess" && room.game.phase !== "idle") {
+  if (room.game.roundType === "final" || room.game.roundType === "tossup") {
+    return { error: "Cannot buy vowels in this round." };
+  }
+  if (room.game.phase !== "guess" && !(room.game.phase === "idle" && onlyVowelsRemain(room.game))) {
     return { error: "You cannot buy a vowel right now." };
   }
 
@@ -411,12 +682,20 @@ export function handleBuyVowel(room, seat, letter) {
   room.game.rows = rows;
 
   if (count > 0) {
+    room.game.solveBlocked = false;
     room.game.message = `${count} ${upper}'s. Spin, buy another vowel, or solve.`;
     if (isSolved(room.game.rows)) {
       finishSolveByLetters(room, seat);
       return { ok: true, hit: true, count, letter: upper, indices, solved: true, rows: room.game.rows };
     }
     return { ok: true, hit: true, count, letter: upper, indices, rows: room.game.rows };
+  }
+
+  if (onlyVowelsRemain(room.game)) {
+    room.game.solveBlocked = true;
+    room.game.message = `No ${upper} in the puzzle. Buy another vowel.`;
+    advanceTurn(room);
+    return { ok: true, hit: false, count: 0, letter: upper, indices: [], turnLost: true, broadcastTurn: true };
   }
 
   room.game.message = `Sorry, no ${upper}.`;
@@ -435,10 +714,53 @@ export function handleBuyVowel(room, seat, letter) {
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {string} text */
 export function handleSolve(room, seat, text) {
   if (!room.game?.started) return { error: "Game not started." };
+
+  if (room.game.roundType === "tossup") {
+    if (room.game.phase !== "tossUpReveal" || room.game.activeSeat !== seat) {
+      return { error: "Ring in first during the Toss-Up." };
+    }
+    const trimmed = String(text || "").trim();
+    const player = getPlayerBySeat(room, seat);
+    const name = player?.name ?? seat;
+
+    if (!trimmed) {
+      room.game.tossUpLockedSeats.add(seat);
+      room.game.activeSeat = null;
+      room.game.tossUpRevealPaused = false;
+      room.game.message = `${name} locked out — letters keep revealing.`;
+      return { ok: true, correct: false, lockedOut: true, resumeTossUp: true };
+    }
+
+    if (guessesMatch(trimmed, room.game.puzzle.answer)) {
+      stopTossUpTimer(room.code);
+      room.game.rows = revealAllRows(room.game.rows, room.game.puzzle.answer);
+      if (player) player.score = (player.score || 0) + TOSS_UP_WIN;
+      room.game.phase = "ended";
+      room.game.message = `Correct! ${name} wins the Toss-Up: $${TOSS_UP_WIN.toLocaleString()}!`;
+      return {
+        ok: true,
+        correct: true,
+        solved: true,
+        answer: room.game.puzzle.answer,
+        rows: room.game.rows,
+        roundWin: TOSS_UP_WIN,
+        name,
+        message: room.game.message,
+      };
+    }
+
+    room.game.tossUpLockedSeats.add(seat);
+    room.game.activeSeat = null;
+    room.game.tossUpRevealPaused = false;
+    room.game.message = `${name}'s solve was wrong — locked out.`;
+    return { ok: true, correct: false, lockedOut: true, resumeTossUp: true };
+  }
+
   if (room.game.activeSeat !== seat) return { error: "Not your turn." };
-  if (room.game.phase !== "guess" && room.game.phase !== "idle") {
+  if (room.game.phase !== "guess" && room.game.phase !== "idle" && room.game.phase !== "finalSolve") {
     return { error: "You cannot solve right now." };
   }
+  if (room.game.solveBlocked) return { error: "Buy a vowel before solving." };
 
   const answer = room.game.puzzle?.answer;
   if (!answer) return { error: "No puzzle loaded." };
@@ -448,12 +770,7 @@ export function handleSolve(room, seat, text) {
 
   if (guessesMatch(text, answer)) {
     room.game.rows = revealAllRows(room.game.rows, answer);
-    const roundWin = bankRoundOnSolve(room, seat);
-    room.game.message =
-      roundWin > 0
-        ? `Correct! ${name} solved the puzzle for $${roundWin.toLocaleString()}!`
-        : `Correct! ${name} solved the puzzle!`;
-    room.game.phase = "ended";
+    const roundWin = finishSolveByLetters(room, seat);
     return {
       ok: true,
       correct: true,
@@ -466,7 +783,22 @@ export function handleSolve(room, seat, text) {
     };
   }
 
-  room.game.message = `${getPlayerBySeat(room, seat)?.name}'s solve was wrong.`;
+  if (room.game.roundType === "final") {
+    room.game.finalWon = false;
+    room.game.rows = revealAllRows(room.game.rows, answer);
+    room.game.phase = "ended";
+    room.game.message = `Sorry ${name} — the answer was: ${answer}`;
+    return {
+      ok: true,
+      correct: false,
+      revealAnswer: true,
+      rows: room.game.rows,
+      answer,
+      message: room.game.message,
+    };
+  }
+
+  room.game.message = `${name}'s solve was wrong.`;
   advanceTurn(room);
   return { ok: true, correct: false, turnLost: true, broadcastTurn: true };
 }
@@ -474,7 +806,17 @@ export function handleSolve(room, seat, text) {
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
 export function handleBuzz(room, seat) {
   if (!room.game?.started) return { error: "Game not started." };
+  if (!isTossUpReveal(room)) return { error: "Buzz only during Toss-Up." };
+  if (room.game.activeSeat) return { error: "Someone already rang in." };
+  if (room.game.tossUpLockedSeats.has(seat)) return { error: "You are locked out." };
+
   const player = getPlayerBySeat(room, seat);
   if (!player) return { error: "Player not found." };
-  return { ok: true, seat, name: player.name };
+
+  room.game.activeSeat = seat;
+  room.game.tossUpRevealPaused = true;
+  room.game.message = `${player.name} rang in!`;
+  return { ok: true, seat, name: player.name, pauseTossUp: true };
 }
+
+export { stopTossUpTimer };

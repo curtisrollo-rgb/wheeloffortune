@@ -28,11 +28,17 @@ import {
   publicGameState,
   startGame,
   turnChangedPayload,
+  setRound,
+  beginTossUp,
+  revealFinalFreeLetters,
+  startTossUpRevealLoop,
+  resumeTossUpReveal,
 } from "./wof-game.js";
+import { getWedgeManifestForRound } from "./wedges.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.8";
+const VERSION = "0.2.10";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -157,6 +163,7 @@ wss.on("connection", (ws) => {
         players: playerSummaries(room),
         gameStarted: !!room.game?.started,
         preview,
+        wedgeManifest: getWedgeManifestForRound(room.game?.roundType || "round1"),
       });
       send(ws, {
         op: "gameUpdate",
@@ -259,7 +266,7 @@ wss.on("connection", (ws) => {
       if (result.error) return error(ws, result.error);
 
       appendLog(room, "Game started");
-      broadcast(room, { op: "gameStarted", code: room.code });
+      broadcast(room, { op: "gameStarted", code: room.code, state: publicGameState(room), players: playerSummaries(room) });
       broadcastGameState(room);
       broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       return;
@@ -280,7 +287,17 @@ wss.on("connection", (ws) => {
         seat: info.seat,
         index: result.index,
         wedge: result.wedge,
+        roundType: room.game.roundType,
       });
+      if (result.revealFinalFree) {
+        const free = revealFinalFreeLetters(room);
+        broadcast(room, {
+          op: "finalFreeReveal",
+          indices: free.indices,
+          rows: free.rows,
+          autoSolved: !!free.autoSolved,
+        });
+      }
       if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       }
@@ -344,6 +361,8 @@ wss.on("connection", (ws) => {
           roundWin: result.roundWin,
           message: result.message,
         });
+      } else if (result.resumeTossUp) {
+        resumeTossUpReveal(room, (r, payload) => broadcast(r, payload));
       } else if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       }
@@ -360,12 +379,50 @@ wss.on("connection", (ws) => {
       const result = handleBuzz(room, info.seat);
       if (result.error) return error(ws, result.error);
 
-      const player = getPlayerBySeat(room, info.seat);
       broadcast(room, {
         op: "buzzWinner",
         seat: info.seat,
-        name: player?.name ?? info.seat,
+        name: result.name,
       });
+      broadcast(room, turnChangedPayload(room, info.seat));
+      broadcastGameState(room);
+      return;
+    }
+
+    if (op === "setRound") {
+      const info = connections.get(ws);
+      if (!info || info.role !== "host") return error(ws, "Host only.");
+      const room = getRoom(info.code);
+      if (!room) return error(ws, "Room not found.");
+      const roundType = String(msg.roundType || "");
+      const result = setRound(room, roundType);
+      if (result.error) return error(ws, result.error);
+      appendLog(room, `Host switched to ${roundType}`);
+      broadcast(room, {
+        op: "roundChanged",
+        roundType,
+        wedgeManifest: getWedgeManifestForRound(roundType),
+        state: publicGameState(room),
+      });
+      if (roundType === "tossup") {
+        broadcast(room, { op: "beginTossUpReady" });
+      }
+      if (room.game.activeSeat) {
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+      }
+      broadcastGameState(room);
+      return;
+    }
+
+    if (op === "beginTossUp") {
+      const info = connections.get(ws);
+      if (!info || info.role !== "host") return error(ws, "Host only.");
+      const room = getRoom(info.code);
+      if (!room) return error(ws, "Room not found.");
+      const result = beginTossUp(room);
+      if (result.error) return error(ws, result.error);
+      startTossUpRevealLoop(room, (r, payload) => broadcast(r, payload));
+      broadcastGameState(room);
       return;
     }
 

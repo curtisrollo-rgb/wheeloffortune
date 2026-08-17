@@ -97,6 +97,14 @@ export class WofClient {
     this.send({ op: "newPuzzle" });
   }
 
+  setRound(roundType) {
+    this.send({ op: "setRound", roundType });
+  }
+
+  beginTossUp() {
+    this.send({ op: "beginTossUp" });
+  }
+
   spin(power) {
     this.send({ op: "spin", power });
   }

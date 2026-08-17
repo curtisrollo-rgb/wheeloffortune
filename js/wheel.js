@@ -110,8 +110,12 @@ function canvasToImage(canvas) {
   });
 }
 
-/** @param {HTMLElement} container */
-export async function createWheel(container, wedges) {
+/** spin-wheel: 0=right, 90=bottom, 180=left, 270=top (matches .wheel-pointer CSS). */
+const DEFAULT_POINTER_ANGLE = 270;
+
+/** @param {HTMLElement} container @param {object[]} wedges @param {{ pointerAngle?: number }} [opts] */
+export async function createWheel(container, wedges, opts = {}) {
+  const pointerAngle = opts.pointerAngle ?? DEFAULT_POINTER_ANGLE;
   const images = await Promise.all(
     wedges.map((w) => {
       const color = w.type === "bankrupt" ? "#fff" : "#000";
@@ -143,7 +147,7 @@ export async function createWheel(container, wedges) {
     lineWidth: 1,
     lineColor: "rgba(255, 255, 255, 0.55)",
     isInteractive: false,
-    pointerAngle: 0,
+    pointerAngle,
     rotationResistance: -70,
     onCurrentIndexChange: () => {
       if (spinPhase !== "spinning") return;
@@ -209,5 +213,31 @@ export async function createWheel(container, wedges) {
     });
   }
 
-  return { wheel, spinToIndex, spinRandom, nudgeWedge, wedges };
+  function getCurrentIndex() {
+    return wheel.getCurrentIndex();
+  }
+
+  /** Snap to exact server index if the animation landed one wedge off. */
+  async function ensureIndex(target) {
+    const len = wedges.length;
+    let current = wheel.getCurrentIndex();
+    if (current === target) {
+      return { index: target, wedge: wedges[target] };
+    }
+
+    let guard = 0;
+    while (current !== target && guard < len) {
+      let delta = (target - current + len) % len;
+      if (delta > len / 2) delta -= len;
+      if (delta === 0) break;
+      const step = delta > 0 ? 1 : -1;
+      const result = await nudgeWedge(step);
+      current = result.index;
+      guard += 1;
+    }
+
+    return { index: current, wedge: wedges[current] };
+  }
+
+  return { wheel, spinToIndex, spinRandom, nudgeWedge, ensureIndex, getCurrentIndex, wedges };
 }

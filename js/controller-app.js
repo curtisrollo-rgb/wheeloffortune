@@ -71,16 +71,24 @@ function syncCalledLetters(called = []) {
 function updateControls() {
   const connected = client?.connected;
   const mine = isMyTurn && connected;
+  const locked = new Set(gameState?.tossUpLockedSeats || []);
+  const canRing = connected && !!gameState?.canRingIn && !locked.has(mySeat);
   const canSpin = mine && !!gameState?.canSpin && !vowelMode;
   const canBuy = mine && !!gameState?.canBuyVowel;
-  const canGuess = mine && !!gameState?.canGuess;
+  const canGuess = mine && (!!gameState?.canGuess || !!gameState?.canPickFinal);
   const canSolve = mine && !!gameState?.canSolve;
 
   if (vowelMode && !canBuy) setVowelMode(false);
 
   els.btnSpinHold.disabled = !canSpin;
+  els.btnSpinHold.hidden = gameState?.roundType === "tossup";
+  els.btnVowel.hidden = gameState?.roundType === "final" || gameState?.roundType === "tossup";
   els.btnVowel.disabled = !mine || (!vowelMode && !canBuy);
-  els.btnSolve.disabled = !canSolve;
+  els.btnSolve.disabled = !canSolve && !canRing;
+  els.btnSolve.textContent = canRing ? "Ring In!" : "Solve";
+  els.btnSolve.classList.toggle("btn-ring-in", canRing);
+  els.btnBuzz.classList.toggle("is-hidden", !canRing);
+  els.btnBuzz.disabled = !canRing;
 
   const called = new Set(gameState?.called || []);
   const inVowelMode = vowelMode && canBuy;
@@ -92,7 +100,7 @@ function updateControls() {
 
     btn.classList.remove("vowel-pick", "vowel-hidden");
 
-    if (!mine) {
+    if (!mine && !gameState?.canPickFinal) {
       btn.disabled = true;
       continue;
     }
@@ -105,6 +113,13 @@ function updateControls() {
         if (!vowel) btn.classList.add("vowel-hidden");
         btn.disabled = true;
       }
+      continue;
+    }
+
+    if (gameState?.canPickFinal) {
+      const isFinalVowel = vowel && gameState.finalConsonantsLeft === 0;
+      const isFinalConsonant = !vowel && (gameState.finalConsonantsLeft ?? 0) > 0;
+      btn.disabled = used || (!isFinalVowel && !isFinalConsonant);
       continue;
     }
 
@@ -133,7 +148,15 @@ function buildLetterGrid() {
 }
 
 function handleLetter(letter) {
-  if (!isMyTurn || !client?.connected) return;
+  if (!client?.connected) return;
+
+  if (gameState?.canPickFinal && isMyTurn) {
+    client.guessLetter(letter);
+    setStatus(`Picked ${letter} for Final Round.`);
+    return;
+  }
+
+  if (!isMyTurn) return;
 
   if (vowelMode) {
     if (!isVowel(letter)) return;
@@ -148,7 +171,16 @@ function handleLetter(letter) {
 }
 
 function syncTurnFromState(state) {
-  if (!mySeat || !state?.started || !state.activeSeat) return;
+  if (!mySeat || !state?.started) return;
+  if (state.roundType === "tossup") {
+    if (state.activeSeat) {
+      setTurnActive(state.activeSeat === mySeat);
+    } else {
+      setTurnActive(false);
+    }
+    return;
+  }
+  if (!state.activeSeat) return;
   const mine = state.activeSeat === mySeat;
   if (mine === isMyTurn) return;
   setTurnActive(mine);
@@ -156,18 +188,19 @@ function syncTurnFromState(state) {
 
 function actionFlags(state) {
   if (!state?.started) {
-    return { canSpin: false, canGuess: false, canBuyVowel: false, canSolve: false };
+    return { canSpin: false, canGuess: false, canBuyVowel: false, canSolve: false, canRingIn: false, canPickFinal: false };
   }
-  const called = new Set(state.called || []);
-  const canSpin = state.canSpin ?? (state.phase === "idle" || state.phase === "guess");
-  const canGuess = state.canGuess ?? (state.phase === "guess" && (state.roundMoney ?? 0) > 0);
-  const canBuyVowel =
-    state.canBuyVowel ??
-    (state.phase === "guess" &&
-      (state.roundBank ?? 0) >= 250 &&
-      "AEIOU".split("").some((letter) => !called.has(letter)));
-  const canSolve = state.canSolve ?? (state.phase === "guess" || state.phase === "idle");
-  return { canSpin, canGuess, canBuyVowel, canSolve };
+  const locked = new Set(state.tossUpLockedSeats || []);
+  const canRingIn = !!state.canRingIn && !locked.has(mySeat);
+  const mine = state.activeSeat === mySeat;
+  return {
+    canSpin: mine && !!state.canSpin,
+    canGuess: mine && !!state.canGuess,
+    canBuyVowel: mine && !!state.canBuyVowel,
+    canSolve: mine && !!state.canSolve && (state.roundType !== "tossup" || state.activeSeat === mySeat),
+    canRingIn,
+    canPickFinal: mine && !!state.canPickFinal,
+  };
 }
 
 function applyGameState(state) {
@@ -266,19 +299,14 @@ function onMessage(msg) {
       break;
     case "gameUpdate":
       applyGameState(msg.state);
-      if (msg.state?.phase === "tossUpReveal") {
-        els.btnBuzz.classList.remove("is-hidden");
-        els.btnBuzz.disabled = false;
-      } else {
-        els.btnBuzz.classList.add("is-hidden");
-      }
       break;
     case "buzzWinner":
       if (msg.seat === mySeat) {
-        setStatus("You buzzed in first! Solve the puzzle.");
+        setTurnActive(true);
+        setStatus("You rang in! Solve the puzzle.");
         openSolveModal();
       } else {
-        setStatus(`${msg.name || msg.seat} buzzed in.`);
+        setStatus(`${msg.name || msg.seat} rang in.`);
       }
       break;
     case "letterResult":
@@ -344,10 +372,20 @@ els.btnVowel.addEventListener("click", () => {
   setStatus("Pick a vowel ($250).");
 });
 
-els.btnSolve.addEventListener("click", openSolveModal);
+els.btnSolve.addEventListener("click", () => {
+  if (gameState?.canRingIn) {
+    client?.buzz();
+    setStatus("Ringing in…");
+    return;
+  }
+  openSolveModal();
+});
 els.btnSolveCancel.addEventListener("click", closeSolveModal);
 els.btnSolveSubmit.addEventListener("click", submitSolve);
-els.btnBuzz.addEventListener("click", () => client?.buzz());
+els.btnBuzz.addEventListener("click", () => {
+  client?.buzz();
+  setStatus("Ringing in…");
+});
 
 els.solveInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") submitSolve();

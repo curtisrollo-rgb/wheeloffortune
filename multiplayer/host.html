@@ -13,7 +13,7 @@
     })();
   </script>
   <link rel="stylesheet" href="css/game.css?v=40" />
-  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=1" />
+  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=2" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page is-loading">
@@ -71,10 +71,18 @@
     </section>
   </main>
 
+  <nav class="host-row" aria-label="Game sections">
+    <button id="btn-tossup" type="button" class="btn btn-secondary btn-round" data-round="tossup">Toss-Up</button>
+    <button id="btn-round1" type="button" class="btn btn-secondary btn-round is-active" data-round="round1">Round 1</button>
+    <button id="btn-round2" type="button" class="btn btn-secondary btn-round" data-round="round2">Round 2</button>
+    <button id="btn-final" type="button" class="btn btn-secondary btn-round" data-round="final">Final Round</button>
+  </nav>
+
   <section class="host-controls">
     <p class="host-room-code">Room code: <strong id="host-room-code">------</strong></p>
     <button id="btn-start-game" type="button" class="btn btn-primary" disabled>Start Game</button>
     <button id="btn-new-puzzle" type="button" class="btn btn-secondary" disabled>New Puzzle</button>
+    <button id="btn-next-round" type="button" class="btn btn-primary" disabled>Next Round</button>
     <p id="app-version" class="app-version"></p>
   </section>
 
@@ -94,6 +102,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=7"></script>
+  <script type="module" src="js/host-app.js?v=9"></script>
 </body>
 </html>

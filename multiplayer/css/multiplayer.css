@@ -267,6 +267,42 @@ body.host-page {
   padding: 0.75rem 1rem 1.25rem;
 }
 
+body.host-page .host-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(255, 215, 0, 0.15);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+body.host-page .host-row .btn-round.is-active {
+  background: var(--accent);
+  color: #111;
+  border-color: var(--accent);
+}
+
+body.host-page .host-row .btn-round.is-suggested {
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.55);
+  animation: suggest-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes suggest-pulse {
+  50% {
+    box-shadow: 0 0 22px rgba(255, 215, 0, 0.85);
+  }
+}
+
+body.host-page .wheel-bottom-pointer {
+  display: none;
+}
+
+#btn-next-round:disabled {
+  opacity: 0.45;
+}
+
 .host-room-code {
   font-size: 0.85rem;
   color: var(--muted);

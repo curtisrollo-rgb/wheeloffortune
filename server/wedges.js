@@ -1,6 +1,7 @@
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { getEnvelopeWedges } from "./final-envelopes.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -38,7 +39,22 @@ function loadWedges() {
 
 loadWedges();
 
-/** @param {"round1"|"round2"|string} roundType */
+/** @param {"round1"|"round2"|"final"|"tossup"|string} roundType */
 export function getWedgesForRound(roundType) {
-  return roundType === "round2" ? round2 : round1;
+  if (roundType === "round2") return round2;
+  if (roundType === "final") return getEnvelopeWedges();
+  return round1;
+}
+
+/** @param {"round1"|"round2"|"final"|string} roundType */
+export function getWedgeManifestForRound(roundType) {
+  return getWedgesForRound(roundType).map((w, index) => ({
+    index,
+    label: w.label,
+    backgroundColor: w.backgroundColor,
+    type: w.type || "cash",
+    value: w.value ?? 0,
+    prizeKind: w.prizeKind ?? null,
+    prizeType: w.prizeType ?? null,
+  }));
 }
