@@ -4,6 +4,7 @@ import { playSound } from "./audio.js?v=8";
 import { playFinalWinVo } from "./final-win-vo.js?v=1";
 import { playFinalLossVo } from "./final-loss-vo.js?v=1";
 import { playCarPrizeVo } from "./car-prize-vo.js?v=1";
+import { playTripPrizeVo } from "./trip-prize-vo.js?v=1";
 
 function formatRevealHeadline({ amount, prize }) {
   if (prize?.kind === "car") {
@@ -61,7 +62,7 @@ export async function showEnvelopeReveal(modal, { amount, won, prize = null }) {
     if (prize?.kind === "car") {
       await playCarPrizeVo(prize.id);
     } else if (prize?.kind === "trip") {
-      // Trip VO clips not generated yet — cash win VO only when a dollar value exists.
+      await playTripPrizeVo(prize.id);
       if (amount > 0) {
         await playFinalWinVo(amount);
       }

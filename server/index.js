@@ -1,8 +1,6 @@
 import http from "http";
 import { WebSocketServer } from "ws";
 import {
-  addPlayer,
-  appendLog,
   createRoom,
   getConnectionRole,
   getPlayerBySeat,
@@ -14,6 +12,8 @@ import {
   listRooms,
   setHost,
   setLobby,
+  addPlayer,
+  appendLog,
 } from "./rooms.js";
 import {
   handleBuzz,
@@ -41,7 +41,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.21";
+const VERSION = "0.2.23";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -168,7 +168,7 @@ wss.on("connection", (ws) => {
         players: playerSummaries(room),
         gameStarted: !!room.game?.started,
         preview,
-        wedgeManifest: getWedgeManifestForRound(room.game?.roundType || "round1"),
+        wedgeManifest: getWedgeManifestForRound(room.game?.roundType || "tossup"),
       });
       send(ws, {
         op: "gameUpdate",
@@ -293,6 +293,7 @@ wss.on("connection", (ws) => {
         index: result.index,
         wedge: result.wedge,
         roundType: room.game.roundType,
+        wedgeManifest: getWedgeManifestForRound(room.game.roundType),
       });
       if (result.revealFinalFree) {
         const free = revealFinalFreeLetters(room);
@@ -363,6 +364,7 @@ wss.on("connection", (ws) => {
         name: result.name,
         players: playerSummaries(room),
         message: `${result.name} is attempting to solve!`,
+        cue: "none",
       });
       broadcastGameState(room);
       return;

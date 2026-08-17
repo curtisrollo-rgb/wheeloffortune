@@ -192,7 +192,10 @@ export function resetRoundFields(game) {
   game.wedgeLabel = "—";
   game.roundPrize = null;
   game.pendingPrizeKind = null;
+  game.pendingPrizeLabel = null;
   game.carPrize = null;
+  game.tripPrize = null;
+  game.tripPrizeClaimed = false;
   game.solveBlocked = false;
   game.finalConsonantsLeft = 0;
   game.finalVowelsLeft = 0;

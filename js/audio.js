@@ -77,8 +77,25 @@ export function playSoundAndWait(name, { volume = 0.6 } = {}) {
 }
 
 export function preloadAll() {
+  return Promise.all([preloadEssential(), preloadRemaining()]);
+}
+
+/** Toss-Up + first spins — keep the boot path small. */
+export function preloadEssential() {
+  return preloadSounds(["tick", "land", "buzz", "solve", "miss", "spin"]);
+}
+
+/** Everything else — safe to load after the lobby is visible. */
+export function preloadRemaining() {
+  const rest = Object.keys(SOUNDS).filter(
+    (name) => !["tick", "land", "buzz", "solve", "miss", "spin"].includes(name),
+  );
+  return preloadSounds(rest);
+}
+
+function preloadSounds(names) {
   return Promise.all(
-    Object.keys(SOUNDS).map(
+    names.map(
       (name) =>
         new Promise((resolve) => {
           const audio = load(name);
@@ -89,7 +106,7 @@ export function preloadAll() {
             settled = true;
             resolve();
           };
-          const timer = setTimeout(finish, 4000);
+          const timer = setTimeout(finish, 2500);
           const done = () => {
             clearTimeout(timer);
             finish();
@@ -101,4 +118,9 @@ export function preloadAll() {
         }),
     ),
   );
+}
+
+/** @deprecated Use preloadEssential / preloadRemaining. */
+export function preloadAllLegacy() {
+  return preloadAll();
 }

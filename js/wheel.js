@@ -40,7 +40,16 @@ function makeFrictionEase(power) {
   return (t) => 1 - (1 - t) ** power;
 }
 
-/** Random duration, revolutions, and deceleration curve per spin. */
+/** Server-authoritative spins — smooth deceleration, lands on exact wedge index. */
+function pickServerSpinProfile() {
+  return {
+    duration: MOBILE_WHEEL ? 4000 : 5800,
+    revolutions: MOBILE_WHEEL ? 3.5 : 5,
+    easing: easeOutQuart,
+  };
+}
+
+/** Random duration, revolutions, and deceleration curve per spin (solo mode). */
 function pickSpinProfile() {
   if (MOBILE_WHEEL) {
     const frictionPower = 2.8 + Math.random() * 3;
@@ -176,7 +185,7 @@ export async function createWheel(container, wedges, opts = {}) {
     pixelRatio: wheelPixelRatio(),
     isInteractive: false,
     pointerAngle,
-    rotationResistance: -70,
+    rotationResistance: 0,
     onCurrentIndexChange: () => {
       if (spinPhase !== "spinning") return;
       if (MOBILE_WHEEL) return;
@@ -186,26 +195,13 @@ export async function createWheel(container, wedges, opts = {}) {
       playSound("tick", { volume: 0.22 });
     },
     onRest: () => {
-      if (spinPhase !== "spinning" && spinPhase !== "nudging" && spinPhase !== "snapping") return;
+      if (spinPhase !== "spinning" && spinPhase !== "nudging") return;
 
-      setSpinningClass(container, false);
-
-      const wasNudging = spinPhase === "nudging";
-      const wasSnapping = spinPhase === "snapping";
-      spinPhase = "idle";
       const index = wheel.getCurrentIndex();
       const wedge = wedges[index];
 
-      if (!wasSnapping) {
-        if (wasNudging) {
-          playSound("tick", { volume: 0.2 });
-        } else if (wedge.type === "bankrupt" || wedge.type === "loseTurn") {
-          // Sad sting + announcer VO handled in main.js after spin resolves.
-        } else if (wedge.type === "prize" || wedge.type === "bonusEnvelope") {
-          playSound("land", { volume: 0.55 });
-        } else {
-          playSound("land", { volume: 0.65 });
-        }
+      if (spinPhase === "nudging") {
+        playSound("tick", { volume: 0.2 });
       }
 
       if (restResolve) {
@@ -216,33 +212,56 @@ export async function createWheel(container, wedges, opts = {}) {
   });
 
   /** @returns {Promise<{ index: number, wedge: object }>} */
-  function spinToIndex(index) {
+  function runSpinTo(index, profile, { playStartSound = false, phase = "spinning" } = {}) {
     return new Promise((resolve) => {
       restResolve = resolve;
-      spinPhase = "spinning";
+      spinPhase = phase;
       setSpinningClass(container, true);
-      playSound("spin", { volume: MOBILE_WHEEL ? 0.35 : 0.45 });
-      const { duration, revolutions, easing } = pickSpinProfile();
-      wheel.spinToItem(index, duration, true, revolutions, 1, easing);
+      if (playStartSound) playSound("spin", { volume: MOBILE_WHEEL ? 0.35 : 0.45 });
+      wheel.spinToItem(index, profile.duration, true, profile.revolutions, 1, profile.easing);
     });
   }
 
-  function spinRandom() {
-    const index = Math.floor(Math.random() * wedges.length);
-    return spinToIndex(index);
-  }
-
-  /** Snap to server index with no visible re-spin (fallback only). */
-  function snapToIndex(index) {
-    if (wheel.getCurrentIndex() === index) {
-      return Promise.resolve({ index, wedge: wedges[index] });
+  function playLandSound(wedge) {
+    if (!wedge) return;
+    if (wedge.type === "bankrupt" || wedge.type === "loseTurn") return;
+    if (wedge.type === "prize" || wedge.type === "bonusEnvelope") {
+      playSound("land", { volume: 0.55 });
+    } else {
+      playSound("land", { volume: 0.65 });
     }
-    return new Promise((resolve) => {
-      restResolve = resolve;
-      spinPhase = "snapping";
-      setSpinningClass(container, true);
-      wheel.spinToItem(index, 0, true, 0, 1);
+  }
+
+  /** Spin to a server-chosen wedge index — one smooth ease-out, no post-spin snap. */
+  async function spinToIndex(index) {
+    const target = Number(index);
+    if (!Number.isFinite(target) || target < 0 || target >= wedges.length) {
+      return { index: 0, wedge: wedges[0] };
+    }
+
+    const result = await runSpinTo(target, pickServerSpinProfile(), {
+      playStartSound: true,
+      phase: "spinning",
     });
+
+    spinPhase = "idle";
+    setSpinningClass(container, false);
+    playLandSound(result.wedge);
+    return result;
+  }
+
+  async function spinRandom() {
+    const index = Math.floor(Math.random() * wedges.length);
+    const result = await runSpinTo(index, pickSpinProfile(), { playStartSound: true, phase: "spinning" });
+    spinPhase = "idle";
+    setSpinningClass(container, false);
+    playLandSound(result.wedge);
+    return result;
+  }
+
+  /** Alias for spinToIndex — kept for older callers. */
+  function snapToIndex(index) {
+    return spinToIndex(index);
   }
 
   function getCurrentIndex() {

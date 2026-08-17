@@ -162,7 +162,8 @@ export function playPlayerActionVo(msg) {
     case "solve":
       return playSolveAttemptVo(name);
     case "spin":
-      return playTurnCueVo(name);
+      // Turn cue ("spin the wheel") is handled by turnChanged only.
+      return Promise.resolve();
     default:
       return Promise.resolve();
   }

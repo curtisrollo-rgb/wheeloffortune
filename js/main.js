@@ -1,7 +1,8 @@
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
-import { preloadAll, playSound } from "./audio.js?v=8";
+import { runInBackground } from "./progressive-load.js?v=1";
+import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
 import { stopAllVo } from "./vo-bus.js?v=1";
-import { loadCategoryVo, playCategoryVo, canonicalCategory } from "./category-vo.js?v=6";
+import { loadCategoryVo, warmCategoryVo, playCategoryVo, canonicalCategory } from "./category-vo.js?v=7";
 import {
   loadSolveCongratsVo,
   playRandomSolveCongrats,
@@ -16,7 +17,7 @@ import {
 import { loadPenaltyVo, playPenaltyVo } from "./penalty-vo.js?v=2";
 import { loadWedgeAmountVo, playWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
 import { PuzzleBoard } from "./board.js?v=2";
-import { createWheel } from "./wheel.js?v=18";
+import { createWheel } from "./wheel.js?v=19";
 import {
   createGameState,
   loadPuzzle,
@@ -51,11 +52,12 @@ import {
   FINAL_FREE_LETTERS,
   VOWEL_COST,
   TOSS_UP_WIN,
-} from "./game-state.js?v=16";
+} from "./game-state.js?v=17";
 import { loadCarPrizes, pickRandomCar, getAllCars } from "./car-prizes.js?v=2";
 import { loadCarPrizeVo, playCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { loadTripPrizes, getAllTrips } from "./trip-prizes.js?v=1";
-import { showPrizeBanner } from "./prize-banner.js?v=1";
+import { loadTripPrizeVo, playTripPrizeVo } from "./trip-prize-vo.js?v=1";
+import { showPrizeBanner, prizeSubtitleForWedge } from "./prize-banner.js?v=2";
 import {
   loadFinalEnvelopeAmounts,
   buildEnvelopeWedges,
@@ -223,6 +225,28 @@ function pauseTossUpReveal() {
 
 function resumeTossUpReveal() {
   tossUpRevealPaused = false;
+}
+
+const WHEEL_OVERLAY_HIDE_MS = 1800;
+let wheelOverlayTimer = null;
+
+function showWheelOverlay() {
+  clearTimeout(wheelOverlayTimer);
+  document.body.classList.add("is-wheel-active");
+  els.wheelSection?.classList.add("is-wheel-visible");
+}
+
+function hideWheelOverlay(delayMs = WHEEL_OVERLAY_HIDE_MS) {
+  clearTimeout(wheelOverlayTimer);
+  const hide = () => {
+    document.body.classList.remove("is-wheel-active");
+    els.wheelSection?.classList.remove("is-wheel-visible");
+  };
+  if (delayMs <= 0) {
+    hide();
+    return;
+  }
+  wheelOverlayTimer = setTimeout(hide, delayMs);
 }
 
 async function loadWheelForRound(roundType) {
@@ -421,6 +445,7 @@ function startNewPuzzle(roundType = currentRound) {
     return;
   }
 
+  await warmCategoryVo(entry.category);
   playCategoryVo(entry.category);
 }
 
@@ -428,6 +453,7 @@ async function startTossUpAfterCategory(entry, sessionId) {
   const category = canonicalCategory(entry.category);
   state.message = `The category is ${category}…`;
   updateHud();
+  await warmCategoryVo(entry.category);
   await playCategoryVo(entry.category);
 
   if (sessionId !== tossUpSessionId) return;
@@ -541,11 +567,16 @@ async function handleFinalEnvelopeSpin() {
   setVowelMode(false);
   state.message = "Spinning for your bonus envelope…";
   updateHud();
+  showWheelOverlay();
 
-  const { index, wedge } = await wheelApi.spinRandom();
-  sealFinalEnvelope(state, index, wedge);
-  updateHud();
-  await revealFinalFreeLettersSequence();
+  try {
+    const { index, wedge } = await wheelApi.spinRandom();
+    sealFinalEnvelope(state, index, wedge);
+    updateHud();
+    await revealFinalFreeLettersSequence();
+  } finally {
+    hideWheelOverlay();
+  }
 }
 
 async function switchRound(roundType) {
@@ -586,6 +617,49 @@ async function revealCarPrize() {
   return car;
 }
 
+async function revealTripPrize(trip) {
+  if (!trip?.label) return;
+  playSound("solve", { volume: 0.45 });
+  const bannerPromise = showPrizeBanner(els.prizeBanner, {
+    title: "You Won!",
+    subtitle: "Vacation Trip",
+    name: trip.label,
+  });
+  if (trip.id) await playTripPrizeVo(trip.id);
+  await bannerPromise;
+}
+
+async function revealGenericPrize(prizeReveal) {
+  if (!prizeReveal?.name) return;
+  playSound("solve", { volume: 0.45 });
+  await showPrizeBanner(els.prizeBanner, {
+    title: "You Won!",
+    subtitle: prizeReveal.subtitle || prizeSubtitleForWedge(prizeReveal.wedgeLabel, "prize"),
+    name: prizeReveal.name,
+  });
+}
+
+async function handlePrizeReveal(result) {
+  if (result.prizeKind === "car" || result.prizeReveal?.kind === "car") {
+    await revealCarPrize();
+  } else if (result.prizeReveal?.kind === "trip") {
+    await revealTripPrize(result.prizeReveal.trip || state.tripPrize);
+  } else if (result.prizeReveal) {
+    await revealGenericPrize(result.prizeReveal);
+  } else if (result.needsCarReveal) {
+    await revealCarPrize();
+  }
+
+  if (result.solvedAfterCar) {
+    resolveSolvedRound(state);
+    playSound("solve", { volume: 0.55 });
+    await playRandomSolveCongrats();
+  } else if (result.onlyVowelsReached) {
+    await playOnlyVowelsRemainVo();
+  }
+  updateHud();
+}
+
 async function handleSpin() {
   if (canSpinFinalEnvelope(state)) {
     await handleFinalEnvelopeSpin();
@@ -596,24 +670,29 @@ async function handleSpin() {
   setVowelMode(false);
   startSpin(state);
   updateHud();
+  showWheelOverlay();
 
-  const { wedge } = await wheelApi.spinRandom();
-  enableCheatNudge();
-  applySpinResult(state, wedge);
+  try {
+    const { wedge } = await wheelApi.spinRandom();
+    enableCheatNudge();
+    applySpinResult(state, wedge);
 
-  if (wedge.type === "bankrupt" || wedge.type === "loseTurn") {
-    await playPenaltyVo(wedge.type);
-  } else if (wedge.type === "prize") {
-    if (wedge.prizeKind === "car") {
-      playSound("land", { volume: 0.45 });
-    } else {
-      playSound("solve", { volume: 0.35 });
+    if (wedge.type === "bankrupt" || wedge.type === "loseTurn") {
+      await playPenaltyVo(wedge.type);
+    } else if (wedge.type === "prize") {
+      if (wedge.prizeKind === "car") {
+        playSound("land", { volume: 0.45 });
+      } else {
+        playSound("solve", { volume: 0.35 });
+      }
+    } else if (wedge.value > 0) {
+      playWedgeAmountVo(wedge.value);
     }
-  } else if (wedge.value > 0) {
-    playWedgeAmountVo(wedge.value);
-  }
 
-  updateHud();
+    updateHud();
+  } finally {
+    hideWheelOverlay();
+  }
 }
 
 async function handleLetter(letter) {
@@ -671,21 +750,13 @@ async function handleLetter(letter) {
     await board.revealTiles(result.indices, state.rows);
   }
 
-  if (result.hit && result.count >= 1 && result.count <= 3 && !result.solved) {
-    await playHitVo(letter, result.count);
+  if (result.needsPrizeReveal || result.needsCarReveal) {
+    await handlePrizeReveal(result);
+    return;
   }
 
-  if (result.needsCarReveal) {
-    await revealCarPrize();
-    if (result.solvedAfterCar) {
-      resolveSolvedRound(state);
-      playSound("solve", { volume: 0.55 });
-      await playRandomSolveCongrats();
-    } else if (result.onlyVowelsReached) {
-      await playOnlyVowelsRemainVo();
-    }
-    updateHud();
-    return;
+  if (result.hit && result.count >= 1 && result.count <= 3 && !result.solved) {
+    await playHitVo(letter, result.count);
   }
 
   if (result.onlyVowelsReached) {
@@ -850,24 +921,30 @@ async function init() {
 
   const loading = createLoadingProgress(els.loadingScreen);
   await runLoadingTasks(loading, [
-    ["Loading sounds…", preloadAll()],
-    ["Loading category voice…", loadCategoryVo()],
-    ["Loading solve voice…", loadSolveCongratsVo()],
-    ["Loading miss voice…", loadMissVo()],
-    ["Loading hit voice…", loadHitVo()],
-    ["Loading milestone voice…", loadMilestoneVo()],
-    ["Loading penalty voice…", loadPenaltyVo()],
-    ["Loading wedge voice…", loadWedgeAmountVo()],
-    ["Loading bonus wheel…", loadFinalEnvelopeAmounts()],
-    ["Loading good luck voice…", loadFinalGoodLuckVo()],
-    ["Loading win voice…", loadFinalWinVo()],
-    ["Loading loss voice…", loadFinalLossVo()],
-    ["Loading car prizes…", loadCarPrizes()],
-    ["Loading trip prizes…", loadTripPrizes()],
-    ["Loading car prize voice…", loadCarPrizeVo()],
+    ["Loading essentials…", Promise.all([
+      preloadEssential(),
+      loadCategoryVo(),
+      loadMissVo(),
+      loadHitVo(),
+    ])],
     ["Loading puzzles…", loadPuzzleData()],
     ["Building wheel…", loadWheelForRound("round1")],
   ]);
+  runInBackground(
+    () => preloadRemaining(),
+    () => loadSolveCongratsVo(),
+    () => loadMilestoneVo(),
+    () => loadPenaltyVo(),
+    () => loadWedgeAmountVo(),
+    () => loadFinalEnvelopeAmounts(),
+    () => loadFinalGoodLuckVo(),
+    () => loadFinalWinVo(),
+    () => loadFinalLossVo(),
+    () => loadCarPrizes(),
+    () => loadTripPrizes(),
+    () => loadCarPrizeVo(),
+    () => loadTripPrizeVo(),
+  );
 
   startNewPuzzle("round1");
 }

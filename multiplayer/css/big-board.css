@@ -1,0 +1,319 @@
+/** TV big board — puzzle-first, wheel slides up only while spinning. */
+
+body.big-board-page {
+  --tile-size: clamp(36px, 5.4vw, 78px);
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+body.big-board-page.is-loading .big-board-main,
+body.big-board-page.is-loading .host-dock {
+  visibility: hidden;
+}
+
+/* ——— Header ——— */
+.big-board-header {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  padding: 0.4rem 0.85rem 0.25rem;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.18);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.big-board-meta {
+  min-width: 0;
+}
+
+.big-board-round {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9eb4d0;
+}
+
+.big-board-page .category-headline {
+  grid-column: auto;
+  justify-self: start;
+  max-width: none;
+  white-space: normal;
+  text-align: left;
+  font-size: clamp(1.35rem, 3.2vw, 2.35rem);
+  line-height: 1.12;
+  padding: 0.1rem 0 0;
+}
+
+.big-board-page .scoreboard {
+  padding: 0;
+  justify-content: flex-end;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+}
+
+.big-board-page .scoreboard .player-score {
+  font-size: 0.78rem;
+  padding: 0.28rem 0.55rem;
+}
+
+.btn-fullscreen {
+  appearance: none;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--accent);
+  border-radius: 8px;
+  width: 2.25rem;
+  height: 2.25rem;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.btn-fullscreen:hover {
+  background: rgba(255, 215, 0, 0.12);
+}
+
+/* ——— Main board area ——— */
+.big-board-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.5rem 4.75rem;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+}
+
+.big-board-page .layout {
+  max-width: none;
+  width: 100%;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.big-board-page .board-section {
+  position: relative;
+  width: 100%;
+  max-width: min(98vw, 1440px);
+  margin: 0 auto;
+}
+
+.big-board-page .puzzle-board {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: clamp(12px, 1.6vw, 22px);
+}
+
+.big-board-page .prize-banner,
+.big-board-page .round-summary {
+  border-radius: 4px;
+  z-index: 25;
+}
+
+/* ——— Called letters strip ——— */
+.letter-track {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.22rem;
+  width: 100%;
+  max-width: min(98vw, 1440px);
+  margin: 0.55rem auto 0;
+  padding: 0.45rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.letter-track-item {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  border-radius: 4px;
+  color: #fff;
+  background: rgba(255, 215, 0, 0.18);
+  border: 1px solid rgba(255, 215, 0, 0.45);
+  transition: opacity 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.letter-track-item.is-called {
+  color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ——— Ephemeral message toast ——— */
+.big-board-page .message-bar {
+  position: fixed;
+  left: 50%;
+  bottom: 4.5rem;
+  transform: translateX(-50%) translateY(12px);
+  z-index: 25;
+  max-width: min(92vw, 42rem);
+  padding: 0.55rem 1rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 215, 0, 0.35);
+  background: rgba(8, 18, 36, 0.92);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.big-board-page .message-bar.is-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ——— Wheel dock — slides up from below ——— */
+.big-board-page .wheel-section {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-host-dock);
+  margin: 0;
+  padding: 0.5rem 0 1.25rem;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom, 0));
+  background: linear-gradient(to top, rgba(6, 14, 28, 0.98) 70%, rgba(6, 14, 28, 0));
+  transform: translateY(108%);
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.big-board-page .wheel-section.is-wheel-visible {
+  transform: translateY(0);
+  pointer-events: auto;
+  z-index: var(--z-wheel);
+}
+
+/* Wheel spin takes over the screen — hide host dock completely */
+body.big-board-page.is-wheel-active .host-dock {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  z-index: calc(var(--z-host-dock) - 10);
+}
+
+body.big-board-page.is-wheel-active .big-board-header {
+  z-index: 30;
+}
+
+body.big-board-page.is-wheel-active .wheel-section {
+  z-index: var(--z-wheel);
+  padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0));
+}
+
+body.big-board-page.is-wheel-active .message-bar {
+  z-index: var(--z-wheel-hud);
+  bottom: min(42vh, 360px);
+}
+
+body.big-board-page.is-wheel-active .big-board-main {
+  opacity: 0.35;
+  transition: opacity 0.4s ease;
+}
+
+.big-board-page .wheel-section.is-toss-up {
+  display: none;
+}
+
+.big-board-page .wheel-wrap {
+  --wheel-size: min(92vw, 480px);
+  --wheel-zoom: 1.65;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ——— Operator dock (hidden until hover) ——— */
+.host-dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-host-dock);
+  padding: 0.35rem 0.75rem calc(0.5rem + env(safe-area-inset-bottom, 0));
+  background: rgba(6, 12, 24, 0.88);
+  border-top: 1px solid rgba(255, 215, 0, 0.15);
+  transform: translateY(calc(100% - 2.4rem));
+  transition: transform 0.35s ease;
+}
+
+.host-dock:hover,
+.host-dock:focus-within {
+  transform: translateY(0);
+}
+
+.host-dock-handle {
+  margin: 0 0 0.35rem;
+  text-align: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255, 215, 0, 0.55);
+  cursor: default;
+  user-select: none;
+}
+
+.big-board-page .host-row {
+  padding: 0.35rem 0 0.5rem;
+  border-top: none;
+  background: transparent;
+}
+
+.big-board-page .host-controls {
+  padding: 0 0 0.35rem;
+}
+
+.big-board-page .host-control-buttons {
+  justify-content: center;
+}
+
+/* Shorter overlays on TV */
+.big-board-page .round-summary {
+  max-width: min(92vw, 28rem);
+}
+
+/* Prize overlays — centered on the puzzle board */
+.big-board-page .prize-banner-title {
+  font-size: clamp(1.6rem, 3.5vw, 2.5rem);
+}
+
+.big-board-page .prize-banner-name {
+  font-size: clamp(1.45rem, 3.4vw, 2.75rem);
+}
+
+.big-board-page .prize-banner-subtitle {
+  font-size: clamp(0.9rem, 1.6vw, 1.05rem);
+}
+
+@media (min-width: 900px) {
+  .big-board-main {
+    padding-bottom: 4rem;
+  }
+
+  .big-board-page .puzzle-board {
+    padding: 12px 16px;
+  }
+}

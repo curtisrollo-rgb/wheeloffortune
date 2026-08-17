@@ -10,6 +10,7 @@ let hideTimer = null;
  *   winnerName?: string,
  *   amount?: number,
  *   detail?: string,
+ *   scoresLine?: string,
  * }} opts
  * @returns {Promise<void>}
  */
@@ -19,7 +20,8 @@ export function showRoundSummary(el, {
   winnerName = "",
   amount = 0,
   detail = "",
-} = {}) {
+  scoresLine = "",
+} = {}, { displayMs = 4800 } = {}) {
   if (!el) return Promise.resolve();
 
   const roundEl = el.querySelector(".round-summary-round");
@@ -27,6 +29,7 @@ export function showRoundSummary(el, {
   const winnerEl = el.querySelector(".round-summary-winner");
   const amountEl = el.querySelector(".round-summary-amount");
   const detailEl = el.querySelector(".round-summary-detail");
+  const scoresEl = el.querySelector(".round-summary-scores");
 
   if (roundEl) roundEl.textContent = roundLabel;
   if (titleEl) titleEl.textContent = title;
@@ -38,6 +41,10 @@ export function showRoundSummary(el, {
   if (detailEl) {
     detailEl.textContent = detail;
     detailEl.classList.toggle("is-hidden", !detail);
+  }
+  if (scoresEl) {
+    scoresEl.textContent = scoresLine ? `Scores: ${scoresLine}` : "";
+    scoresEl.classList.toggle("is-hidden", !scoresLine);
   }
 
   clearTimeout(hideTimer);
@@ -53,7 +60,7 @@ export function showRoundSummary(el, {
         el.classList.add("is-hidden");
         resolve();
       }, 450);
-    }, 4800);
+    }, displayMs);
   });
 }
 

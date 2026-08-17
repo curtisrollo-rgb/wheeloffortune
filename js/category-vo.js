@@ -10,6 +10,8 @@ const clipsByCategory = new Map();
 const spokenByCategory = new Map();
 let aliases = {};
 let ready = false;
+/** @type {Set<string>} */
+const warmedUrls = new Set();
 let currentVo = null;
 let playGeneration = 0;
 
@@ -57,7 +59,7 @@ function preloadUrl(url, timeoutMs = 4000) {
   });
 }
 
-export async function loadCategoryVo() {
+export async function loadCategoryVo({ preloadClips = false } = {}) {
   if (ready) return;
 
   const [manifestRes, aliasRes] = await Promise.all([
@@ -76,7 +78,6 @@ export async function loadCategoryVo() {
   }
 
   const manifest = await manifestRes.json();
-  const urls = [];
   for (const clip of manifest.clips || []) {
     const key = clip.category.toLowerCase();
     const url = `${clip.file}?v=4`;
@@ -85,11 +86,29 @@ export async function loadCategoryVo() {
     if (!spokenByCategory.has(key)) {
       spokenByCategory.set(key, clip.spoken || clip.category);
     }
-    urls.push(url);
   }
 
-  await Promise.all(urls.map(preloadUrl));
+  if (preloadClips) {
+    const urls = [...clipsByCategory.values()].flat();
+    await Promise.all(urls.map((url) => warmCategoryUrl(url)));
+  }
+
   ready = true;
+}
+
+/** Preload clips for one category before announcing it (avoids first-play stutter). */
+export async function warmCategoryVo(category) {
+  if (!category) return;
+  if (!ready) await loadCategoryVo();
+  const { url } = resolveClip(category);
+  if (!url) return;
+  await warmCategoryUrl(url);
+}
+
+async function warmCategoryUrl(url) {
+  if (!url || warmedUrls.has(url)) return;
+  warmedUrls.add(url);
+  await preloadUrl(url);
 }
 
 function haltCurrentAudio() {

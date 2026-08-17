@@ -1,7 +1,8 @@
 import { WofClient } from "./net/client.js?v=1";
 import { getWsUrl, getRoomFromUrl, getSeatFromUrl, getNameFromUrl } from "./net/config.js?v=1";
 import { stampVersion } from "./version.js?v=1";
-import { preloadAll, playSound } from "./audio.js?v=8";
+import { runInBackground } from "./progressive-load.js?v=1";
+import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
 
 const VOWELS = "AEIOU";
 
@@ -50,7 +51,8 @@ let awaitingSolveResult = false;
 function unlockAudio() {
   if (audioReady) return;
   audioReady = true;
-  preloadAll().catch(() => {});
+  preloadEssential().catch(() => {});
+  runInBackground(() => preloadRemaining());
 }
 
 function sfx(name, opts = {}) {

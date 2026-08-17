@@ -1,21 +1,23 @@
 import { WofClient } from "./net/client.js?v=1";
-import { getWsUrl, getRoomFromUrl, dataUrl, buildJoinUrl } from "./net/config.js?v=2";
-import { renderJoinQr } from "./room-qr.js?v=1";
+import { getWsUrl, getRoomFromUrl, dataUrl } from "./net/config.js?v=2";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
 import { PuzzleBoard } from "./board.js?v=3";
-import { createWheel } from "./wheel.js?v=18";
-import { preloadAll, playSound } from "./audio.js?v=8";
-import { loadCategoryVo } from "./category-vo.js?v=6";
+import { createWheel } from "./wheel.js?v=19";
+import { runInBackground } from "./progressive-load.js?v=1";
+import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
+import { loadCategoryVo, warmCategoryVo } from "./category-vo.js?v=7";
 import { loadMissVo } from "./miss-vo.js?v=4";
 import { loadHitVo } from "./hit-vo.js?v=1";
 import { loadPenaltyVo, playPenaltyVo } from "./penalty-vo.js?v=2";
 import { loadWedgeAmountVo, playWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
 import { loadSolveCongratsVo, playRandomSolveCongrats } from "./solve-congrats-vo.js?v=2";
 import { loadCarPrizeVo, playCarPrizeVo } from "./car-prize-vo.js?v=1";
+import { loadTripPrizeVo, playTripPrizeVo } from "./trip-prize-vo.js?v=1";
 import { buildEnvelopeWedges, getFinalEnvelopePrizes, loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
 import { showEnvelopeReveal } from "./final-envelope-ui.js?v=1";
-import { showPrizeBanner } from "./prize-banner.js?v=1";
-import { showRoundSummary } from "./round-summary.js?v=1";
+import { showPrizeBanner, prizeSubtitleForWedge } from "./prize-banner.js?v=2";
+import { showRoundSummary } from "./round-summary.js?v=2";
+import { playRoundSummaryVo } from "./round-summary-vo.js?v=1";
 import { loadMilestoneVo, playOnlyVowelsRemainVo, playNoMoreVowelsVo } from "./milestone-vo.js?v=1";
 import { loadFinalGoodLuckVo, playRandomFinalGoodLuckVo } from "./final-good-luck-vo.js?v=1";
 import { loadFinalWinVo } from "./final-win-vo.js?v=1";
@@ -23,14 +25,14 @@ import { loadFinalLossVo } from "./final-loss-vo.js?v=1";
 import { stopAllVo } from "./vo-bus.js?v=1";
 import { playHitVo } from "./hit-vo.js?v=1";
 import { playMissVo } from "./miss-vo.js?v=4";
-import { playCategoryVo, canonicalCategory } from "./category-vo.js?v=6";
+import { playCategoryVo, canonicalCategory } from "./category-vo.js?v=7";
 import {
   loadHostVo,
   playWelcomeVo,
   playTurnCueVo,
   playSolveAttemptVo,
   playPlayerActionVo,
-} from "./host-vo.js?v=2";
+} from "./host-vo.js?v=3";
 import { ROW_WIDTHS } from "./puzzle-layout.js?v=3";
 import { stampVersion } from "./version.js?v=1";
 
@@ -42,6 +44,12 @@ const ROUND_LABELS = {
 };
 
 const GAME_ORDER = ["tossup", "round1", "round2", "final"];
+const LETTER_TRACK = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const MESSAGE_CLEAR_MS = 4200;
+const WHEEL_HIDE_DELAY_MS = 2200;
+const WHEEL_DOCK_OPEN_MS = 620;
+const TV_BANNER_MS = 3200;
+const TV_SUMMARY_MS = 3600;
 
 function emptyBoardRows() {
   return ROW_WIDTHS.map((w) => "#".repeat(w));
@@ -67,12 +75,17 @@ let hostVoChain = Promise.resolve();
 let spinAnimating = false;
 let pendingSpinWedge = null;
 let pendingGameState = null;
-let currentRoundType = "round1";
+let currentRoundType = "tossup";
 let latestGameState = null;
 let wheelApi = null;
 let wheelLoading = null;
 let envelopeRevealShown = false;
 let autoAdvanceTimer = null;
+let backgroundLoadsStarted = false;
+let round2AssetsLoaded = false;
+let finalAssetsLoaded = false;
+let messageClearTimer = null;
+let wheelHideTimer = null;
 
 const AUTO_ADVANCE_MS = 5500;
 
@@ -115,18 +128,31 @@ async function maybeRevealFinalEnvelope(state) {
   await showEnvelopeReveal(els.envelopeRevealModal, { amount, won, prize });
 }
 
+function formatScoresLine(players = []) {
+  if (!players.length) return "";
+  return players.map((p) => `${p.name} $${(p.score || 0).toLocaleString()}`).join(" · ");
+}
+
 function buildRoundSummary(state, players = []) {
   const roundLabel = ROUND_LABELS[state?.roundType] || state?.roundType || "Round";
   const winner = players.find((p) => p.seat === state?.roundWinnerSeat);
   const winnerName = winner?.name || state?.roundWinnerSeat || "";
+  const scoresLine = formatScoresLine(players);
 
   if (state?.roundType === "final") {
+    let detail = state.finalWon ? "" : "The envelope is revealed below.";
+    if (state.finalWon && state.finalEnvelopePrize?.kind === "car") {
+      detail = `Bonus: ${state.finalEnvelopePrize.name}`;
+    } else if (state.finalWon && state.finalEnvelopePrize?.kind === "trip") {
+      detail = `Bonus: ${state.finalEnvelopePrize.label}`;
+    }
     return {
       roundLabel,
       title: state.finalWon ? "Final Round Won!" : "Final Round Over",
       winnerName: winnerName || winner?.name || "Finalist",
       amount: state.finalWon ? (state.finalEnvelopeAmount ?? 0) : 0,
-      detail: state.finalWon ? "" : "The envelope is revealed below.",
+      detail,
+      scoresLine,
     };
   }
 
@@ -138,6 +164,7 @@ function buildRoundSummary(state, players = []) {
         winnerName,
         amount: state.roundWinAmount || 1000,
         detail: "",
+        scoresLine,
       };
     }
     return {
@@ -146,11 +173,13 @@ function buildRoundSummary(state, players = []) {
       winnerName: "No winner",
       amount: 0,
       detail: "Nobody rang in with the right answer.",
+      scoresLine,
     };
   }
 
   let detail = "";
   if (state?.carPrize?.name) detail = `Plus: ${state.carPrize.name}`;
+  else if (state?.tripPrize?.label) detail = `Plus: ${state.tripPrize.label}`;
   else if (state?.roundPrize) detail = `Prize: ${state.roundPrize}`;
 
   return {
@@ -159,28 +188,63 @@ function buildRoundSummary(state, players = []) {
     winnerName: winnerName || "Winner",
     amount: state?.roundWinAmount || 0,
     detail,
+    scoresLine,
   };
 }
 
+async function revealTripPrize(trip) {
+  if (!trip?.label) return;
+  await revealPrizeFromLetter({
+    kind: "trip",
+    subtitle: "Vacation Trip",
+    name: trip.label,
+    id: trip.id,
+  });
+}
+
 async function handleRoundEnd(state, players = []) {
-  await maybeRevealSolvedBoard(state.rows, state.message);
+  const isFinalLoss = state?.roundType === "final" && state.finalWon === false;
+  await maybeRevealSolvedBoard(state.rows, state.message, { skipCongrats: isFinalLoss });
+
   if (state.roundType === "final") {
     await maybeRevealFinalEnvelope(state);
+  } else if (state.tripPrize?.label && state.roundWinnerSeat && !state.tripPrizeClaimed) {
+    await revealTripPrize(state.tripPrize);
   }
-  await showRoundSummary(els.roundSummary, buildRoundSummary(state, players));
+
+  const summary = buildRoundSummary(state, players);
+  await playRoundSummaryVo(summary);
+  await showRoundSummary(els.roundSummary, summary, { displayMs: TV_SUMMARY_MS });
   scheduleAutoAdvance(state);
 }
 
-async function revealCarPrize(car) {
-  if (!car?.name) return;
+async function revealPrizeFromLetter(prizeReveal) {
+  if (!prizeReveal?.name) return;
   playSound("solve", { volume: 0.45 });
-  const bannerPromise = showPrizeBanner(els.prizeBanner, {
-    title: "You Won!",
+  const bannerPromise = showPrizeBanner(
+    els.prizeBanner,
+    {
+      title: "You Won!",
+      subtitle: prizeReveal.subtitle || prizeSubtitleForWedge(prizeReveal.wedgeLabel, prizeReveal.kind),
+      name: prizeReveal.name,
+    },
+    { displayMs: TV_BANNER_MS },
+  );
+  if (prizeReveal.kind === "car" && prizeReveal.id) {
+    await playCarPrizeVo(prizeReveal.id);
+  } else if (prizeReveal.kind === "trip" && prizeReveal.id) {
+    await playTripPrizeVo(prizeReveal.id);
+  }
+  await bannerPromise;
+}
+
+async function revealCarPrize(car) {
+  await revealPrizeFromLetter({
+    kind: "car",
     subtitle: "New Car",
     name: car.name,
+    id: car.id || "car-round2",
   });
-  await playCarPrizeVo(car.id || "car-round2");
-  await bannerPromise;
 }
 
 function nextRoundType(roundType) {
@@ -224,78 +288,81 @@ function announceAction(msg) {
     setMessage(`${name} is attempting to solve!`);
   } else if (msg.action === "spin") {
     setMessage(`${name} spins the wheel!`);
+    showWheelDock();
+    return Promise.resolve();
   }
   return playPlayerActionVo(msg);
 }
 
+function scheduleHostBackgroundLoads() {
+  if (backgroundLoadsStarted) return;
+  backgroundLoadsStarted = true;
+  runInBackground(
+    () => preloadRemaining(),
+    () => loadPenaltyVo(),
+    () => loadWedgeAmountVo(),
+    () => loadSolveCongratsVo(),
+    () => loadMilestoneVo(),
+  );
+}
+
+function scheduleRound2Assets() {
+  if (round2AssetsLoaded) return;
+  round2AssetsLoaded = true;
+  runInBackground(() => loadCarPrizeVo(), () => loadTripPrizeVo());
+}
+
+function scheduleFinalAssets() {
+  if (finalAssetsLoaded) return;
+  finalAssetsLoaded = true;
+  runInBackground(
+    () => loadFinalEnvelopeAmounts(),
+    () => loadFinalGoodLuckVo(),
+    () => loadFinalWinVo(),
+    () => loadFinalLossVo(),
+  );
+}
+
+function scheduleWheelForRound(roundType) {
+  if (roundType === "tossup") return;
+  if (roundType === "final") {
+    scheduleFinalAssets();
+  }
+  runInBackground(async () => {
+    if (roundType === "final" && !getFinalEnvelopePrizes().length) {
+      await loadFinalEnvelopeAmounts();
+    }
+    await loadWheelForRound(roundType);
+  });
+}
+
+function onRoundTypeProgressiveLoad(roundType) {
+  if (roundType === "round1" || roundType === "round2") scheduleRound2Assets();
+  if (roundType === "round2" || roundType === "final") scheduleFinalAssets();
+  scheduleWheelForRound(roundType);
+}
+
 function applySpinWedgeToHud(wedge, state) {
   if (wedge?.label) els.wedgeResult.textContent = wedge.label;
-  const money =
-    typeof wedge?.value === "number" && wedge.value > 0
-      ? wedge.value
-      : typeof state?.roundMoney === "number"
-        ? state.roundMoney
-        : 0;
-  if (money > 0) {
-    els.roundMoney.textContent = `$${money.toLocaleString()}/letter`;
-  } else {
-    updateRoundMoneyPill(state);
+  if (wedge?.type === "bankrupt" || wedge?.type === "loseTurn") {
+    setMessage(wedge.label);
+    return;
+  }
+  if (typeof wedge?.value === "number" && wedge.value > 0) {
+    setMessage(`${wedge.label} — $${wedge.value.toLocaleString()} per letter`);
+    return;
+  }
+  if (wedge?.type === "prize") {
+    setMessage(`Prize wedge: ${wedge.prize || wedge.label || "Prize"}`);
+    return;
+  }
+  if (wedge?.type === "bonusEnvelope") {
+    setMessage("Bonus envelope sealed!");
   }
 }
 
-function updateRoundMoneyPill(state) {
-  if (!state) return;
-  if (state.roundType === "final") {
-    if (state.phase === "finalEnvelope") {
-      els.roundMoney.textContent = "Spin for envelope";
-    } else if (state.phase === "finalRevealFree") {
-      els.roundMoney.textContent = "Free letters…";
-    } else if (state.finalEnvelopeAmount != null || state.finalEnvelopePrize) {
-      if (state.finalEnvelopePrize?.kind === "car") {
-        els.roundMoney.textContent = "Bonus sealed ✉ CAR";
-      } else if (state.finalEnvelopePrize?.kind === "trip") {
-        els.roundMoney.textContent = "Bonus sealed ✉ TRIP";
-      } else {
-        els.roundMoney.textContent = "Bonus sealed ✉";
-      }
-    } else if (state.phase === "finalPick") {
-      els.roundMoney.textContent =
-        state.finalConsonantsLeft > 0
-          ? `${state.finalConsonantsLeft} consonant(s) to pick`
-          : "Pick 1 vowel";
-    } else if (state.phase === "finalSolve") {
-      els.roundMoney.textContent = "Solve the puzzle!";
-    } else {
-      els.roundMoney.textContent = "Final Round";
-    }
-    return;
-  }
-  if (state.roundType === "tossup") {
-    if (state.phase === "tossUpAnnounce") {
-      els.roundMoney.textContent = "Category…";
-    } else if (state.phase === "tossUpCountdown") {
-      els.roundMoney.textContent = "Get ready…";
-    } else if (state.phase === "tossUpReveal") {
-      els.roundMoney.textContent = "$1,000 Toss-Up";
-    } else if (state.phase === "ended") {
-      els.roundMoney.textContent = "Toss-Up complete";
-    } else {
-      els.roundMoney.textContent = "Toss-Up";
-    }
-    return;
-  }
-  const roundLabel = state.roundMoney
-    ? `$${state.roundBank.toLocaleString()} (@ $${state.roundMoney}/letter)`
-    : state.roundBank
-      ? `$${state.roundBank.toLocaleString()}`
-      : state.pendingPrizeKind === "car"
-        ? "CAR — call a consonant"
-        : state.carPrize
-          ? `Car: ${state.carPrize.name}`
-          : state.roundPrize
-            ? `Prize: ${state.roundPrize}`
-            : "—";
-  els.roundMoney.textContent = roundLabel;
+function updateRoundMoneyPill(_state) {
+  /* Status pill removed from big board — wedge/message toasts carry live info. */
 }
 
 function setRoundTabsEnabled(enabled) {
@@ -327,6 +394,7 @@ function maybeAnnounceCategory(state) {
       setMessage("Welcome to Wheel of Fortune!");
       await playWelcomeVo();
     }
+    await warmCategoryVo(state.category);
     setMessage(
       withWelcome
         ? `Welcome to Wheel of Fortune! The category is ${label}.`
@@ -343,16 +411,24 @@ function applyGameState(state, players = []) {
 
   if (state.started) setRoundTabsEnabled(true);
 
-  if (state.roundType && state.roundType !== currentRoundType) {
+  if (state.roundType && state.roundType !== currentRoundType && !spinAnimating) {
     syncRoundTabs(state.roundType);
     updateWheelSection(state.roundType);
     wheelLoading = loadWheelForRound(state.roundType);
+    onRoundTypeProgressiveLoad(state.roundType);
   }
 
   if (state.category) {
-    const label = ROUND_LABELS[state.roundType] || state.roundType;
-    els.category.textContent = `${label} · ${state.category}`;
+    if (els.roundLabel) {
+      els.roundLabel.textContent = ROUND_LABELS[state.roundType] || state.roundType || "Round";
+    }
+    els.category.textContent = canonicalCategory(state.category);
+  } else if (els.roundLabel && state.roundType) {
+    els.roundLabel.textContent = ROUND_LABELS[state.roundType] || state.roundType;
   }
+
+  renderLetterTrack(state.called || []);
+
   if (state.puzzleId && state.puzzleId !== lastPuzzleId) {
     lastPuzzleId = state.puzzleId;
     lastPuzzleLayout = "";
@@ -390,14 +466,21 @@ function flushPendingGameState() {
 }
 
 async function handleLetterResult(msg) {
-  if (msg.carWon && msg.carPrize) {
-    await revealCarPrize(msg.carPrize);
+  if (msg.hit && msg.letter) {
+    const called = new Set(latestGameState?.called || []);
+    called.add(String(msg.letter).toUpperCase());
+    renderLetterTrack([...called]);
   }
 
   if (msg.hit && msg.indices?.length) {
     boardRevealBusy = true;
     try {
       await board.revealTiles(msg.indices, msg.rows);
+      if (msg.prizeReveal) {
+        await revealPrizeFromLetter(msg.prizeReveal);
+      } else if (msg.carWon && msg.carPrize) {
+        await revealCarPrize(msg.carPrize);
+      }
       if (msg.solved && msg.rows?.length) {
         await board.revealAll(msg.rows);
         playSound("solve", { volume: 0.55 });
@@ -406,7 +489,7 @@ async function handleLetterResult(msg) {
           board.rows = msg.rows;
           lastPuzzleLayout = puzzleLayoutKey(msg.rows);
         }
-      } else if (msg.count >= 1 && msg.count <= 3) {
+      } else if (msg.count >= 1 && msg.count <= 3 && !msg.prizeReveal && !msg.carWon) {
         await playHitVo(msg.letter, msg.count);
       }
       if (msg.onlyVowelsRemain) {
@@ -432,7 +515,7 @@ function boardHasHiddenTiles() {
   return !!els.board.querySelector(".letter-slot");
 }
 
-async function maybeRevealSolvedBoard(rows, message) {
+async function maybeRevealSolvedBoard(rows, message, { skipCongrats = false } = {}) {
   if (!rows?.length || boardRevealBusy) return;
   if (rows.some((row) => row.includes("_"))) return;
   if (!boardHasHiddenTiles()) return;
@@ -442,7 +525,9 @@ async function maybeRevealSolvedBoard(rows, message) {
     if (message) setMessage(message);
     await board.revealAll(rows);
     playSound("solve", { volume: 0.55 });
-    await playRandomSolveCongrats();
+    if (!skipCongrats) {
+      await playRandomSolveCongrats();
+    }
     board.rows = rows;
     lastPuzzleLayout = puzzleLayoutKey(rows);
   } finally {
@@ -518,18 +603,16 @@ const $ = (id) => document.getElementById(id);
 const els = {
   loadingScreen: $("loading-screen"),
   loadingLabel: $("loading-label"),
+  roundLabel: $("round-label"),
   category: $("category-pill"),
-  score: $("score-pill"),
-  roundMoney: $("round-money-pill"),
   message: $("message-bar"),
   board: $("puzzle-board"),
+  letterTrack: $("letter-track"),
   wheelSection: $("wheel-section"),
   wheelHost: $("wheel-host"),
   wedgeResult: $("wedge-result"),
   scoreboard: $("scoreboard"),
-  hostRoomCode: $("host-room-code"),
-  hostQrRoom: $("host-qr-room"),
-  joinQrCanvas: $("join-qr-canvas"),
+  btnFullscreen: $("btn-fullscreen"),
   btnStartGame: $("btn-start-game"),
   btnNewPuzzle: $("btn-new-puzzle"),
   btnTossUp: $("btn-tossup"),
@@ -552,16 +635,65 @@ function hideLoading() {
   els.loadingScreen?.classList.add("is-hidden");
 }
 
-async function updateJoinQr(code) {
-  if (!code || !els.joinQrCanvas) return;
-  const url = await buildJoinUrl(code, getWsUrl());
-  await renderJoinQr(els.joinQrCanvas, url, { size: 168 });
-  if (els.hostQrRoom) els.hostQrRoom.textContent = code;
-  if (els.hostRoomCode) els.hostRoomCode.textContent = code;
+async function updateJoinQr(_code) {
+  /* QR lives on lobby page only — big board is view-only. */
+}
+
+function showWheelDock() {
+  if (latestGameState?.roundType === "tossup") return;
+  clearTimeout(wheelHideTimer);
+  document.body.classList.add("is-wheel-active");
+  els.wheelSection?.classList.add("is-wheel-visible");
+}
+
+function hideWheelDock(delayMs = WHEEL_HIDE_DELAY_MS) {
+  clearTimeout(wheelHideTimer);
+  const hide = () => {
+    if (spinAnimating && delayMs > 0) return;
+    document.body.classList.remove("is-wheel-active");
+    els.wheelSection?.classList.remove("is-wheel-visible");
+  };
+  if (delayMs <= 0) {
+    hide();
+    return;
+  }
+  wheelHideTimer = setTimeout(hide, delayMs);
+}
+
+async function ensureWheelReady(roundType) {
+  if (wheelLoading) await wheelLoading;
+  if (wheelApi?.spinToIndex) return;
+  const type = roundType || latestGameState?.roundType || currentRoundType;
+  if (type && type !== "tossup") {
+    await loadWheelForRound(type);
+  }
+}
+
+function renderLetterTrack(called = []) {
+  if (!els.letterTrack) return;
+  const used = new Set((called || []).map((ch) => String(ch).toUpperCase()));
+  els.letterTrack.innerHTML = "";
+  for (const letter of LETTER_TRACK) {
+    const item = document.createElement("span");
+    item.className = "letter-track-item";
+    item.textContent = letter;
+    if (used.has(letter)) item.classList.add("is-called");
+    els.letterTrack.appendChild(item);
+  }
 }
 
 function setMessage(text) {
-  els.message.textContent = text;
+  if (!els.message) return;
+  els.message.textContent = text || "";
+  clearTimeout(messageClearTimer);
+  if (text) {
+    els.message.classList.add("is-visible");
+    messageClearTimer = setTimeout(() => {
+      els.message.classList.remove("is-visible");
+    }, MESSAGE_CLEAR_MS);
+  } else {
+    els.message.classList.remove("is-visible");
+  }
 }
 
 function renderScoreboard(players = [], activeSeat = null) {
@@ -600,10 +732,33 @@ async function loadWheelForRound(roundType) {
   wheelApi = await createWheel(els.wheelHost, wedges);
 }
 
+function manifestMatchesWheel(manifest, wedges = []) {
+  if (!manifest?.length || manifest.length !== wedges.length) return false;
+  return manifest.every((entry, i) => {
+    const w = wedges[i];
+    return w && entry.label === w.label && (entry.backgroundColor || "") === (w.backgroundColor || "");
+  });
+}
+
 async function loadWheelFromManifest(manifest) {
   if (!manifest?.length) return;
-  els.wheelHost.innerHTML = "";
-  wheelApi = await createWheel(els.wheelHost, manifest);
+  const job = (async () => {
+    updateWheelSection(currentRoundType);
+    els.wheelHost.innerHTML = "";
+    wheelApi = await createWheel(els.wheelHost, manifest);
+  })();
+  wheelLoading = job;
+  try {
+    await job;
+  } finally {
+    if (wheelLoading === job) wheelLoading = null;
+  }
+}
+
+async function ensureWheelManifest(manifest) {
+  if (!manifest?.length) return;
+  if (manifestMatchesWheel(manifest, wheelApi?.wedges)) return;
+  await loadWheelFromManifest(manifest);
 }
 
 function onMessage(msg) {
@@ -612,14 +767,12 @@ function onMessage(msg) {
       stampVersion("#app-version", msg.version);
       break;
     case "hostAttached":
-      els.hostRoomCode.textContent = msg.code;
-      els.score.textContent = msg.code;
       updateJoinQr(msg.code).catch(() => {});
       setMessage("Room connected. Waiting for players…");
       els.btnStartGame.disabled = false;
       renderScoreboard(msg.players || []);
       if (msg.wedgeManifest?.length) {
-        loadWheelFromManifest(msg.wedgeManifest);
+        wheelLoading = ensureWheelManifest(msg.wedgeManifest);
       }
       applyGameState(msg.preview, msg.players);
       break;
@@ -633,14 +786,16 @@ function onMessage(msg) {
       envelopeRevealShown = false;
       clearAutoAdvance();
       stopAllVo();
-      if (msg.wedgeManifest?.length) {
-        loadWheelFromManifest(msg.wedgeManifest);
-      } else {
-        loadWheelForRound(msg.roundType);
-      }
+      hideWheelDock(0);
       syncRoundTabs(msg.roundType);
+      if (msg.wedgeManifest?.length) {
+        wheelLoading = ensureWheelManifest(msg.wedgeManifest);
+      } else {
+        wheelLoading = loadWheelForRound(msg.roundType);
+      }
       if (msg.state) applyGameState(msg.state, msg.players);
       else setMessage(`Switched to ${ROUND_LABELS[msg.roundType] || msg.roundType}.`);
+      onRoundTypeProgressiveLoad(msg.roundType);
       break;
     case "turnChanged":
       renderScoreboard(msg.players || [], msg.seat);
@@ -675,15 +830,25 @@ function onMessage(msg) {
     case "spinResult":
       spinAnimating = true;
       pendingSpinWedge = msg.wedge;
+      showWheelDock();
       (async () => {
-        if (wheelLoading) await wheelLoading;
-        if (msg.roundType && msg.roundType !== currentRoundType) {
+        if (msg.roundType) syncRoundTabs(msg.roundType);
+        if (msg.wedgeManifest?.length) {
+          await ensureWheelManifest(msg.wedgeManifest);
+        } else if (msg.roundType && msg.roundType !== currentRoundType) {
           await loadWheelForRound(msg.roundType);
+        } else {
+          await ensureWheelReady(msg.roundType);
         }
-        await wheelApi?.spinToIndex?.(msg.index);
-        if (wheelApi?.getCurrentIndex?.() !== msg.index && wheelApi?.snapToIndex) {
-          await wheelApi.snapToIndex(msg.index);
+        if (!wheelApi?.spinToIndex) {
+          console.warn("Spin animation: wheel not ready");
+          spinAnimating = false;
+          flushPendingGameState();
+          hideWheelDock(800);
+          return;
         }
+        await sleep(WHEEL_DOCK_OPEN_MS);
+        await wheelApi.spinToIndex(msg.index);
         const wedge = msg.wedge;
         const state = pendingGameState?.state ?? latestGameState;
         applySpinWedgeToHud(wedge, {
@@ -694,11 +859,14 @@ function onMessage(msg) {
         spinAnimating = false;
         pendingSpinWedge = null;
         flushPendingGameState();
+        hideWheelDock();
         if (wedge?.type === "bankrupt" || wedge?.type === "loseTurn") {
           playPenaltyVo(wedge.type);
         } else if (wedge?.type === "prize") {
           if (wedge.prizeKind === "car") {
             playSound("land", { volume: 0.45 });
+          } else if (wedge.prizeKind === "trip") {
+            playSound("solve", { volume: 0.4 });
           } else {
             playSound("solve", { volume: 0.35 });
           }
@@ -711,11 +879,18 @@ function onMessage(msg) {
         console.warn("Spin animation:", err);
         spinAnimating = false;
         flushPendingGameState();
+        hideWheelDock(600);
       });
       break;
     case "buzzWinner":
       setMessage(`${msg.name || msg.seat} rang in to solve!`);
-      playSound("land", { volume: 0.5 });
+      playSound("buzz", { volume: 0.55 });
+      break;
+    case "solveWrong":
+      queueHostVo(async () => {
+        if (msg.message) setMessage(msg.message);
+        await playMissVo();
+      });
       break;
     case "tossUpComplete":
       queueHostVo(async () => {
@@ -741,6 +916,7 @@ function onMessage(msg) {
       } else {
         els.tossupCountdown.classList.add("is-hidden");
         setMessage("Toss-Up! Ring in when you know it!");
+        playSound("land", { volume: 0.5 });
       }
       break;
     case "tossUpTile":
@@ -790,10 +966,6 @@ async function connectToRoom() {
     hideLoading();
     return;
   }
-
-  els.hostRoomCode.textContent = roomCode;
-  els.score.textContent = roomCode;
-  updateJoinQr(roomCode).catch(() => {});
 
   client = new WofClient({
     onMessage,
@@ -845,32 +1017,33 @@ els.btnNextRound?.addEventListener("click", () => {
   if (next) switchRound(next);
 });
 
+els.btnFullscreen?.addEventListener("click", () => {
+  const root = document.documentElement;
+  if (document.fullscreenElement) {
+    document.exitFullscreen?.().catch(() => {});
+  } else {
+    root.requestFullscreen?.().catch(() => {});
+  }
+});
+
 async function init() {
   stampVersion();
   setRoundTabsEnabled(false);
   board.render(emptyBoardRows());
+  renderLetterTrack([]);
   const loading = createLoadingProgress(els.loadingScreen);
   await runLoadingTasks(loading, [
-    ["Loading sounds…", preloadAll()],
-    ["Loading voice…", Promise.all([
+    ["Loading essentials…", Promise.all([
+      preloadEssential(),
       loadCategoryVo(),
+      loadHostVo(),
       loadMissVo(),
       loadHitVo(),
-      loadPenaltyVo(),
-      loadWedgeAmountVo(),
-      loadSolveCongratsVo(),
-      loadCarPrizeVo(),
-      loadHostVo(),
-      loadMilestoneVo(),
-      loadFinalGoodLuckVo(),
-      loadFinalWinVo(),
-      loadFinalLossVo(),
     ])],
-    ["Loading bonus wheel…", loadFinalEnvelopeAmounts()],
-    ["Building wheel…", loadWheelForRound("round1")],
     ["Connecting…", connectToRoom()],
   ]);
-  hideLoading();
+  scheduleHostBackgroundLoads();
+  onRoundTypeProgressiveLoad("tossup");
 }
 
 init().catch((err) => {

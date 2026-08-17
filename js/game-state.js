@@ -7,6 +7,8 @@ import {
   revealAllRows,
   isSolved,
 } from "./puzzle-layout.js?v=3";
+import { pickRandomTrip } from "./trip-prizes.js?v=1";
+import { prizeSubtitleForWedge } from "./prize-banner.js?v=2";
 
 export const VOWEL_COST = 250;
 export const MIN_ROUND_WIN = 1000;
@@ -37,10 +39,15 @@ export function createGameState() {
     roundType: "round1",
     /** Prize wedge picked up in Round 2 (won on solve). */
     roundPrize: null,
-    /** @type {"car"|null} Waiting for a consonant hit before prize is revealed. */
+    /** @type {"car"|"trip"|"prize"|null} Waiting for a consonant hit before prize is revealed. */
     pendingPrizeKind: null,
+    /** Wedge label for generic prize wedges (GIFT, SPA, …). */
+    pendingPrizeLabel: null,
     /** @type {{ id: string, name: string, make: string, model: string }|null} */
     carPrize: null,
+    /** @type {{ id: string, label: string, name: string, valueUsd?: number }|null} */
+    tripPrize: null,
+    tripPrizeClaimed: false,
     finalConsonantsLeft: 0,
     finalVowelsLeft: 0,
     /** Letters chosen in Final Round before the batch reveal. */
@@ -71,7 +78,10 @@ export function loadPuzzle(state, entry, { roundType = state.roundType } = {}) {
   state.roundType = roundType;
   state.roundPrize = null;
   state.pendingPrizeKind = null;
+  state.pendingPrizeLabel = null;
   state.carPrize = null;
+  state.tripPrize = null;
+  state.tripPrizeClaimed = false;
   state.finalConsonantsLeft = 0;
   state.finalVowelsLeft = 0;
   state.finalPendingPicks = [];
@@ -257,10 +267,46 @@ export function hasUncalledVowels(state) {
 function loseTurn(state, message) {
   state.phase = "idle";
   state.roundMoney = 0;
-  if (state.pendingPrizeKind === "car") {
+  if (state.pendingPrizeKind) {
     state.pendingPrizeKind = null;
+    state.pendingPrizeLabel = null;
+    if (!state.tripPrizeClaimed) {
+      state.tripPrize = null;
+      state.roundPrize = null;
+    }
   }
   state.message = message;
+}
+
+function tryClaimPendingPrize(state) {
+  if (state.pendingPrizeKind === "car" && !state.carPrize) {
+    return { kind: "car" };
+  }
+  if (state.pendingPrizeKind === "trip" && state.tripPrize && !state.tripPrizeClaimed) {
+    state.pendingPrizeKind = null;
+    state.pendingPrizeLabel = null;
+    state.tripPrizeClaimed = true;
+    state.roundPrize = state.tripPrize.label;
+    return {
+      kind: "trip",
+      subtitle: "Vacation Trip",
+      name: state.tripPrize.label,
+      id: state.tripPrize.id,
+      trip: state.tripPrize,
+    };
+  }
+  if (state.pendingPrizeKind === "prize" && state.roundPrize) {
+    const reveal = {
+      kind: "prize",
+      subtitle: prizeSubtitleForWedge(state.pendingPrizeLabel, "prize"),
+      name: state.roundPrize,
+      wedgeLabel: state.pendingPrizeLabel,
+    };
+    state.pendingPrizeKind = null;
+    state.pendingPrizeLabel = null;
+    return reveal;
+  }
+  return null;
 }
 
 function bankRoundAndEnd(state) {
@@ -345,7 +391,7 @@ export function canGuessLetter(state) {
   if (state.roundType === "tossup") return false;
   return (
     state.phase === "guess" &&
-    (state.roundMoney > 0 || state.roundPrize || state.pendingPrizeKind === "car") &&
+    (state.roundMoney > 0 || state.roundPrize || state.pendingPrizeKind) &&
     hasHiddenConsonants(state) &&
     !isSolved(state.rows)
   );
@@ -465,7 +511,10 @@ export function applySpinResult(state, wedge) {
     state.roundBank = 0;
     state.roundPrize = null;
     state.pendingPrizeKind = null;
+    state.pendingPrizeLabel = null;
     state.carPrize = null;
+    state.tripPrize = null;
+    state.tripPrizeClaimed = false;
     loseTurn(state, "Bankrupt! Round earnings wiped. Spin again.");
     return { type: "bankrupt" };
   }
@@ -480,15 +529,34 @@ export function applySpinResult(state, wedge) {
     state.roundMoney = 0;
     if (wedge.prizeKind === "car") {
       state.pendingPrizeKind = "car";
+      state.pendingPrizeLabel = null;
       state.roundPrize = null;
       state.carPrize = null;
+      state.tripPrize = null;
+      state.tripPrizeClaimed = false;
       state.message = "Landed on CAR! Call a consonant in the puzzle to claim your car.";
       return { type: "prize", prizeKind: "car" };
     }
-    state.pendingPrizeKind = null;
+    if (wedge.label === "TRIP" || wedge.prizeKind === "trip") {
+      const trip = pickRandomTrip();
+      state.pendingPrizeKind = "trip";
+      state.pendingPrizeLabel = null;
+      state.tripPrize = trip;
+      state.tripPrizeClaimed = false;
+      state.carPrize = null;
+      state.roundPrize = trip?.label || wedge.prize || "Trip";
+      state.message = trip
+        ? `Landed on TRIP! Call a consonant to claim ${trip.label}.`
+        : "Landed on TRIP! Call a consonant to claim your trip.";
+      return { type: "prize", prizeKind: "trip" };
+    }
+    state.pendingPrizeKind = "prize";
+    state.pendingPrizeLabel = wedge.label;
     state.carPrize = null;
+    state.tripPrize = null;
+    state.tripPrizeClaimed = false;
     state.roundPrize = wedge.prize || wedge.label;
-    state.message = `You picked up ${state.roundPrize}! Solve the puzzle to win it. Guess a consonant.`;
+    state.message = `Landed on ${wedge.label}! Call a consonant to claim ${state.roundPrize}.`;
     return { type: "prize", prize: state.roundPrize };
   }
 
@@ -519,9 +587,19 @@ export function guessConsonant(state, letter) {
     const earned = state.roundMoney > 0 ? count * state.roundMoney : 0;
     if (earned > 0) state.roundBank += earned;
 
-    if (isCarPrizePending(state)) {
+    const pendingReveal = tryClaimPendingPrize(state);
+    if (pendingReveal?.kind === "car") {
       if (isSolved(state.rows)) {
-        return { ok: true, hit: true, indices, count, earned, needsCarReveal: true, solvedAfterCar: true };
+        return {
+          ok: true,
+          hit: true,
+          indices,
+          count,
+          earned,
+          needsPrizeReveal: true,
+          prizeKind: "car",
+          solvedAfterCar: true,
+        };
       }
       if (onlyVowelsRemain(state)) {
         return {
@@ -530,11 +608,22 @@ export function guessConsonant(state, letter) {
           indices,
           count,
           earned,
-          needsCarReveal: true,
+          needsPrizeReveal: true,
+          prizeKind: "car",
           onlyVowelsReached: true,
         };
       }
-      return { ok: true, hit: true, indices, count, earned, needsCarReveal: true };
+      return { ok: true, hit: true, indices, count, earned, needsPrizeReveal: true, prizeKind: "car" };
+    }
+    if (pendingReveal) {
+      const base = { ok: true, hit: true, indices, count, earned, needsPrizeReveal: true, prizeReveal: pendingReveal };
+      if (isSolved(state.rows)) {
+        return { ...base, solvedAfterCar: true };
+      }
+      if (onlyVowelsRemain(state)) {
+        return { ...base, onlyVowelsReached: true };
+      }
+      return base;
     }
 
     if (isSolved(state.rows)) {

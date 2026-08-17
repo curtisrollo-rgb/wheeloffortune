@@ -11,6 +11,9 @@
   --font-display: "Segoe UI", system-ui, sans-serif;
   /** Small gap between puzzle board and wheel (no overlap) */
   --board-wheel-gap: clamp(0.25rem, 1.2vw, 0.55rem);
+  --z-host-dock: 45;
+  --z-wheel: 85;
+  --z-wheel-hud: 90;
 }
 
 *,
@@ -215,6 +218,10 @@ body.is-loading .top-bar {
   justify-content: center;
   gap: 0.35rem;
   padding: 1.25rem;
+  margin: auto;
+  max-width: 100%;
+  max-height: 100%;
+  text-align: center;
   background: linear-gradient(135deg, rgba(8, 32, 16, 0.94), rgba(0, 0, 0, 0.88));
   border: 3px solid var(--accent);
   border-radius: 8px;
@@ -264,7 +271,7 @@ body.is-loading .top-bar {
   text-align: center;
   line-height: 1.2;
   color: #fff;
-  max-width: 95%;
+  max-width: 92%;
 }
 
 .round-summary {
@@ -344,6 +351,18 @@ body.is-loading .top-bar {
 }
 
 .round-summary-detail.is-hidden {
+  display: none;
+}
+
+.round-summary-scores {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #ffd54f;
+}
+
+.round-summary-scores.is-hidden {
   display: none;
 }
 
@@ -440,6 +459,40 @@ body.is-loading .top-bar {
   position: relative;
   z-index: 2;
   overflow: visible;
+}
+
+body.is-wheel-active .wheel-section,
+.wheel-section.is-wheel-visible {
+  z-index: var(--z-wheel);
+}
+
+/* Wheel spin takes over the viewport — menus stay underneath */
+body.is-wheel-active .controls {
+  opacity: 0.35;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+body.is-wheel-active:not(.big-board-page) .wheel-section {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-wheel);
+  margin-top: 0;
+  padding: 0.35rem 0 1rem;
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom, 0));
+  background: linear-gradient(to top, rgba(6, 14, 28, 0.98) 65%, rgba(6, 14, 28, 0));
+  pointer-events: none;
+}
+
+body.is-wheel-active:not(.big-board-page) .layout {
+  opacity: 0.4;
+  transition: opacity 0.35s ease;
+}
+
+body.is-wheel-active:not(.big-board-page) .top-bar {
+  z-index: 1;
 }
 
 /* TV-style crop: top rim visible; bottom arc trimmed */

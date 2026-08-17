@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Wheel of Fortune — TV Display</title>
+  <title>Wheel of Fortune — TV Big Board</title>
   <script>
-    // Repo root base — fixes assets/data paths when hosted in a subdirectory.
     (function () {
       var base = document.createElement("base");
       base.href = new URL("../", location.href).href;
       document.head.appendChild(base);
     })();
   </script>
-  <link rel="stylesheet" href="css/game.css?v=42" />
-  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=6" />
+  <link rel="stylesheet" href="css/game.css?v=45" />
+  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=7" />
+  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=4" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
-<body class="host-page is-loading">
+<body class="host-page big-board-page is-loading">
   <div id="loading-screen" class="loading-screen" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="loading-label">
     <div class="loading-screen-inner">
       <p class="loading-brand">Wheel of Fortune</p>
@@ -28,82 +28,75 @@
     </div>
   </div>
 
-  <header class="top-bar">
-    <div class="brand">
-      <h1>Wheel of Fortune</h1>
+  <header class="big-board-header">
+    <div class="big-board-meta">
+      <p id="round-label" class="big-board-round">Waiting</p>
+      <h1 id="category-pill" class="category-headline" aria-live="polite">—</h1>
     </div>
-    <div id="category-pill" class="category-headline" aria-live="polite">—</div>
-    <div class="status-pills">
-      <span id="score-pill" class="pill" title="Room code">------</span>
-      <span id="round-money-pill" class="pill" title="Game status">Waiting</span>
-    </div>
-    <span class="host-badge">TV Display</span>
+    <div id="scoreboard" class="scoreboard" aria-live="polite"></div>
+    <button id="btn-fullscreen" type="button" class="btn-fullscreen" title="Enter fullscreen" aria-label="Toggle fullscreen">⛶</button>
   </header>
-
-  <div id="scoreboard" class="scoreboard" aria-live="polite"></div>
-
-  <p id="message-bar" class="message-bar">Connect to a room to begin.</p>
 
   <div id="tossup-countdown" class="tossup-countdown is-hidden" aria-live="assertive">3</div>
 
-  <main class="layout">
-    <section class="board-section">
-      <div id="prize-banner" class="prize-banner is-hidden" aria-live="polite">
-        <p class="prize-banner-subtitle">New Car</p>
-        <p class="prize-banner-title">You Won!</p>
-        <p class="prize-banner-name"></p>
-      </div>
-      <div id="round-summary" class="round-summary is-hidden" aria-live="polite">
-        <p class="round-summary-round">Round 1</p>
-        <p class="round-summary-title">Round Winner!</p>
-        <p class="round-summary-winner">Player</p>
-        <p class="round-summary-amount">$0</p>
-        <p class="round-summary-detail"></p>
-      </div>
-      <div id="puzzle-board" class="puzzle-board" aria-label="Puzzle board"></div>
-    </section>
-
-    <section id="wheel-section" class="wheel-section">
-      <div id="final-envelope-panel" class="final-envelope-panel is-hidden">
-        <p class="final-envelope-heading">Bonus Envelopes</p>
-        <div id="envelope-tray" class="envelope-tray" aria-label="Final Round envelope tray"></div>
-        <p id="sealed-envelope-note" class="sealed-envelope-note is-hidden">Your bonus is sealed in the highlighted envelope.</p>
-      </div>
-      <div class="wheel-wrap">
-        <div class="wheel-inner">
-          <div class="wheel-pointer" aria-hidden="true"></div>
-          <div id="wheel-host"></div>
+  <main class="big-board-main">
+    <div class="layout">
+      <section class="board-section">
+        <div id="prize-banner" class="prize-banner is-hidden" aria-live="polite">
+          <p class="prize-banner-subtitle">New Car</p>
+          <p class="prize-banner-title">You Won!</p>
+          <p class="prize-banner-name"></p>
         </div>
-        <div class="wheel-bottom-pointer" aria-hidden="true"></div>
-      </div>
-      <div id="wedge-result" class="wedge-result">—</div>
-    </section>
+        <div id="round-summary" class="round-summary is-hidden" aria-live="polite">
+          <p class="round-summary-round">Round 1</p>
+          <p class="round-summary-title">Round Winner!</p>
+          <p class="round-summary-winner">Player</p>
+          <p class="round-summary-amount">$0</p>
+          <p class="round-summary-detail"></p>
+          <p class="round-summary-scores is-hidden"></p>
+        </div>
+        <div id="puzzle-board" class="puzzle-board" aria-label="Puzzle board"></div>
+      </section>
+    </div>
+
+    <div id="letter-track" class="letter-track" aria-label="Letters called"></div>
   </main>
 
-  <nav class="host-row" aria-label="Game sections">
-    <button id="btn-tossup" type="button" class="btn btn-secondary btn-round" data-round="tossup">Toss-Up</button>
-    <button id="btn-round1" type="button" class="btn btn-secondary btn-round is-active" data-round="round1">Round 1</button>
-    <button id="btn-round2" type="button" class="btn btn-secondary btn-round" data-round="round2">Round 2</button>
-    <button id="btn-final" type="button" class="btn btn-secondary btn-round" data-round="final">Final Round</button>
-  </nav>
+  <p id="message-bar" class="message-bar" aria-live="polite"></p>
 
-  <section class="host-controls">
-    <div class="host-join-panel">
-      <div class="host-join-qr-wrap">
-        <canvas id="join-qr-canvas" width="168" height="168" aria-label="Scan to join this room on your phone"></canvas>
-      </div>
-      <div class="host-join-meta">
-        <p class="host-room-code">Room <strong id="host-room-code">------</strong></p>
-        <p class="host-join-hint">Scan to join · <strong id="host-qr-room">------</strong></p>
-      </div>
+  <section id="wheel-section" class="wheel-section wheel-dock">
+    <div id="final-envelope-panel" class="final-envelope-panel is-hidden">
+      <p class="final-envelope-heading">Bonus Envelopes</p>
+      <div id="envelope-tray" class="envelope-tray" aria-label="Final Round envelope tray"></div>
+      <p id="sealed-envelope-note" class="sealed-envelope-note is-hidden">Your bonus is sealed in the highlighted envelope.</p>
     </div>
-    <div class="host-control-buttons">
-    <button id="btn-start-game" type="button" class="btn btn-primary" disabled>Start Game</button>
-    <button id="btn-new-puzzle" type="button" class="btn btn-secondary" disabled>New Puzzle</button>
-    <button id="btn-next-round" type="button" class="btn btn-primary" disabled>Next Round</button>
+    <div class="wheel-wrap">
+      <div class="wheel-inner">
+        <div class="wheel-pointer" aria-hidden="true"></div>
+        <div id="wheel-host"></div>
+      </div>
+      <div class="wheel-bottom-pointer" aria-hidden="true"></div>
     </div>
-    <p id="app-version" class="app-version"></p>
+    <div id="wedge-result" class="wedge-result">—</div>
   </section>
+
+  <aside class="host-dock" aria-label="Host controls">
+    <p class="host-dock-handle">Host controls</p>
+    <nav class="host-row" aria-label="Game sections">
+      <button id="btn-tossup" type="button" class="btn btn-secondary btn-round" data-round="tossup">Toss-Up</button>
+      <button id="btn-round1" type="button" class="btn btn-secondary btn-round" data-round="round1">Round 1</button>
+      <button id="btn-round2" type="button" class="btn btn-secondary btn-round" data-round="round2">Round 2</button>
+      <button id="btn-final" type="button" class="btn btn-secondary btn-round" data-round="final">Final</button>
+    </nav>
+    <section class="host-controls">
+      <div class="host-control-buttons">
+        <button id="btn-start-game" type="button" class="btn btn-primary" disabled>Start Game</button>
+        <button id="btn-new-puzzle" type="button" class="btn btn-secondary" disabled>New Puzzle</button>
+        <button id="btn-next-round" type="button" class="btn btn-primary" disabled>Next Round</button>
+      </div>
+      <p id="app-version" class="app-version"></p>
+    </section>
+  </aside>
 
   <div id="envelope-reveal-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="envelope-reveal-title">
     <div class="modal envelope-reveal-modal">
@@ -121,6 +114,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=15"></script>
+  <script type="module" src="js/host-app.js?v=22"></script>
 </body>
 </html>

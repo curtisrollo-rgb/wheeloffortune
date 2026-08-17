@@ -13,6 +13,8 @@ import {
 import { getPlayerBySeat, playerSummaries } from "./rooms.js";
 import { pickRandomPuzzle, puzzleCount } from "./puzzles.js";
 import { getWedgesForRound } from "./wedges.js";
+import { pickRandomTrip } from "./trip-prizes.js";
+import { pickRandomCar } from "./car-prizes.js";
 import { randomBytes } from "crypto";
 import {
   TOSS_UP_WIN,
@@ -35,6 +37,18 @@ import {
 
 export const VOWEL_COST = 250;
 export const MIN_ROUND_WIN = 1000;
+
+/** @param {string} [wedgeLabel] @param {"car"|"trip"|"prize"} [kind] */
+function prizeSubtitleForWedge(wedgeLabel, kind) {
+  if (kind === "car") return "New Car";
+  if (kind === "trip") return "Vacation Trip";
+  const label = String(wedgeLabel || "").toUpperCase();
+  if (label === "GIFT") return "Gift Card";
+  if (label === "SPA") return "Spa Getaway";
+  if (label === "TRIP") return "Vacation Trip";
+  if (label === "CAR") return "New Car";
+  return wedgeLabel || "Bonus Prize";
+}
 
 /** @type {Map<string, NodeJS.Timeout>} */
 const tossUpTimers = new Map();
@@ -112,7 +126,7 @@ export function createInitialGame() {
   return {
     started: false,
     phase: "lobby",
-    roundType: "round1",
+    roundType: "tossup",
     activeSeat: null,
     message: "Waiting to start…",
     category: "—",
@@ -126,7 +140,10 @@ export function createInitialGame() {
     usedPuzzleIds: new Set(),
     roundPrize: null,
     pendingPrizeKind: null,
+    pendingPrizeLabel: null,
     carPrize: null,
+    tripPrize: null,
+    tripPrizeClaimed: false,
     solveBlocked: false,
     finalConsonantsLeft: 0,
     finalVowelsLeft: 0,
@@ -203,8 +220,13 @@ function advanceTurn(room) {
   room.game.activeSeat = nextSeat;
   room.game.phase = "idle";
   room.game.roundMoney = 0;
-  if (room.game.pendingPrizeKind === "car") {
+  if (room.game.pendingPrizeKind) {
     room.game.pendingPrizeKind = null;
+    room.game.pendingPrizeLabel = null;
+    if (!room.game.tripPrizeClaimed) {
+      room.game.tripPrize = null;
+      room.game.roundPrize = null;
+    }
   }
   const next = getPlayerBySeat(room, nextSeat);
   room.game.message = `${next?.name}'s turn — spin the wheel!`;
@@ -362,7 +384,7 @@ export function playerActionFlags(room) {
     g.phase !== "ended";
   const canGuess =
     g.phase === "guess" &&
-    (g.roundMoney > 0 || g.roundPrize || g.pendingPrizeKind === "car") &&
+    (g.roundMoney > 0 || g.roundPrize || g.pendingPrizeKind) &&
     hasHiddenConsonants(g);
   const canBuyVowel =
     (g.phase === "guess" || (g.phase === "idle" && onlyVowelsRemain(g))) &&
@@ -393,6 +415,8 @@ export function publicGameState(room) {
     roundPrize: room.game.roundPrize,
     pendingPrizeKind: room.game.pendingPrizeKind,
     carPrize: room.game.carPrize,
+    tripPrize: room.game.tripPrize,
+    tripPrizeClaimed: !!room.game.tripPrizeClaimed,
     puzzleId: room.game.puzzle?.id ?? null,
     called: [...room.game.called],
     finalConsonantsLeft: room.game.finalConsonantsLeft,
@@ -479,8 +503,11 @@ export function letterResultPayload(room, seat, result) {
     roundType: room.game.roundType,
     onlyVowelsRemain: !!result.onlyVowelsRemain,
     noMoreVowels: !!result.noMoreVowels,
-    carWon: !!result.carWon,
-    carPrize: result.carPrize ?? null,
+    carWon: result.prizeReveal?.kind === "car" || !!result.carWon,
+    carPrize: result.prizeReveal?.kind === "car"
+      ? { id: result.prizeReveal.id, name: result.prizeReveal.name }
+      : result.carPrize ?? null,
+    prizeReveal: result.prizeReveal ?? null,
   };
 }
 
@@ -521,6 +548,9 @@ export function handleSpin(room, seat, _power) {
     room.game.roundMoney = 0;
     room.game.roundPrize = null;
     room.game.pendingPrizeKind = null;
+    room.game.pendingPrizeLabel = null;
+    room.game.tripPrize = null;
+    room.game.tripPrizeClaimed = false;
     room.game.wedgeLabel = wedge.label;
     room.game.message = `${name} hit BANKRUPT! Round earnings wiped.`;
     advanceTurn(room);
@@ -554,11 +584,22 @@ export function handleSpin(room, seat, _power) {
     if (wedge.prizeKind === "car") {
       room.game.pendingPrizeKind = "car";
       room.game.roundPrize = null;
+      room.game.tripPrize = null;
       room.game.message = `${name} landed on CAR! Call a consonant to claim it.`;
+    } else if (wedge.label === "TRIP" || wedge.prizeKind === "trip") {
+      const trip = pickRandomTrip();
+      room.game.pendingPrizeKind = "trip";
+      room.game.tripPrize = trip;
+      room.game.tripPrizeClaimed = false;
+      room.game.roundPrize = trip?.label || wedge.prize || "Trip";
+      room.game.message = `${name} landed on TRIP! Call a consonant to claim ${room.game.roundPrize}!`;
     } else {
-      room.game.pendingPrizeKind = null;
+      room.game.pendingPrizeKind = "prize";
+      room.game.pendingPrizeLabel = wedge.label;
+      room.game.tripPrize = null;
+      room.game.tripPrizeClaimed = false;
       room.game.roundPrize = wedge.prize || wedge.label;
-      room.game.message = `${name} landed on ${room.game.roundPrize}! Guess a consonant.`;
+      room.game.message = `${name} landed on ${wedge.label}! Call a consonant to claim ${room.game.roundPrize}!`;
     }
     return {
       ok: true,
@@ -567,8 +608,9 @@ export function handleSpin(room, seat, _power) {
         label: wedge.label,
         value: 0,
         type: "prize",
-        prize: wedge.prize,
-        prizeKind: wedge.prizeKind,
+        prize: room.game.roundPrize,
+        prizeKind: room.game.pendingPrizeKind || wedge.prizeKind || null,
+        tripId: room.game.tripPrize?.id ?? null,
       },
       state: publicGameState(room),
     };
@@ -642,10 +684,12 @@ function finishSolveByLetters(room, seat) {
     roundWin > 0
       ? `Correct! ${name} solved the puzzle for $${roundWin.toLocaleString()}!`
       : `Correct! ${name} solved the puzzle!`;
-  if (room.game.roundPrize) {
-    message += ` Plus: ${room.game.roundPrize}!`;
-  } else if (room.game.carPrize) {
+  if (room.game.carPrize) {
     message += ` Plus: ${room.game.carPrize.name}!`;
+  } else if (room.game.tripPrize?.label) {
+    message += ` Plus: ${room.game.tripPrize.label}!`;
+  } else if (room.game.roundPrize) {
+    message += ` Plus: ${room.game.roundPrize}!`;
   }
   room.game.message = message;
   room.game.phase = "ended";
@@ -717,12 +761,35 @@ export function handleGuessLetter(room, seat, letter) {
       if (player) player.score += earned;
     }
 
-    let carWon = false;
+    let prizeReveal = null;
     if (room.game.pendingPrizeKind === "car") {
+      const car = pickRandomCar() || { id: "car-round2", name: "Bonus Car" };
       room.game.pendingPrizeKind = null;
-      room.game.carPrize = { id: "car-round2", name: "Bonus Car" };
-      room.game.roundPrize = room.game.carPrize.name;
-      carWon = true;
+      room.game.pendingPrizeLabel = null;
+      room.game.carPrize = car;
+      room.game.roundPrize = car.name;
+      prizeReveal = { kind: "car", subtitle: "New Car", name: car.name, id: car.id };
+    } else if (room.game.pendingPrizeKind === "trip" && room.game.tripPrize) {
+      room.game.pendingPrizeKind = null;
+      room.game.pendingPrizeLabel = null;
+      room.game.tripPrizeClaimed = true;
+      room.game.roundPrize = room.game.tripPrize.label;
+      prizeReveal = {
+        kind: "trip",
+        subtitle: "Vacation Trip",
+        name: room.game.tripPrize.label,
+        id: room.game.tripPrize.id,
+      };
+    } else if (room.game.pendingPrizeKind === "prize" && room.game.roundPrize) {
+      const subtitle = prizeSubtitleForWedge(room.game.pendingPrizeLabel, "prize");
+      prizeReveal = {
+        kind: "prize",
+        subtitle,
+        name: room.game.roundPrize,
+        wedgeLabel: room.game.pendingPrizeLabel,
+      };
+      room.game.pendingPrizeKind = null;
+      room.game.pendingPrizeLabel = null;
     }
 
     const onlyVowels = onlyVowelsRemain(room.game);
@@ -750,8 +817,9 @@ export function handleGuessLetter(room, seat, letter) {
       indices,
       rows: room.game.rows,
       onlyVowelsRemain: onlyVowels,
-      carWon,
-      carPrize: carWon ? room.game.carPrize : null,
+      prizeReveal,
+      carWon: prizeReveal?.kind === "car",
+      carPrize: prizeReveal?.kind === "car" ? room.game.carPrize : null,
     };
   }
 
@@ -833,6 +901,22 @@ export function handleBuyVowel(room, seat, letter) {
   };
 }
 
+/** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {string} name @param {string} lockedMessage */
+function failTossUpSolve(room, seat, name, lockedMessage) {
+  room.game.activeSeat = null;
+  room.game.tossUpRevealPaused = false;
+
+  // Solo play: no lockout pool — the only player can ring in again.
+  if (room.players.length <= 1) {
+    room.game.message = `${name}'s solve was wrong — ring in again when you're ready!`;
+    return { ok: true, correct: false, lockedOut: false, resumeTossUp: true };
+  }
+
+  room.game.tossUpLockedSeats.add(seat);
+  room.game.message = lockedMessage;
+  return { ok: true, correct: false, lockedOut: true, resumeTossUp: true };
+}
+
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {string} text */
 export function handleSolve(room, seat, text) {
   if (!room.game?.started) return { error: "Game not started." };
@@ -846,11 +930,7 @@ export function handleSolve(room, seat, text) {
     const name = player?.name ?? seat;
 
     if (!trimmed) {
-      room.game.tossUpLockedSeats.add(seat);
-      room.game.activeSeat = null;
-      room.game.tossUpRevealPaused = false;
-      room.game.message = `${name} locked out — letters keep revealing.`;
-      return { ok: true, correct: false, lockedOut: true, resumeTossUp: true };
+      return failTossUpSolve(room, seat, name, `${name} locked out — letters keep revealing.`);
     }
 
     if (guessesMatch(trimmed, room.game.puzzle.answer)) {
@@ -873,11 +953,7 @@ export function handleSolve(room, seat, text) {
       };
     }
 
-    room.game.tossUpLockedSeats.add(seat);
-    room.game.activeSeat = null;
-    room.game.tossUpRevealPaused = false;
-    room.game.message = `${name}'s solve was wrong — locked out.`;
-    return { ok: true, correct: false, lockedOut: true, resumeTossUp: true };
+    return failTossUpSolve(room, seat, name, `${name}'s solve was wrong — locked out.`);
   }
 
   if (room.game.activeSeat !== seat) return { error: "Not your turn." };

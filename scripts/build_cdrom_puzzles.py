@@ -63,6 +63,21 @@ CDROM_EXTRA_ALIASES = {
     "On The Map": "Place",
     "Rhyme Time": "Rhyme Time",
     "Final Round": "Phrase",
+    "Thing (single)": "Thing",
+    "Things (plural)": "Thing",
+    "Before And After (my Favorite Category!)": "Before And After",
+    "Proper Names": "Proper Name",
+    "Song And Show": "Song Title",
+    "Title And Author": "Title",
+    "Clue": "Proper Name",
+    "The 60'S": "Decade",
+    "The 70'S": "Decade",
+    "The 80'S": "Decade",
+    "The 90'S": "Decade",
+    "The 60’s": "Decade",
+    "The 70’s": "Decade",
+    "The 80’s": "Decade",
+    "The 90’s": "Decade",
 }
 
 GUIDES = [
