@@ -1,5 +1,6 @@
 import { WofClient } from "./net/client.js?v=1";
-import { getWsUrl, getRoomFromUrl, dataUrl } from "./net/config.js?v=1";
+import { getWsUrl, getRoomFromUrl, dataUrl, buildJoinUrl } from "./net/config.js?v=2";
+import { renderJoinQr } from "./room-qr.js?v=1";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
 import { PuzzleBoard } from "./board.js?v=3";
 import { createWheel } from "./wheel.js?v=18";
@@ -527,6 +528,8 @@ const els = {
   wedgeResult: $("wedge-result"),
   scoreboard: $("scoreboard"),
   hostRoomCode: $("host-room-code"),
+  hostQrRoom: $("host-qr-room"),
+  joinQrCanvas: $("join-qr-canvas"),
   btnStartGame: $("btn-start-game"),
   btnNewPuzzle: $("btn-new-puzzle"),
   btnTossUp: $("btn-tossup"),
@@ -547,6 +550,14 @@ const roomCode = getRoomFromUrl();
 function hideLoading() {
   document.body.classList.remove("is-loading");
   els.loadingScreen?.classList.add("is-hidden");
+}
+
+async function updateJoinQr(code) {
+  if (!code || !els.joinQrCanvas) return;
+  const url = await buildJoinUrl(code, getWsUrl());
+  await renderJoinQr(els.joinQrCanvas, url, { size: 168 });
+  if (els.hostQrRoom) els.hostQrRoom.textContent = code;
+  if (els.hostRoomCode) els.hostRoomCode.textContent = code;
 }
 
 function setMessage(text) {
@@ -603,6 +614,7 @@ function onMessage(msg) {
     case "hostAttached":
       els.hostRoomCode.textContent = msg.code;
       els.score.textContent = msg.code;
+      updateJoinQr(msg.code).catch(() => {});
       setMessage("Room connected. Waiting for players…");
       els.btnStartGame.disabled = false;
       renderScoreboard(msg.players || []);
@@ -781,6 +793,7 @@ async function connectToRoom() {
 
   els.hostRoomCode.textContent = roomCode;
   els.score.textContent = roomCode;
+  updateJoinQr(roomCode).catch(() => {});
 
   client = new WofClient({
     onMessage,

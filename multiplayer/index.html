@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wheel of Fortune — Online Lobby</title>
-  <link rel="stylesheet" href="css/multiplayer.css?v=2" />
+  <link rel="stylesheet" href="css/multiplayer.css?v=3" />
 </head>
 <body>
   <div class="page-wrap">
@@ -30,9 +30,13 @@
 
     <div class="panel" id="room-panel" hidden>
       <h2>Your room</h2>
-      <p class="status-line">Share this code with players:</p>
+      <p class="status-line">Share this code or scan the QR:</p>
       <p><span id="room-code" class="room-code">------</span></p>
-      <p id="join-link-hint" class="status-line"></p>
+      <div id="join-qr-block" class="join-qr-block" hidden>
+        <canvas id="join-qr-canvas" width="200" height="200" aria-label="Scan to join this room"></canvas>
+        <p class="join-qr-caption">Scan to join room <strong id="join-qr-room">----</strong></p>
+      </div>
+      <p id="join-link-hint" class="status-line join-link-hint" title=""></p>
       <ul id="player-list" class="player-list" aria-live="polite"></ul>
       <div class="row" style="margin-top: 0.85rem">
         <button id="btn-open-host" type="button" class="btn btn-primary">Open TV Display</button>
@@ -57,6 +61,6 @@
     </p>
   </div>
 
-  <script type="module" src="../js/net/lobby.js?v=2"></script>
+  <script type="module" src="../js/net/lobby.js?v=3"></script>
 </body>
 </html>

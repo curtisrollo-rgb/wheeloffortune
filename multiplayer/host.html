@@ -13,7 +13,7 @@
     })();
   </script>
   <link rel="stylesheet" href="css/game.css?v=42" />
-  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=4" />
+  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=6" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page is-loading">
@@ -88,10 +88,20 @@
   </nav>
 
   <section class="host-controls">
-    <p class="host-room-code">Room code: <strong id="host-room-code">------</strong></p>
+    <div class="host-join-panel">
+      <div class="host-join-qr-wrap">
+        <canvas id="join-qr-canvas" width="168" height="168" aria-label="Scan to join this room on your phone"></canvas>
+      </div>
+      <div class="host-join-meta">
+        <p class="host-room-code">Room <strong id="host-room-code">------</strong></p>
+        <p class="host-join-hint">Scan to join · <strong id="host-qr-room">------</strong></p>
+      </div>
+    </div>
+    <div class="host-control-buttons">
     <button id="btn-start-game" type="button" class="btn btn-primary" disabled>Start Game</button>
     <button id="btn-new-puzzle" type="button" class="btn btn-secondary" disabled>New Puzzle</button>
     <button id="btn-next-round" type="button" class="btn btn-primary" disabled>Next Round</button>
+    </div>
     <p id="app-version" class="app-version"></p>
   </section>
 
@@ -111,6 +121,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=14"></script>
+  <script type="module" src="js/host-app.js?v=15"></script>
 </body>
 </html>

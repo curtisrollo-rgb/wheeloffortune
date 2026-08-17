@@ -51,8 +51,35 @@ export function pageUrl(page, { room, seat, name, ws } = {}) {
 
 export function shareJoinUrl(room, ws) {
   const origin = location.origin;
-  const path = pageUrl("join.html", { room, ws });
+  const path = pageUrl("join.html", { room, ws: ws || undefined });
   return `${origin}${path}`;
+}
+
+let defaultWsCache;
+
+/** Optional production WebSocket URL — keeps join QR codes short (room code only). */
+export async function getDefaultWsUrl() {
+  if (defaultWsCache !== undefined) return defaultWsCache;
+  try {
+    const res = await fetch(dataUrl("multiplayer-config.json?v=1"));
+    if (res.ok) {
+      const data = await res.json();
+      defaultWsCache = String(data.defaultWsUrl || "").trim();
+    } else {
+      defaultWsCache = "";
+    }
+  } catch {
+    defaultWsCache = "";
+  }
+  return defaultWsCache;
+}
+
+/** Join URL for QR codes — omits ?ws= when it matches the deployed default server. */
+export async function buildJoinUrl(room, ws) {
+  const defaultWs = await getDefaultWsUrl();
+  const trimmed = String(ws || "").trim();
+  const useShort = !!defaultWs && (!trimmed || trimmed === defaultWs);
+  return shareJoinUrl(room, useShort ? "" : trimmed);
 }
 
 /** App root URL (handles /multiplayer/ pages in subdirectories). */

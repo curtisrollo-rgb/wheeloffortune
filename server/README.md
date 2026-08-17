@@ -33,6 +33,8 @@ Check loaded count: `GET /health` → `"puzzleCount": 8030`
 
 For solo/TV static site, upload `data/puzzles-cdrom.json` to Bluehost (or use `?tv` on index for the old TV-scraped bank).
 
+After creating a room, players can **scan the QR code** on the TV or lobby page to join (no long URL to copy). Set your Railway WebSocket URL once in `data/multiplayer-config.json` so QR links stay short (`join.html?room=CODE` only).
+
 ## Local run
 
 ```bash

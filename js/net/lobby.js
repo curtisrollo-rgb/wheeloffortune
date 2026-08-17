@@ -1,5 +1,6 @@
 import { WofClient } from "./client.js?v=1";
-import { getWsUrl, setWsUrl, pageUrl, shareJoinUrl } from "./config.js?v=1";
+import { getWsUrl, setWsUrl, pageUrl, buildJoinUrl } from "./config.js?v=2";
+import { renderJoinQr } from "../room-qr.js?v=1";
 import { stampVersion } from "../version.js?v=1";
 
 const $ = (id) => document.getElementById(id);
@@ -13,6 +14,9 @@ const els = {
   roomPanel: $("room-panel"),
   roomCode: $("room-code"),
   joinLinkHint: $("join-link-hint"),
+  joinQrCanvas: $("join-qr-canvas"),
+  joinQrRoom: $("join-qr-room"),
+  joinQrBlock: $("join-qr-block"),
   playerList: $("player-list"),
   btnOpenHost: $("btn-open-host"),
   btnStart: $("btn-start"),
@@ -44,6 +48,21 @@ function renderPlayers(players = []) {
   els.btnStart.disabled = players.length < 1;
 }
 
+async function showRoomJoinQr(code) {
+  if (!code) return;
+  const ws = els.wsUrl.value.trim();
+  const url = await buildJoinUrl(code, ws);
+  if (els.joinQrRoom) els.joinQrRoom.textContent = code;
+  if (els.joinQrCanvas) {
+    await renderJoinQr(els.joinQrCanvas, url, { size: 200 });
+  }
+  if (els.joinQrBlock) els.joinQrBlock.hidden = false;
+  if (els.joinLinkHint) {
+    els.joinLinkHint.textContent = url.length > 72 ? `${url.slice(0, 68)}…` : url;
+    els.joinLinkHint.title = url;
+  }
+}
+
 function onMessage(msg) {
   switch (msg.op) {
     case "hello":
@@ -53,8 +72,8 @@ function onMessage(msg) {
       roomCode = msg.code;
       els.roomCode.textContent = roomCode;
       els.roomPanel.hidden = false;
-      els.joinLinkHint.textContent = `Players join at: ${shareJoinUrl(roomCode, els.wsUrl.value.trim())}`;
-      setStatus(els.roomStatus, "Open the TV display, then share the join link with players.", "ok");
+      showRoomJoinQr(roomCode).catch(() => {});
+      setStatus(els.roomStatus, "Scan the QR code or share the link — then open the TV display.", "ok");
       renderPlayers(msg.players || []);
       break;
     case "lobbyUpdate":

@@ -1,5 +1,5 @@
 import { WofClient } from "./client.js?v=1";
-import { getWsUrl, setWsUrl, getRoomFromUrl, pageUrl } from "./config.js?v=1";
+import { getWsUrl, setWsUrl, getRoomFromUrl, getDefaultWsUrl, pageUrl } from "./config.js?v=2";
 import { stampVersion } from "../version.js?v=1";
 
 const $ = (id) => document.getElementById(id);
@@ -108,13 +108,23 @@ els.btnJoin.addEventListener("click", () => {
 
 els.btnOpenController.addEventListener("click", openController);
 
-els.wsUrl.value = getWsUrl();
-const presetRoom = getRoomFromUrl();
-if (presetRoom) els.roomCode.value = presetRoom;
+async function bootstrap() {
+  let ws = getWsUrl();
+  if (!ws) ws = await getDefaultWsUrl();
+  if (ws) els.wsUrl.value = ws;
 
-if (els.wsUrl.value) {
-  connect().catch(() => {});
+  const presetRoom = getRoomFromUrl();
+  if (presetRoom) els.roomCode.value = presetRoom;
+
+  if (els.wsUrl.value) {
+    await connect().catch(() => {});
+  }
+
+  updateJoinButton();
+  stampVersion();
 }
 
-updateJoinButton();
-stampVersion();
+bootstrap().catch(() => {
+  updateJoinButton();
+  stampVersion();
+});
