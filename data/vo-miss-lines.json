@@ -1,0 +1,37 @@
+{
+  "tag_prefix": "[sympathetically]",
+  "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "templates": [
+    "Sorry, no {L}'s.",
+    "Sorry, no {L}'s in this puzzle.",
+    "No {L}'s up there.",
+    "Sorry, zero {L}'s.",
+    "Not a single {L} in this puzzle.",
+    "Sorry, there's no {L}.",
+    "Bad luck — no {L}'s.",
+    "Nothing for {L}."
+  ],
+  "variants_per_letter": 2,
+  "generic": [
+    { "id": "none", "text": "Sorry, there are none." },
+    { "id": "bad_luck", "text": "Bad luck." },
+    { "id": "sorry_no", "text": "Sorry, no." },
+    { "id": "not_in_puzzle", "text": "Not in the puzzle." },
+    { "id": "afraid_not", "text": "No, I'm afraid not." },
+    { "id": "not_up_there", "text": "Sorry, that letter's not up there." },
+    { "id": "nothing_showing", "text": "Nothing showing for that one." },
+    { "id": "no_hits", "text": "No hits on that letter." },
+    { "id": "try_next_spin", "text": "Sorry, try again on your next spin." },
+    { "id": "thats_miss", "text": "That's a miss." },
+    { "id": "no_luck", "text": "No luck this time." },
+    { "id": "zero", "text": "Sorry, zero of those." },
+    { "id": "not_this_time", "text": "Not this time." },
+    { "id": "doesnt_have", "text": "The puzzle doesn't have that one." },
+    { "id": "no_matches", "text": "Sorry, no matches." },
+    { "id": "unlucky", "text": "Unlucky pick." },
+    { "id": "not_in_there", "text": "That one's not in there." },
+    { "id": "blank", "text": "Sorry, blank on that letter." },
+    { "id": "nothing_for", "text": "No, nothing for that letter." },
+    { "id": "tough_break", "text": "Tough break — not in the puzzle." }
+  ]
+}

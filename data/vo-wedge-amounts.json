@@ -1,0 +1,18 @@
+{
+  "tag_prefix": "[matter of factly]",
+  "amounts": [
+    { "id": "amount_300", "value": 300, "text": "Three hundred dollars." },
+    { "id": "amount_350", "value": 350, "text": "Three hundred fifty dollars." },
+    { "id": "amount_400", "value": 400, "text": "Four hundred dollars." },
+    { "id": "amount_450", "value": 450, "text": "Four hundred fifty dollars." },
+    { "id": "amount_500", "value": 500, "text": "Five hundred dollars." },
+    { "id": "amount_600", "value": 600, "text": "Six hundred dollars." },
+    { "id": "amount_650", "value": 650, "text": "Six hundred fifty dollars." },
+    { "id": "amount_700", "value": 700, "text": "Seven hundred dollars." },
+    { "id": "amount_750", "value": 750, "text": "Seven hundred fifty dollars." },
+    { "id": "amount_800", "value": 800, "text": "Eight hundred dollars." },
+    { "id": "amount_900", "value": 900, "text": "Nine hundred dollars." },
+    { "id": "amount_1000", "value": 1000, "text": "One thousand dollars." },
+    { "id": "amount_3000", "value": 3000, "text": "Three thousand dollars." }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "lines": [
+    { "id": "welcome", "text": "[excitedly] Welcome to Wheel of Fortune!" },
+    { "id": "land_money", "text": "[excitedly] Five hundred dollars!" },
+    { "id": "land_big", "text": "[excitedly] One thousand dollars!" },
+    { "id": "bankrupt", "text": "[sad voice] Bankrupt!" },
+    { "id": "lose_turn", "text": "[sad voice] Lose a turn." },
+    { "id": "solve", "text": "[excitedly] Correct! You solved the puzzle!" },
+    { "id": "miss", "text": "[excitedly] Sorry, try again." },
+    { "id": "spin_prompt", "text": "[excitedly] Spin the wheel!" },
+    { "id": "buy_vowel", "text": "[excitedly] Buying a vowel." },
+    { "id": "no_more_vowels", "text": "[excitedly] No more vowels." }
+  ]
+}

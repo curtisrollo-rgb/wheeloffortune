@@ -1,0 +1,13 @@
+# Dependencies
+node_modules/
+server/node_modules/
+
+# Secrets
+.env
+
+# Logs
+*.log
+scripts/*.log
+
+# OS
+.DS_Store

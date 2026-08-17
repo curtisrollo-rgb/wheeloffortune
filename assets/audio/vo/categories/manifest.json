@@ -1,0 +1,510 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "moods": [
+    "excitedly",
+    "good mood happy"
+  ],
+  "clips": [
+    {
+      "slug": "thing",
+      "mood_key": "excitedly",
+      "category": "Thing",
+      "spoken": "Thing",
+      "intro": "And the next category is",
+      "mood": "excitedly",
+      "text": "[excitedly] And the next category is... Thing!",
+      "file": "assets/audio/vo/categories/thing_excitedly.mp3"
+    },
+    {
+      "slug": "thing",
+      "mood_key": "happy",
+      "category": "Thing",
+      "spoken": "Thing",
+      "intro": "And the next category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] And the next category is... Thing!",
+      "file": "assets/audio/vo/categories/thing_happy.mp3"
+    },
+    {
+      "slug": "food_and_drink",
+      "mood_key": "excitedly",
+      "category": "Food And Drink",
+      "spoken": "Food and Drink",
+      "intro": "Next category",
+      "mood": "excitedly",
+      "text": "[excitedly] Next category... Food and Drink!",
+      "file": "assets/audio/vo/categories/food_and_drink_excitedly.mp3"
+    },
+    {
+      "slug": "food_and_drink",
+      "mood_key": "happy",
+      "category": "Food And Drink",
+      "spoken": "Food and Drink",
+      "intro": "Next category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Next category... Food and Drink!",
+      "file": "assets/audio/vo/categories/food_and_drink_happy.mp3"
+    },
+    {
+      "slug": "place",
+      "mood_key": "excitedly",
+      "category": "Place",
+      "spoken": "Place",
+      "intro": "Ready for the next category?",
+      "mood": "excitedly",
+      "text": "[excitedly] Ready for the next category?... Place!",
+      "file": "assets/audio/vo/categories/place_excitedly.mp3"
+    },
+    {
+      "slug": "place",
+      "mood_key": "happy",
+      "category": "Place",
+      "spoken": "Place",
+      "intro": "Ready for the next category?",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Ready for the next category?... Place!",
+      "file": "assets/audio/vo/categories/place_happy.mp3"
+    },
+    {
+      "slug": "phrase",
+      "mood_key": "excitedly",
+      "category": "Phrase",
+      "spoken": "Phrase",
+      "intro": "Your category is",
+      "mood": "excitedly",
+      "text": "[excitedly] Your category is... Phrase!",
+      "file": "assets/audio/vo/categories/phrase_excitedly.mp3"
+    },
+    {
+      "slug": "phrase",
+      "mood_key": "happy",
+      "category": "Phrase",
+      "spoken": "Phrase",
+      "intro": "Your category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Your category is... Phrase!",
+      "file": "assets/audio/vo/categories/phrase_happy.mp3"
+    },
+    {
+      "slug": "what_are_you_doing",
+      "mood_key": "excitedly",
+      "category": "What Are You Doing",
+      "spoken": "What Are You Doing",
+      "intro": "Here comes your category",
+      "mood": "excitedly",
+      "text": "[excitedly] Here comes your category... What Are You Doing!",
+      "file": "assets/audio/vo/categories/what_are_you_doing_excitedly.mp3"
+    },
+    {
+      "slug": "what_are_you_doing",
+      "mood_key": "happy",
+      "category": "What Are You Doing",
+      "spoken": "What Are You Doing",
+      "intro": "Here comes your category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Here comes your category... What Are You Doing!",
+      "file": "assets/audio/vo/categories/what_are_you_doing_happy.mp3"
+    },
+    {
+      "slug": "people",
+      "mood_key": "excitedly",
+      "category": "People",
+      "spoken": "People",
+      "intro": "Let's play the category",
+      "mood": "excitedly",
+      "text": "[excitedly] Let's play the category... People!",
+      "file": "assets/audio/vo/categories/people_excitedly.mp3"
+    },
+    {
+      "slug": "people",
+      "mood_key": "happy",
+      "category": "People",
+      "spoken": "People",
+      "intro": "Let's play the category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Let's play the category... People!",
+      "file": "assets/audio/vo/categories/people_happy.mp3"
+    },
+    {
+      "slug": "event",
+      "mood_key": "excitedly",
+      "category": "Event",
+      "spoken": "Event",
+      "intro": "This round's category is",
+      "mood": "excitedly",
+      "text": "[excitedly] This round's category is... Event!",
+      "file": "assets/audio/vo/categories/event_excitedly.mp3"
+    },
+    {
+      "slug": "event",
+      "mood_key": "happy",
+      "category": "Event",
+      "spoken": "Event",
+      "intro": "This round's category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] This round's category is... Event!",
+      "file": "assets/audio/vo/categories/event_happy.mp3"
+    },
+    {
+      "slug": "proper_name",
+      "mood_key": "excitedly",
+      "category": "Proper Name",
+      "spoken": "Proper Name",
+      "intro": "Get ready for the category",
+      "mood": "excitedly",
+      "text": "[excitedly] Get ready for the category... Proper Name!",
+      "file": "assets/audio/vo/categories/proper_name_excitedly.mp3"
+    },
+    {
+      "slug": "proper_name",
+      "mood_key": "happy",
+      "category": "Proper Name",
+      "spoken": "Proper Name",
+      "intro": "Get ready for the category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Get ready for the category... Proper Name!",
+      "file": "assets/audio/vo/categories/proper_name_happy.mp3"
+    },
+    {
+      "slug": "before_and_after",
+      "mood_key": "excitedly",
+      "category": "Before And After",
+      "spoken": "Before and After",
+      "intro": "The category is",
+      "mood": "excitedly",
+      "text": "[excitedly] The category is... Before and After!",
+      "file": "assets/audio/vo/categories/before_and_after_excitedly.mp3"
+    },
+    {
+      "slug": "before_and_after",
+      "mood_key": "happy",
+      "category": "Before And After",
+      "spoken": "Before and After",
+      "intro": "The category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] The category is... Before and After!",
+      "file": "assets/audio/vo/categories/before_and_after_happy.mp3"
+    },
+    {
+      "slug": "living_thing",
+      "mood_key": "excitedly",
+      "category": "Living Thing",
+      "spoken": "Living Thing",
+      "intro": "And now, the category",
+      "mood": "excitedly",
+      "text": "[excitedly] And now, the category... Living Thing!",
+      "file": "assets/audio/vo/categories/living_thing_excitedly.mp3"
+    },
+    {
+      "slug": "living_thing",
+      "mood_key": "happy",
+      "category": "Living Thing",
+      "spoken": "Living Thing",
+      "intro": "And now, the category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] And now, the category... Living Thing!",
+      "file": "assets/audio/vo/categories/living_thing_happy.mp3"
+    },
+    {
+      "slug": "around_the_house",
+      "mood_key": "excitedly",
+      "category": "Around The House",
+      "spoken": "Around the House",
+      "intro": "And the next category is",
+      "mood": "excitedly",
+      "text": "[excitedly] And the next category is... Around the House!",
+      "file": "assets/audio/vo/categories/around_the_house_excitedly.mp3"
+    },
+    {
+      "slug": "around_the_house",
+      "mood_key": "happy",
+      "category": "Around The House",
+      "spoken": "Around the House",
+      "intro": "And the next category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] And the next category is... Around the House!",
+      "file": "assets/audio/vo/categories/around_the_house_happy.mp3"
+    },
+    {
+      "slug": "song_title",
+      "mood_key": "excitedly",
+      "category": "Song Title",
+      "spoken": "Song Title",
+      "intro": "Next category",
+      "mood": "excitedly",
+      "text": "[excitedly] Next category... Song Title!",
+      "file": "assets/audio/vo/categories/song_title_excitedly.mp3"
+    },
+    {
+      "slug": "song_title",
+      "mood_key": "happy",
+      "category": "Song Title",
+      "spoken": "Song Title",
+      "intro": "Next category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Next category... Song Title!",
+      "file": "assets/audio/vo/categories/song_title_happy.mp3"
+    },
+    {
+      "slug": "fictional_character",
+      "mood_key": "excitedly",
+      "category": "Fictional Character",
+      "spoken": "Fictional Character",
+      "intro": "Ready for the next category?",
+      "mood": "excitedly",
+      "text": "[excitedly] Ready for the next category?... Fictional Character!",
+      "file": "assets/audio/vo/categories/fictional_character_excitedly.mp3"
+    },
+    {
+      "slug": "fictional_character",
+      "mood_key": "happy",
+      "category": "Fictional Character",
+      "spoken": "Fictional Character",
+      "intro": "Ready for the next category?",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Ready for the next category?... Fictional Character!",
+      "file": "assets/audio/vo/categories/fictional_character_happy.mp3"
+    },
+    {
+      "slug": "show_biz",
+      "mood_key": "excitedly",
+      "category": "Show Biz",
+      "spoken": "Show Biz",
+      "intro": "Your category is",
+      "mood": "excitedly",
+      "text": "[excitedly] Your category is... Show Biz!",
+      "file": "assets/audio/vo/categories/show_biz_excitedly.mp3"
+    },
+    {
+      "slug": "show_biz",
+      "mood_key": "happy",
+      "category": "Show Biz",
+      "spoken": "Show Biz",
+      "intro": "Your category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Your category is... Show Biz!",
+      "file": "assets/audio/vo/categories/show_biz_happy.mp3"
+    },
+    {
+      "slug": "title",
+      "mood_key": "excitedly",
+      "category": "Title",
+      "spoken": "Title",
+      "intro": "Here comes your category",
+      "mood": "excitedly",
+      "text": "[excitedly] Here comes your category... Title!",
+      "file": "assets/audio/vo/categories/title_excitedly.mp3"
+    },
+    {
+      "slug": "title",
+      "mood_key": "happy",
+      "category": "Title",
+      "spoken": "Title",
+      "intro": "Here comes your category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Here comes your category... Title!",
+      "file": "assets/audio/vo/categories/title_happy.mp3"
+    },
+    {
+      "slug": "same_name",
+      "mood_key": "excitedly",
+      "category": "Same Name",
+      "spoken": "Same Name",
+      "intro": "Let's play the category",
+      "mood": "excitedly",
+      "text": "[excitedly] Let's play the category... Same Name!",
+      "file": "assets/audio/vo/categories/same_name_excitedly.mp3"
+    },
+    {
+      "slug": "same_name",
+      "mood_key": "happy",
+      "category": "Same Name",
+      "spoken": "Same Name",
+      "intro": "Let's play the category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Let's play the category... Same Name!",
+      "file": "assets/audio/vo/categories/same_name_happy.mp3"
+    },
+    {
+      "slug": "movie_title",
+      "mood_key": "excitedly",
+      "category": "Movie Title",
+      "spoken": "Movie Title",
+      "intro": "This round's category is",
+      "mood": "excitedly",
+      "text": "[excitedly] This round's category is... Movie Title!",
+      "file": "assets/audio/vo/categories/movie_title_excitedly.mp3"
+    },
+    {
+      "slug": "movie_title",
+      "mood_key": "happy",
+      "category": "Movie Title",
+      "spoken": "Movie Title",
+      "intro": "This round's category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] This round's category is... Movie Title!",
+      "file": "assets/audio/vo/categories/movie_title_happy.mp3"
+    },
+    {
+      "slug": "fun_and_games",
+      "mood_key": "excitedly",
+      "category": "Fun And Games",
+      "spoken": "Fun and Games",
+      "intro": "Get ready for the category",
+      "mood": "excitedly",
+      "text": "[excitedly] Get ready for the category... Fun and Games!",
+      "file": "assets/audio/vo/categories/fun_and_games_excitedly.mp3"
+    },
+    {
+      "slug": "fun_and_games",
+      "mood_key": "happy",
+      "category": "Fun And Games",
+      "spoken": "Fun and Games",
+      "intro": "Get ready for the category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Get ready for the category... Fun and Games!",
+      "file": "assets/audio/vo/categories/fun_and_games_happy.mp3"
+    },
+    {
+      "slug": "occupation",
+      "mood_key": "excitedly",
+      "category": "Occupation",
+      "spoken": "Occupation",
+      "intro": "The category is",
+      "mood": "excitedly",
+      "text": "[excitedly] The category is... Occupation!",
+      "file": "assets/audio/vo/categories/occupation_excitedly.mp3"
+    },
+    {
+      "slug": "occupation",
+      "mood_key": "happy",
+      "category": "Occupation",
+      "spoken": "Occupation",
+      "intro": "The category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] The category is... Occupation!",
+      "file": "assets/audio/vo/categories/occupation_happy.mp3"
+    },
+    {
+      "slug": "tv_show_title",
+      "mood_key": "excitedly",
+      "category": "Tv Show Title",
+      "spoken": "TV Show Title",
+      "intro": "And now, the category",
+      "mood": "excitedly",
+      "text": "[excitedly] And now, the category... TV Show Title!",
+      "file": "assets/audio/vo/categories/tv_show_title_excitedly.mp3"
+    },
+    {
+      "slug": "tv_show_title",
+      "mood_key": "happy",
+      "category": "Tv Show Title",
+      "spoken": "TV Show Title",
+      "intro": "And now, the category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] And now, the category... TV Show Title!",
+      "file": "assets/audio/vo/categories/tv_show_title_happy.mp3"
+    },
+    {
+      "slug": "rhyme_time",
+      "mood_key": "excitedly",
+      "category": "Rhyme Time",
+      "spoken": "Rhyme Time",
+      "intro": "And the next category is",
+      "mood": "excitedly",
+      "text": "[excitedly] And the next category is... Rhyme Time!",
+      "file": "assets/audio/vo/categories/rhyme_time_excitedly.mp3"
+    },
+    {
+      "slug": "rhyme_time",
+      "mood_key": "happy",
+      "category": "Rhyme Time",
+      "spoken": "Rhyme Time",
+      "intro": "And the next category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] And the next category is... Rhyme Time!",
+      "file": "assets/audio/vo/categories/rhyme_time_happy.mp3"
+    },
+    {
+      "slug": "decade",
+      "mood_key": "excitedly",
+      "category": "Decade",
+      "spoken": "Decade",
+      "intro": "Next category",
+      "mood": "excitedly",
+      "text": "[excitedly] Next category... Decade!",
+      "file": "assets/audio/vo/categories/decade_excitedly.mp3"
+    },
+    {
+      "slug": "decade",
+      "mood_key": "happy",
+      "category": "Decade",
+      "spoken": "Decade",
+      "intro": "Next category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Next category... Decade!",
+      "file": "assets/audio/vo/categories/decade_happy.mp3"
+    },
+    {
+      "slug": "same_letter",
+      "mood_key": "excitedly",
+      "category": "Same Letter",
+      "spoken": "Same Letter",
+      "intro": "Ready for the next category?",
+      "mood": "excitedly",
+      "text": "[excitedly] Ready for the next category?... Same Letter!",
+      "file": "assets/audio/vo/categories/same_letter_excitedly.mp3"
+    },
+    {
+      "slug": "same_letter",
+      "mood_key": "happy",
+      "category": "Same Letter",
+      "spoken": "Same Letter",
+      "intro": "Ready for the next category?",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Ready for the next category?... Same Letter!",
+      "file": "assets/audio/vo/categories/same_letter_happy.mp3"
+    },
+    {
+      "slug": "what_are_you_wearing",
+      "mood_key": "excitedly",
+      "category": "What Are You Wearing",
+      "spoken": "What Are You Wearing",
+      "intro": "Your category is",
+      "mood": "excitedly",
+      "text": "[excitedly] Your category is... What Are You Wearing!",
+      "file": "assets/audio/vo/categories/what_are_you_wearing_excitedly.mp3"
+    },
+    {
+      "slug": "what_are_you_wearing",
+      "mood_key": "happy",
+      "category": "What Are You Wearing",
+      "spoken": "What Are You Wearing",
+      "intro": "Your category is",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Your category is... What Are You Wearing!",
+      "file": "assets/audio/vo/categories/what_are_you_wearing_happy.mp3"
+    },
+    {
+      "slug": "college_life",
+      "mood_key": "excitedly",
+      "category": "College Life",
+      "spoken": "College Life",
+      "intro": "Here comes your category",
+      "mood": "excitedly",
+      "text": "[excitedly] Here comes your category... College Life!",
+      "file": "assets/audio/vo/categories/college_life_excitedly.mp3"
+    },
+    {
+      "slug": "college_life",
+      "mood_key": "happy",
+      "category": "College Life",
+      "spoken": "College Life",
+      "intro": "Here comes your category",
+      "mood": "good mood happy",
+      "text": "[good mood happy] Here comes your category... College Life!",
+      "file": "assets/audio/vo/categories/college_life_happy.mp3"
+    }
+  ]
+}

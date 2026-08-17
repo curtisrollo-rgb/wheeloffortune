@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wheel of Fortune — Online Lobby</title>
+  <link rel="stylesheet" href="css/multiplayer.css?v=1" />
+</head>
+<body>
+  <div class="page-wrap">
+    <h1 class="page-brand">Wheel of Fortune Online</h1>
+    <p class="page-subtitle">Create a game for the TV, then have players join from their phones.</p>
+
+    <div class="panel">
+      <h2>Server</h2>
+      <div class="row">
+        <input id="ws-url" type="url" placeholder="wss://your-app.up.railway.app" autocomplete="off" />
+        <button id="btn-connect" type="button" class="btn btn-primary">Connect</button>
+      </div>
+      <p id="conn-status" class="status-line">Enter your Railway WebSocket URL, then connect.</p>
+    </div>
+
+    <div class="panel" id="create-panel" hidden>
+      <h2>Create game</h2>
+      <p class="status-line">You’ll get a room code for players and open the TV display.</p>
+      <div class="row">
+        <button id="btn-create" type="button" class="btn btn-primary">Create Room</button>
+      </div>
+    </div>
+
+    <div class="panel" id="room-panel" hidden>
+      <h2>Your room</h2>
+      <p class="status-line">Share this code with players:</p>
+      <p><span id="room-code" class="room-code">------</span></p>
+      <p id="join-link-hint" class="status-line"></p>
+      <ul id="player-list" class="player-list" aria-live="polite"></ul>
+      <div class="row" style="margin-top: 0.85rem">
+        <button id="btn-open-host" type="button" class="btn btn-primary">Open TV Display</button>
+        <button id="btn-start" type="button" class="btn btn-secondary" disabled>Start Game</button>
+      </div>
+      <p id="room-status" class="status-line" style="margin-top: 0.65rem"></p>
+    </div>
+
+    <div class="panel">
+      <h2>Players</h2>
+      <div class="link-grid">
+        <a class="link-card" href="join.html">
+          <strong>Join with a code</strong>
+          <span>Phone controller — enter room code and your name</span>
+        </a>
+      </div>
+    </div>
+
+    <p class="footer-links">
+      <a href="../index.html">Solo prototype</a>
+    </p>
+  </div>
+
+  <script type="module" src="../js/net/lobby.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,683 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "tag_prefix": "[congratulatory]",
+  "byLetter": {
+    "A": {
+      "1": {
+        "id": "hit_a_1",
+        "letter": "A",
+        "count": 1,
+        "text": "One A.",
+        "spoken": "[congratulatory] One A.",
+        "file": "assets/audio/vo/hit/hit_a_1.mp3"
+      },
+      "2": {
+        "id": "hit_a_2",
+        "letter": "A",
+        "count": 2,
+        "text": "There are two A's.",
+        "spoken": "[congratulatory] There are two A's.",
+        "file": "assets/audio/vo/hit/hit_a_2.mp3"
+      },
+      "3": {
+        "id": "hit_a_3",
+        "letter": "A",
+        "count": 3,
+        "text": "Three A's.",
+        "spoken": "[congratulatory] Three A's.",
+        "file": "assets/audio/vo/hit/hit_a_3.mp3"
+      }
+    },
+    "B": {
+      "1": {
+        "id": "hit_b_1",
+        "letter": "B",
+        "count": 1,
+        "text": "A single B.",
+        "spoken": "[congratulatory] A single B.",
+        "file": "assets/audio/vo/hit/hit_b_1.mp3"
+      },
+      "2": {
+        "id": "hit_b_2",
+        "letter": "B",
+        "count": 2,
+        "text": "Two B's.",
+        "spoken": "[congratulatory] Two B's.",
+        "file": "assets/audio/vo/hit/hit_b_2.mp3"
+      },
+      "3": {
+        "id": "hit_b_3",
+        "letter": "B",
+        "count": 3,
+        "text": "There are three B's.",
+        "spoken": "[congratulatory] There are three B's.",
+        "file": "assets/audio/vo/hit/hit_b_3.mp3"
+      }
+    },
+    "C": {
+      "1": {
+        "id": "hit_c_1",
+        "letter": "C",
+        "count": 1,
+        "text": "Just one C.",
+        "spoken": "[congratulatory] Just one C.",
+        "file": "assets/audio/vo/hit/hit_c_1.mp3"
+      },
+      "2": {
+        "id": "hit_c_2",
+        "letter": "C",
+        "count": 2,
+        "text": "You've got two C's.",
+        "spoken": "[congratulatory] You've got two C's.",
+        "file": "assets/audio/vo/hit/hit_c_2.mp3"
+      },
+      "3": {
+        "id": "hit_c_3",
+        "letter": "C",
+        "count": 3,
+        "text": "3 C's.",
+        "spoken": "[congratulatory] 3 C's.",
+        "file": "assets/audio/vo/hit/hit_c_3.mp3"
+      }
+    },
+    "D": {
+      "1": {
+        "id": "hit_d_1",
+        "letter": "D",
+        "count": 1,
+        "text": "One D.",
+        "spoken": "[congratulatory] One D.",
+        "file": "assets/audio/vo/hit/hit_d_1.mp3"
+      },
+      "2": {
+        "id": "hit_d_2",
+        "letter": "D",
+        "count": 2,
+        "text": "There are two D's.",
+        "spoken": "[congratulatory] There are two D's.",
+        "file": "assets/audio/vo/hit/hit_d_2.mp3"
+      },
+      "3": {
+        "id": "hit_d_3",
+        "letter": "D",
+        "count": 3,
+        "text": "Three D's.",
+        "spoken": "[congratulatory] Three D's.",
+        "file": "assets/audio/vo/hit/hit_d_3.mp3"
+      }
+    },
+    "E": {
+      "1": {
+        "id": "hit_e_1",
+        "letter": "E",
+        "count": 1,
+        "text": "A single E.",
+        "spoken": "[congratulatory] A single E.",
+        "file": "assets/audio/vo/hit/hit_e_1.mp3"
+      },
+      "2": {
+        "id": "hit_e_2",
+        "letter": "E",
+        "count": 2,
+        "text": "Two E's.",
+        "spoken": "[congratulatory] Two E's.",
+        "file": "assets/audio/vo/hit/hit_e_2.mp3"
+      },
+      "3": {
+        "id": "hit_e_3",
+        "letter": "E",
+        "count": 3,
+        "text": "There are three E's.",
+        "spoken": "[congratulatory] There are three E's.",
+        "file": "assets/audio/vo/hit/hit_e_3.mp3"
+      }
+    },
+    "F": {
+      "1": {
+        "id": "hit_f_1",
+        "letter": "F",
+        "count": 1,
+        "text": "Just one F.",
+        "spoken": "[congratulatory] Just one F.",
+        "file": "assets/audio/vo/hit/hit_f_1.mp3"
+      },
+      "2": {
+        "id": "hit_f_2",
+        "letter": "F",
+        "count": 2,
+        "text": "You've got two F's.",
+        "spoken": "[congratulatory] You've got two F's.",
+        "file": "assets/audio/vo/hit/hit_f_2.mp3"
+      },
+      "3": {
+        "id": "hit_f_3",
+        "letter": "F",
+        "count": 3,
+        "text": "3 F's.",
+        "spoken": "[congratulatory] 3 F's.",
+        "file": "assets/audio/vo/hit/hit_f_3.mp3"
+      }
+    },
+    "G": {
+      "1": {
+        "id": "hit_g_1",
+        "letter": "G",
+        "count": 1,
+        "text": "One G.",
+        "spoken": "[congratulatory] One G.",
+        "file": "assets/audio/vo/hit/hit_g_1.mp3"
+      },
+      "2": {
+        "id": "hit_g_2",
+        "letter": "G",
+        "count": 2,
+        "text": "There are two G's.",
+        "spoken": "[congratulatory] There are two G's.",
+        "file": "assets/audio/vo/hit/hit_g_2.mp3"
+      },
+      "3": {
+        "id": "hit_g_3",
+        "letter": "G",
+        "count": 3,
+        "text": "Three G's.",
+        "spoken": "[congratulatory] Three G's.",
+        "file": "assets/audio/vo/hit/hit_g_3.mp3"
+      }
+    },
+    "H": {
+      "1": {
+        "id": "hit_h_1",
+        "letter": "H",
+        "count": 1,
+        "text": "A single H.",
+        "spoken": "[congratulatory] A single H.",
+        "file": "assets/audio/vo/hit/hit_h_1.mp3"
+      },
+      "2": {
+        "id": "hit_h_2",
+        "letter": "H",
+        "count": 2,
+        "text": "Two H's.",
+        "spoken": "[congratulatory] Two H's.",
+        "file": "assets/audio/vo/hit/hit_h_2.mp3"
+      },
+      "3": {
+        "id": "hit_h_3",
+        "letter": "H",
+        "count": 3,
+        "text": "There are three H's.",
+        "spoken": "[congratulatory] There are three H's.",
+        "file": "assets/audio/vo/hit/hit_h_3.mp3"
+      }
+    },
+    "I": {
+      "1": {
+        "id": "hit_i_1",
+        "letter": "I",
+        "count": 1,
+        "text": "Just one I.",
+        "spoken": "[congratulatory] Just one I.",
+        "file": "assets/audio/vo/hit/hit_i_1.mp3"
+      },
+      "2": {
+        "id": "hit_i_2",
+        "letter": "I",
+        "count": 2,
+        "text": "You've got two I's.",
+        "spoken": "[congratulatory] You've got two I's.",
+        "file": "assets/audio/vo/hit/hit_i_2.mp3"
+      },
+      "3": {
+        "id": "hit_i_3",
+        "letter": "I",
+        "count": 3,
+        "text": "3 I's.",
+        "spoken": "[congratulatory] 3 I's.",
+        "file": "assets/audio/vo/hit/hit_i_3.mp3"
+      }
+    },
+    "J": {
+      "1": {
+        "id": "hit_j_1",
+        "letter": "J",
+        "count": 1,
+        "text": "One J.",
+        "spoken": "[congratulatory] One J.",
+        "file": "assets/audio/vo/hit/hit_j_1.mp3"
+      },
+      "2": {
+        "id": "hit_j_2",
+        "letter": "J",
+        "count": 2,
+        "text": "There are two J's.",
+        "spoken": "[congratulatory] There are two J's.",
+        "file": "assets/audio/vo/hit/hit_j_2.mp3"
+      },
+      "3": {
+        "id": "hit_j_3",
+        "letter": "J",
+        "count": 3,
+        "text": "Three J's.",
+        "spoken": "[congratulatory] Three J's.",
+        "file": "assets/audio/vo/hit/hit_j_3.mp3"
+      }
+    },
+    "K": {
+      "1": {
+        "id": "hit_k_1",
+        "letter": "K",
+        "count": 1,
+        "text": "A single K.",
+        "spoken": "[congratulatory] A single K.",
+        "file": "assets/audio/vo/hit/hit_k_1.mp3"
+      },
+      "2": {
+        "id": "hit_k_2",
+        "letter": "K",
+        "count": 2,
+        "text": "Two K's.",
+        "spoken": "[congratulatory] Two K's.",
+        "file": "assets/audio/vo/hit/hit_k_2.mp3"
+      },
+      "3": {
+        "id": "hit_k_3",
+        "letter": "K",
+        "count": 3,
+        "text": "There are three K's.",
+        "spoken": "[congratulatory] There are three K's.",
+        "file": "assets/audio/vo/hit/hit_k_3.mp3"
+      }
+    },
+    "L": {
+      "1": {
+        "id": "hit_l_1",
+        "letter": "L",
+        "count": 1,
+        "text": "Just one L.",
+        "spoken": "[congratulatory] Just one L.",
+        "file": "assets/audio/vo/hit/hit_l_1.mp3"
+      },
+      "2": {
+        "id": "hit_l_2",
+        "letter": "L",
+        "count": 2,
+        "text": "You've got two L's.",
+        "spoken": "[congratulatory] You've got two L's.",
+        "file": "assets/audio/vo/hit/hit_l_2.mp3"
+      },
+      "3": {
+        "id": "hit_l_3",
+        "letter": "L",
+        "count": 3,
+        "text": "3 L's.",
+        "spoken": "[congratulatory] 3 L's.",
+        "file": "assets/audio/vo/hit/hit_l_3.mp3"
+      }
+    },
+    "M": {
+      "1": {
+        "id": "hit_m_1",
+        "letter": "M",
+        "count": 1,
+        "text": "One M.",
+        "spoken": "[congratulatory] One M.",
+        "file": "assets/audio/vo/hit/hit_m_1.mp3"
+      },
+      "2": {
+        "id": "hit_m_2",
+        "letter": "M",
+        "count": 2,
+        "text": "There are two M's.",
+        "spoken": "[congratulatory] There are two M's.",
+        "file": "assets/audio/vo/hit/hit_m_2.mp3"
+      },
+      "3": {
+        "id": "hit_m_3",
+        "letter": "M",
+        "count": 3,
+        "text": "Three M's.",
+        "spoken": "[congratulatory] Three M's.",
+        "file": "assets/audio/vo/hit/hit_m_3.mp3"
+      }
+    },
+    "N": {
+      "1": {
+        "id": "hit_n_1",
+        "letter": "N",
+        "count": 1,
+        "text": "A single N.",
+        "spoken": "[congratulatory] A single N.",
+        "file": "assets/audio/vo/hit/hit_n_1.mp3"
+      },
+      "2": {
+        "id": "hit_n_2",
+        "letter": "N",
+        "count": 2,
+        "text": "Two N's.",
+        "spoken": "[congratulatory] Two N's.",
+        "file": "assets/audio/vo/hit/hit_n_2.mp3"
+      },
+      "3": {
+        "id": "hit_n_3",
+        "letter": "N",
+        "count": 3,
+        "text": "There are three N's.",
+        "spoken": "[congratulatory] There are three N's.",
+        "file": "assets/audio/vo/hit/hit_n_3.mp3"
+      }
+    },
+    "O": {
+      "1": {
+        "id": "hit_o_1",
+        "letter": "O",
+        "count": 1,
+        "text": "Just one O.",
+        "spoken": "[congratulatory] Just one O.",
+        "file": "assets/audio/vo/hit/hit_o_1.mp3"
+      },
+      "2": {
+        "id": "hit_o_2",
+        "letter": "O",
+        "count": 2,
+        "text": "You've got two O's.",
+        "spoken": "[congratulatory] You've got two O's.",
+        "file": "assets/audio/vo/hit/hit_o_2.mp3"
+      },
+      "3": {
+        "id": "hit_o_3",
+        "letter": "O",
+        "count": 3,
+        "text": "3 O's.",
+        "spoken": "[congratulatory] 3 O's.",
+        "file": "assets/audio/vo/hit/hit_o_3.mp3"
+      }
+    },
+    "P": {
+      "1": {
+        "id": "hit_p_1",
+        "letter": "P",
+        "count": 1,
+        "text": "One P.",
+        "spoken": "[congratulatory] One P.",
+        "file": "assets/audio/vo/hit/hit_p_1.mp3"
+      },
+      "2": {
+        "id": "hit_p_2",
+        "letter": "P",
+        "count": 2,
+        "text": "There are two P's.",
+        "spoken": "[congratulatory] There are two P's.",
+        "file": "assets/audio/vo/hit/hit_p_2.mp3"
+      },
+      "3": {
+        "id": "hit_p_3",
+        "letter": "P",
+        "count": 3,
+        "text": "Three P's.",
+        "spoken": "[congratulatory] Three P's.",
+        "file": "assets/audio/vo/hit/hit_p_3.mp3"
+      }
+    },
+    "Q": {
+      "1": {
+        "id": "hit_q_1",
+        "letter": "Q",
+        "count": 1,
+        "text": "A single Q.",
+        "spoken": "[congratulatory] A single Q.",
+        "file": "assets/audio/vo/hit/hit_q_1.mp3"
+      },
+      "2": {
+        "id": "hit_q_2",
+        "letter": "Q",
+        "count": 2,
+        "text": "Two Q's.",
+        "spoken": "[congratulatory] Two Q's.",
+        "file": "assets/audio/vo/hit/hit_q_2.mp3"
+      },
+      "3": {
+        "id": "hit_q_3",
+        "letter": "Q",
+        "count": 3,
+        "text": "There are three Q's.",
+        "spoken": "[congratulatory] There are three Q's.",
+        "file": "assets/audio/vo/hit/hit_q_3.mp3"
+      }
+    },
+    "R": {
+      "1": {
+        "id": "hit_r_1",
+        "letter": "R",
+        "count": 1,
+        "text": "Just one R.",
+        "spoken": "[congratulatory] Just one R.",
+        "file": "assets/audio/vo/hit/hit_r_1.mp3"
+      },
+      "2": {
+        "id": "hit_r_2",
+        "letter": "R",
+        "count": 2,
+        "text": "You've got two R's.",
+        "spoken": "[congratulatory] You've got two R's.",
+        "file": "assets/audio/vo/hit/hit_r_2.mp3"
+      },
+      "3": {
+        "id": "hit_r_3",
+        "letter": "R",
+        "count": 3,
+        "text": "3 R's.",
+        "spoken": "[congratulatory] 3 R's.",
+        "file": "assets/audio/vo/hit/hit_r_3.mp3"
+      }
+    },
+    "S": {
+      "1": {
+        "id": "hit_s_1",
+        "letter": "S",
+        "count": 1,
+        "text": "One S.",
+        "spoken": "[congratulatory] One S.",
+        "file": "assets/audio/vo/hit/hit_s_1.mp3"
+      },
+      "2": {
+        "id": "hit_s_2",
+        "letter": "S",
+        "count": 2,
+        "text": "There are two S's.",
+        "spoken": "[congratulatory] There are two S's.",
+        "file": "assets/audio/vo/hit/hit_s_2.mp3"
+      },
+      "3": {
+        "id": "hit_s_3",
+        "letter": "S",
+        "count": 3,
+        "text": "Three S's.",
+        "spoken": "[congratulatory] Three S's.",
+        "file": "assets/audio/vo/hit/hit_s_3.mp3"
+      }
+    },
+    "T": {
+      "1": {
+        "id": "hit_t_1",
+        "letter": "T",
+        "count": 1,
+        "text": "A single T.",
+        "spoken": "[congratulatory] A single T.",
+        "file": "assets/audio/vo/hit/hit_t_1.mp3"
+      },
+      "2": {
+        "id": "hit_t_2",
+        "letter": "T",
+        "count": 2,
+        "text": "Two T's.",
+        "spoken": "[congratulatory] Two T's.",
+        "file": "assets/audio/vo/hit/hit_t_2.mp3"
+      },
+      "3": {
+        "id": "hit_t_3",
+        "letter": "T",
+        "count": 3,
+        "text": "There are three T's.",
+        "spoken": "[congratulatory] There are three T's.",
+        "file": "assets/audio/vo/hit/hit_t_3.mp3"
+      }
+    },
+    "U": {
+      "1": {
+        "id": "hit_u_1",
+        "letter": "U",
+        "count": 1,
+        "text": "Just one U.",
+        "spoken": "[congratulatory] Just one U.",
+        "file": "assets/audio/vo/hit/hit_u_1.mp3"
+      },
+      "2": {
+        "id": "hit_u_2",
+        "letter": "U",
+        "count": 2,
+        "text": "You've got two U's.",
+        "spoken": "[congratulatory] You've got two U's.",
+        "file": "assets/audio/vo/hit/hit_u_2.mp3"
+      },
+      "3": {
+        "id": "hit_u_3",
+        "letter": "U",
+        "count": 3,
+        "text": "3 U's.",
+        "spoken": "[congratulatory] 3 U's.",
+        "file": "assets/audio/vo/hit/hit_u_3.mp3"
+      }
+    },
+    "V": {
+      "1": {
+        "id": "hit_v_1",
+        "letter": "V",
+        "count": 1,
+        "text": "One V.",
+        "spoken": "[congratulatory] One V.",
+        "file": "assets/audio/vo/hit/hit_v_1.mp3"
+      },
+      "2": {
+        "id": "hit_v_2",
+        "letter": "V",
+        "count": 2,
+        "text": "There are two V's.",
+        "spoken": "[congratulatory] There are two V's.",
+        "file": "assets/audio/vo/hit/hit_v_2.mp3"
+      },
+      "3": {
+        "id": "hit_v_3",
+        "letter": "V",
+        "count": 3,
+        "text": "Three V's.",
+        "spoken": "[congratulatory] Three V's.",
+        "file": "assets/audio/vo/hit/hit_v_3.mp3"
+      }
+    },
+    "W": {
+      "1": {
+        "id": "hit_w_1",
+        "letter": "W",
+        "count": 1,
+        "text": "A single W.",
+        "spoken": "[congratulatory] A single W.",
+        "file": "assets/audio/vo/hit/hit_w_1.mp3"
+      },
+      "2": {
+        "id": "hit_w_2",
+        "letter": "W",
+        "count": 2,
+        "text": "Two W's.",
+        "spoken": "[congratulatory] Two W's.",
+        "file": "assets/audio/vo/hit/hit_w_2.mp3"
+      },
+      "3": {
+        "id": "hit_w_3",
+        "letter": "W",
+        "count": 3,
+        "text": "There are three W's.",
+        "spoken": "[congratulatory] There are three W's.",
+        "file": "assets/audio/vo/hit/hit_w_3.mp3"
+      }
+    },
+    "X": {
+      "1": {
+        "id": "hit_x_1",
+        "letter": "X",
+        "count": 1,
+        "text": "Just one X.",
+        "spoken": "[congratulatory] Just one X.",
+        "file": "assets/audio/vo/hit/hit_x_1.mp3"
+      },
+      "2": {
+        "id": "hit_x_2",
+        "letter": "X",
+        "count": 2,
+        "text": "You've got two X's.",
+        "spoken": "[congratulatory] You've got two X's.",
+        "file": "assets/audio/vo/hit/hit_x_2.mp3"
+      },
+      "3": {
+        "id": "hit_x_3",
+        "letter": "X",
+        "count": 3,
+        "text": "3 X's.",
+        "spoken": "[congratulatory] 3 X's.",
+        "file": "assets/audio/vo/hit/hit_x_3.mp3"
+      }
+    },
+    "Y": {
+      "1": {
+        "id": "hit_y_1",
+        "letter": "Y",
+        "count": 1,
+        "text": "One Y.",
+        "spoken": "[congratulatory] One Y.",
+        "file": "assets/audio/vo/hit/hit_y_1.mp3"
+      },
+      "2": {
+        "id": "hit_y_2",
+        "letter": "Y",
+        "count": 2,
+        "text": "There are two Y's.",
+        "spoken": "[congratulatory] There are two Y's.",
+        "file": "assets/audio/vo/hit/hit_y_2.mp3"
+      },
+      "3": {
+        "id": "hit_y_3",
+        "letter": "Y",
+        "count": 3,
+        "text": "Three Y's.",
+        "spoken": "[congratulatory] Three Y's.",
+        "file": "assets/audio/vo/hit/hit_y_3.mp3"
+      }
+    },
+    "Z": {
+      "1": {
+        "id": "hit_z_1",
+        "letter": "Z",
+        "count": 1,
+        "text": "A single Z.",
+        "spoken": "[congratulatory] A single Z.",
+        "file": "assets/audio/vo/hit/hit_z_1.mp3"
+      },
+      "2": {
+        "id": "hit_z_2",
+        "letter": "Z",
+        "count": 2,
+        "text": "Two Z's.",
+        "spoken": "[congratulatory] Two Z's.",
+        "file": "assets/audio/vo/hit/hit_z_2.mp3"
+      },
+      "3": {
+        "id": "hit_z_3",
+        "letter": "Z",
+        "count": 3,
+        "text": "There are three Z's.",
+        "spoken": "[congratulatory] There are three Z's.",
+        "file": "assets/audio/vo/hit/hit_z_3.mp3"
+      }
+    }
+  }
+}

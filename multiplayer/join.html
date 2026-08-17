@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>Join Game — Wheel of Fortune</title>
+  <link rel="stylesheet" href="css/multiplayer.css?v=1" />
+</head>
+<body>
+  <div class="page-wrap">
+    <h1 class="page-brand">Join Game</h1>
+    <p class="page-subtitle">Enter the room code from the TV and pick a display name.</p>
+
+    <div class="panel">
+      <h2>Server</h2>
+      <div class="row">
+        <input id="ws-url" type="url" placeholder="wss://your-app.up.railway.app" autocomplete="off" />
+        <button id="btn-connect" type="button" class="btn btn-secondary">Connect</button>
+      </div>
+      <p id="conn-status" class="status-line">Not connected</p>
+    </div>
+
+    <div class="panel" id="join-panel" hidden>
+      <h2>Join room</h2>
+      <div class="row">
+        <input id="room-code" class="code-input" type="text" maxlength="6" placeholder="CODE" autocomplete="off" />
+      </div>
+      <div class="row">
+        <input id="player-name" type="text" maxlength="20" placeholder="Your name" autocomplete="name" />
+      </div>
+      <button id="btn-join" type="button" class="btn btn-primary btn-block" disabled>Join as Player</button>
+      <p id="join-status" class="status-line" style="margin-top: 0.65rem"></p>
+    </div>
+
+    <div class="panel" id="waiting-panel" hidden>
+      <h2>Connected</h2>
+      <p class="status-line">Room <strong id="active-room-code" class="room-code" style="font-size: 1.1rem">------</strong></p>
+      <p id="waiting-status" class="status-line ok">Waiting for the host to start…</p>
+      <button id="btn-open-controller" type="button" class="btn btn-primary btn-block" hidden>Open Controller</button>
+    </div>
+
+    <p class="footer-links">
+      <a href="index.html">Create a game</a> · <a href="../index.html">Solo prototype</a>
+    </p>
+  </div>
+
+  <script type="module" src="../js/net/join.js?v=1"></script>
+</body>
+</html>

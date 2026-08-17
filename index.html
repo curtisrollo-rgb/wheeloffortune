@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache" />
+  <title>Wheel of Fortune — Prototype</title>
+  <link rel="stylesheet" href="css/game.css?v=40" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+</head>
+<body class="is-loading">
+  <div id="loading-screen" class="loading-screen" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="loading-label">
+    <div class="loading-screen-inner">
+      <p class="loading-brand">Wheel of Fortune</p>
+      <p id="loading-label" class="loading-label">Starting…</p>
+      <div class="loading-track">
+        <div id="loading-bar" class="loading-bar"></div>
+      </div>
+      <p id="loading-percent" class="loading-percent">0%</p>
+    </div>
+  </div>
+
+  <header class="top-bar">
+    <div class="brand">
+      <h1>Wheel of Fortune</h1>
+    </div>
+    <div id="category-pill" class="category-headline" aria-live="polite">—</div>
+    <div class="status-pills">
+      <span id="score-pill" class="pill" title="Total winnings (banked)">$0</span>
+      <span id="round-money-pill" class="pill" title="Round bank — vowels cost $250 from here">—</span>
+    </div>
+  </header>
+
+  <p id="message-bar" class="message-bar">Loading…</p>
+
+  <main class="layout">
+    <section class="board-section">
+      <div id="prize-banner" class="prize-banner is-hidden" aria-live="polite">
+        <p class="prize-banner-subtitle">New Car</p>
+        <p class="prize-banner-title">You Won!</p>
+        <p class="prize-banner-name"></p>
+      </div>
+      <div id="puzzle-board" class="puzzle-board" aria-label="Puzzle board"></div>
+    </section>
+
+    <section id="wheel-section" class="wheel-section">
+      <div id="final-envelope-panel" class="final-envelope-panel is-hidden">
+        <p class="final-envelope-heading">Bonus Envelopes</p>
+        <div id="envelope-tray" class="envelope-tray" aria-label="Final Round envelope tray"></div>
+        <p id="sealed-envelope-note" class="sealed-envelope-note is-hidden">Your bonus is sealed in the highlighted envelope.</p>
+      </div>
+      <div class="wheel-wrap">
+        <div class="wheel-inner">
+          <div class="wheel-pointer" aria-hidden="true"></div>
+          <div id="wheel-host"></div>
+        </div>
+        <div class="wheel-bottom-pointer" aria-hidden="true"></div>
+      </div>
+      <div id="wedge-result" class="wedge-result">—</div>
+    </section>
+  </main>
+
+  <section class="controls">
+    <div class="action-row">
+      <button id="btn-spin" type="button" class="btn btn-primary" disabled>Spin</button>
+      <button id="btn-vowel" type="button" class="btn btn-secondary" disabled>Buy Vowel ($250)</button>
+      <button id="btn-solve" type="button" class="btn btn-secondary" disabled>Solve</button>
+    </div>
+    <div id="letter-grid" class="letter-grid" aria-label="Letter keyboard"></div>
+    <div class="host-row" aria-label="Host controls">
+      <button id="btn-round1" type="button" class="btn btn-secondary btn-round is-active" data-round="round1">Round 1</button>
+      <button id="btn-round2" type="button" class="btn btn-secondary btn-round" data-round="round2">Round 2</button>
+      <button id="btn-final" type="button" class="btn btn-secondary btn-round" data-round="final">Final Round</button>
+      <button id="btn-tossup" type="button" class="btn btn-secondary btn-round" data-round="tossup">Toss-Up</button>
+      <button id="btn-new" type="button" class="btn btn-secondary">New Puzzle</button>
+    </div>
+  </section>
+
+  <div id="envelope-reveal-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="envelope-reveal-title">
+    <div class="modal envelope-reveal-modal">
+      <div class="envelope-graphic" aria-hidden="true">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body">
+          <p id="envelope-reveal-amount" class="envelope-reveal-amount">$0</p>
+        </div>
+      </div>
+      <h2 id="envelope-reveal-title">Opening envelope…</h2>
+      <p id="envelope-reveal-detail" class="envelope-reveal-detail"></p>
+      <div class="modal-actions">
+        <button id="btn-envelope-dismiss" type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="solve-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="solve-title">
+    <div class="modal">
+      <h2 id="solve-title">Solve the Puzzle</h2>
+      <input id="solve-input" type="text" autocomplete="off" placeholder="Type the full phrase…" />
+      <div class="modal-actions">
+        <button id="btn-solve-cancel" type="button" class="btn btn-secondary">Cancel</button>
+        <button id="btn-solve-submit" type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-links" style="text-align:center;margin:0.75rem 0 0;font-size:0.82rem;color:#9eb4d0">
+    <a href="multiplayer/" style="color:#ffd700">Play online (multiplayer)</a>
+  </p>
+
+  <script type="module">
+    import("./js/main.js?v=20").catch((err) => {
+      console.error(err);
+      const bar = document.getElementById("message-bar");
+      if (bar) {
+        bar.textContent = `Failed to load game (${err.message}). Hard refresh the page (⌘⇧R).`;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "comment": "24 Final Round bonus envelopes — cash plus 2 cars and 2 vacations (amounts hidden until opened).",
+  "prizes": [
+    { "type": "cash", "amount": 25000 },
+    { "type": "cash", "amount": 30000 },
+    { "type": "cash", "amount": 35000 },
+    { "type": "cash", "amount": 40000 },
+    { "type": "cash", "amount": 45000 },
+    { "type": "cash", "amount": 50000 },
+    { "type": "cash", "amount": 55000 },
+    { "type": "car" },
+    { "type": "cash", "amount": 65000 },
+    { "type": "cash", "amount": 70000 },
+    { "type": "cash", "amount": 75000 },
+    { "type": "trip" },
+    { "type": "cash", "amount": 85000 },
+    { "type": "cash", "amount": 90000 },
+    { "type": "cash", "amount": 95000 },
+    { "type": "cash", "amount": 100000 },
+    { "type": "cash", "amount": 40000 },
+    { "type": "car" },
+    { "type": "cash", "amount": 50000 },
+    { "type": "cash", "amount": 55000 },
+    { "type": "cash", "amount": 60000 },
+    { "type": "trip" },
+    { "type": "cash", "amount": 70000 },
+    { "type": "cash", "amount": 75000 }
+  ]
+}

@@ -1,0 +1,1940 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "vo_prefix": "[excitedly]",
+  "trips": [
+    {
+      "id": "to_iceland",
+      "wording": "Collette Trip to Iceland",
+      "congratsText": "Good work — you've won a Collette trip to Iceland!",
+      "voText": "Great news! You've won a Collette trip to Iceland!",
+      "spoken": "[excitedly] Great news! You've won a Collette trip to Iceland!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_iceland.mp3"
+    },
+    {
+      "id": "twelve_day_expedition_to_antarctica",
+      "wording": "FEATURED BR EXPEDITION: 12d in Antarctica",
+      "congratsText": "You've won a twelve-day expedition to Antarctica!",
+      "voText": "Congratulations! You've won a twelve-day expedition to Antarctica!",
+      "spoken": "[excitedly] Congratulations! You've won a twelve-day expedition to Antarctica!",
+      "file": "assets/audio/vo/trip-prizes/trips/twelve_day_expedition_to_antarctica.mp3"
+    },
+    {
+      "id": "thirteen_day_expedition_to_sicily_greece_and_sardinia",
+      "wording": "FEATURED BR EXPEDITION: 13d in Sicily, Greece, and Sardinia",
+      "congratsText": "Congratulations, you've won a thirteen-day expedition to Sicily, Greece, and Sardinia!",
+      "voText": "Congrats! You've won a thirteen-day expedition to Sicily, Greece, and Sardinia!",
+      "spoken": "[excitedly] Congrats! You've won a thirteen-day expedition to Sicily, Greece, and Sardinia!",
+      "file": "assets/audio/vo/trip-prizes/trips/thirteen_day_expedition_to_sicily_greece_and_sardinia.mp3"
+    },
+    {
+      "id": "ten_day_expedition_to_the_galapagos",
+      "wording": "FEATURED BR EXPEDITION: Ten days in the Galapagos",
+      "congratsText": "Congrats, you've won a ten-day expedition to the Galapagos!",
+      "voText": "Good work! You've won a ten-day expedition to the Galapagos!",
+      "spoken": "[excitedly] Good work! You've won a ten-day expedition to the Galapagos!",
+      "file": "assets/audio/vo/trip-prizes/trips/ten_day_expedition_to_the_galapagos.mp3"
+    },
+    {
+      "id": "ten_day_expedition_to_the_galapagos_islands",
+      "wording": "FEATURED BR EXPEDITION: Ten days in the Galapagos Islands",
+      "congratsText": "Good work — you've won a ten-day expedition to the Galapagos Islands!",
+      "voText": "You've won! A ten-day expedition to the Galapagos Islands!",
+      "spoken": "[excitedly] You've won! A ten-day expedition to the Galapagos Islands!",
+      "file": "assets/audio/vo/trip-prizes/trips/ten_day_expedition_to_the_galapagos_islands.mp3"
+    },
+    {
+      "id": "twelve_day_expedition_to_england_ireland_and_scotland",
+      "wording": "FEATURED BR EXPEDITION: Twelve days in England, Ireland, and Scotland",
+      "congratsText": "You've won a twelve-day expedition to England, Ireland, and Scotland!",
+      "voText": "Great news! You've won a twelve-day expedition to England, Ireland, and Scotland!",
+      "spoken": "[excitedly] Great news! You've won a twelve-day expedition to England, Ireland, and Scotland!",
+      "file": "assets/audio/vo/trip-prizes/trips/twelve_day_expedition_to_england_ireland_and_scotland.mp3"
+    },
+    {
+      "id": "of_alaska",
+      "wording": "FEATURED COLLETTE TOUR: Alaska",
+      "congratsText": "Congratulations, you've won a Collette tour of Alaska!",
+      "voText": "Congratulations! You've won a Collette tour of Alaska!",
+      "spoken": "[excitedly] Congratulations! You've won a Collette tour of Alaska!",
+      "file": "assets/audio/vo/trip-prizes/trips/of_alaska.mp3"
+    },
+    {
+      "id": "of_costa_rica",
+      "wording": "FEATURED COLLETTE TOUR: Costa Rica",
+      "congratsText": "Congrats, you've won a Collette tour of Costa Rica!",
+      "voText": "Congrats! You've won a Collette tour of Costa Rica!",
+      "spoken": "[excitedly] Congrats! You've won a Collette tour of Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/of_costa_rica.mp3"
+    },
+    {
+      "id": "of_hawaii",
+      "wording": "FEATURED COLLETTE TOUR: Hawaii",
+      "congratsText": "Good work — you've won a Collette tour of Hawaii!",
+      "voText": "Good work! You've won a Collette tour of Hawaii!",
+      "spoken": "[excitedly] Good work! You've won a Collette tour of Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/of_hawaii.mp3"
+    },
+    {
+      "id": "of_italy",
+      "wording": "FEATURED COLLETTE TOUR: Italy",
+      "congratsText": "You've won a Collette tour of Italy!",
+      "voText": "You've won! A Collette tour of Italy!",
+      "spoken": "[excitedly] You've won! A Collette tour of Italy!",
+      "file": "assets/audio/vo/trip-prizes/trips/of_italy.mp3"
+    },
+    {
+      "id": "of_southern_italy_sicily",
+      "wording": "FEATURED COLLETTE TOUR: southern Italy & Sicily",
+      "congratsText": "Congratulations, you've won a Collette tour of southern Italy & Sicily!",
+      "voText": "Great news! You've won a Collette tour of southern Italy & Sicily!",
+      "spoken": "[excitedly] Great news! You've won a Collette tour of southern Italy & Sicily!",
+      "file": "assets/audio/vo/trip-prizes/trips/of_southern_italy_sicily.mp3"
+    },
+    {
+      "id": "of_switzerland_austria_bavaria",
+      "wording": "FEATURED COLLETTE TOUR: Switzerland, Austria, & Bavaria",
+      "congratsText": "Congrats, you've won a Collette tour of Switzerland, Austria, & Bavaria!",
+      "voText": "Congratulations! You've won a Collette tour of Switzerland, Austria, & Bavaria!",
+      "spoken": "[excitedly] Congratulations! You've won a Collette tour of Switzerland, Austria, & Bavaria!",
+      "file": "assets/audio/vo/trip-prizes/trips/of_switzerland_austria_bavaria.mp3"
+    },
+    {
+      "id": "of_washington_dc",
+      "wording": "FEATURED COLLETTE TOUR: Washington, DC",
+      "congratsText": "Good work — you've won a Collette tour of Washington, DC!",
+      "voText": "Congrats! You've won a Collette tour of Washington, DC!",
+      "spoken": "[excitedly] Congrats! You've won a Collette tour of Washington, DC!",
+      "file": "assets/audio/vo/trip-prizes/trips/of_washington_dc.mp3"
+    },
+    {
+      "id": "3_island_tour_of_hawaii",
+      "wording": "FEATURED COLLETTE TRIP: 3-island tour of Hawaii",
+      "congratsText": "You've won a Collette trip 3-island tour of Hawaii!",
+      "voText": "Good work! You've won a Collette trip 3-island tour of Hawaii!",
+      "spoken": "[excitedly] Good work! You've won a Collette trip 3-island tour of Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/3_island_tour_of_hawaii.mp3"
+    },
+    {
+      "id": "american_southwest",
+      "wording": "FEATURED COLLETTE TRIP: American Southwest",
+      "congratsText": "Congratulations, you've won a Collette trip American Southwest!",
+      "voText": "You've won! A Collette trip American Southwest!",
+      "spoken": "[excitedly] You've won! A Collette trip American Southwest!",
+      "file": "assets/audio/vo/trip-prizes/trips/american_southwest.mp3"
+    },
+    {
+      "id": "california_dreamin",
+      "wording": "FEATURED COLLETTE TRIP: California Dreamin’",
+      "congratsText": "Congrats, you've won a Collette trip California Dreamin’!",
+      "voText": "Great news! You've won a Collette trip California Dreamin’!",
+      "spoken": "[excitedly] Great news! You've won a Collette trip California Dreamin’!",
+      "file": "assets/audio/vo/trip-prizes/trips/california_dreamin.mp3"
+    },
+    {
+      "id": "costa_rica",
+      "wording": "FEATURED COLLETTE TRIP: Costa Rica",
+      "congratsText": "Good work — you've won a Collette trip Costa Rica!",
+      "voText": "Congratulations! You've won a Collette trip Costa Rica!",
+      "spoken": "[excitedly] Congratulations! You've won a Collette trip Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/costa_rica.mp3"
+    },
+    {
+      "id": "ireland",
+      "wording": "FEATURED COLLETTE TRIP: Ireland",
+      "congratsText": "You've won a Collette trip Ireland!",
+      "voText": "Congrats! You've won a Collette trip Ireland!",
+      "spoken": "[excitedly] Congrats! You've won a Collette trip Ireland!",
+      "file": "assets/audio/vo/trip-prizes/trips/ireland.mp3"
+    },
+    {
+      "id": "portugal",
+      "wording": "FEATURED COLLETTE TRIP: Portugal",
+      "congratsText": "Congratulations, you've won a Collette trip Portugal!",
+      "voText": "Good work! You've won a Collette trip Portugal!",
+      "spoken": "[excitedly] Good work! You've won a Collette trip Portugal!",
+      "file": "assets/audio/vo/trip-prizes/trips/portugal.mp3"
+    },
+    {
+      "id": "rome",
+      "wording": "FEATURED COLLETTE TRIP: Rome",
+      "congratsText": "Congrats, you've won a Collette trip Rome!",
+      "voText": "You've won! A Collette trip Rome!",
+      "spoken": "[excitedly] You've won! A Collette trip Rome!",
+      "file": "assets/audio/vo/trip-prizes/trips/rome.mp3"
+    },
+    {
+      "id": "spain_portugal",
+      "wording": "FEATURED COLLETTE TRIP: Spain & Portugal",
+      "congratsText": "Good work — you've won a Collette trip Spain & Portugal!",
+      "voText": "Great news! You've won a Collette trip Spain & Portugal!",
+      "spoken": "[excitedly] Great news! You've won a Collette trip Spain & Portugal!",
+      "file": "assets/audio/vo/trip-prizes/trips/spain_portugal.mp3"
+    },
+    {
+      "id": "utahs_national_parks",
+      "wording": "FEATURED COLLETTE TRIP: Utah’s national parks",
+      "congratsText": "You've won a Collette trip Utah’s national parks!",
+      "voText": "Congratulations! You've won a Collette trip Utah’s national parks!",
+      "spoken": "[excitedly] Congratulations! You've won a Collette trip Utah’s national parks!",
+      "file": "assets/audio/vo/trip-prizes/trips/utahs_national_parks.mp3"
+    },
+    {
+      "id": "a_alaska_cruise",
+      "wording": "FEATURED CRUISE: Alaska",
+      "congratsText": "Congratulations, you've won a Alaska cruise!",
+      "voText": "Congrats! You've won a Alaska cruise!",
+      "spoken": "[excitedly] Congrats! You've won a Alaska cruise!",
+      "file": "assets/audio/vo/trip-prizes/trips/a_alaska_cruise.mp3"
+    },
+    {
+      "id": "a_canada_new_england_cruise",
+      "wording": "FEATURED CRUISE: Canada & New England",
+      "congratsText": "Congrats, you've won a Canada & New England cruise!",
+      "voText": "Good work! You've won a Canada & New England cruise!",
+      "spoken": "[excitedly] Good work! You've won a Canada & New England cruise!",
+      "file": "assets/audio/vo/trip-prizes/trips/a_canada_new_england_cruise.mp3"
+    },
+    {
+      "id": "a_caribbean_cruise",
+      "wording": "FEATURED CRUISE: Caribbean",
+      "congratsText": "Good work — you've won a Caribbean cruise!",
+      "voText": "You've won! A Caribbean cruise!",
+      "spoken": "[excitedly] You've won! A Caribbean cruise!",
+      "file": "assets/audio/vo/trip-prizes/trips/a_caribbean_cruise.mp3"
+    },
+    {
+      "id": "regent_seven_seas_cruise",
+      "wording": "FEATURED CRUISE: Regent Seven Seas Cruise",
+      "congratsText": "You've won a Regent Seven Seas Cruise!",
+      "voText": "Great news! You've won a Regent Seven Seas Cruise!",
+      "spoken": "[excitedly] Great news! You've won a Regent Seven Seas Cruise!",
+      "file": "assets/audio/vo/trip-prizes/trips/regent_seven_seas_cruise.mp3"
+    },
+    {
+      "id": "a_scotland_and_iceland_cruise",
+      "wording": "FEATURED CRUISE: Scotland and Iceland",
+      "congratsText": "Congratulations, you've won a Scotland and Iceland cruise!",
+      "voText": "Congratulations! You've won a Scotland and Iceland cruise!",
+      "spoken": "[excitedly] Congratulations! You've won a Scotland and Iceland cruise!",
+      "file": "assets/audio/vo/trip-prizes/trips/a_scotland_and_iceland_cruise.mp3"
+    },
+    {
+      "id": "to_bahamas",
+      "wording": "FEATURED DISNEY CRUISE: Bahamas",
+      "congratsText": "Congrats, you've won a Disney cruise to Bahamas!",
+      "voText": "Congrats! You've won a Disney cruise to Bahamas!",
+      "spoken": "[excitedly] Congrats! You've won a Disney cruise to Bahamas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_bahamas.mp3"
+    },
+    {
+      "id": "at_aulani",
+      "wording": "FEATURED DISNEY PRIZE: Aulani",
+      "congratsText": "Good work — you've won a Disney vacation at Aulani!",
+      "voText": "Good work! You've won a Disney vacation at Aulani!",
+      "spoken": "[excitedly] Good work! You've won a Disney vacation at Aulani!",
+      "file": "assets/audio/vo/trip-prizes/trips/at_aulani.mp3"
+    },
+    {
+      "id": "bahamas",
+      "wording": "FEATURED DISNEY PRIZE: Bahamas",
+      "congratsText": "You've won a Disney vacation Bahamas!",
+      "voText": "You've won! A Disney vacation Bahamas!",
+      "spoken": "[excitedly] You've won! A Disney vacation Bahamas!",
+      "file": "assets/audio/vo/trip-prizes/trips/bahamas.mp3"
+    },
+    {
+      "id": "caribbean_cruise_featuring_a_marvel_day_at_sea",
+      "wording": "FEATURED DISNEY PRIZE: Caribbean Cruise featuring a MARVEL Day at Sea",
+      "congratsText": "Congratulations, you've won a Disney prize Caribbean Cruise featuring a Marvel Day at Sea!",
+      "voText": "Great news! You've won a Disney prize Caribbean Cruise featuring a Marvel Day at Sea!",
+      "spoken": "[excitedly] Great news! You've won a Disney prize Caribbean Cruise featuring a Marvel Day at Sea!",
+      "file": "assets/audio/vo/trip-prizes/trips/caribbean_cruise_featuring_a_marvel_day_at_sea.mp3"
+    },
+    {
+      "id": "disney_cruise_line",
+      "wording": "FEATURED DISNEY PRIZE: Disney Cruise Line",
+      "congratsText": "Congrats, you've won a Disney prize Disney Cruise Line!",
+      "voText": "Congratulations! You've won a Disney prize Disney Cruise Line!",
+      "spoken": "[excitedly] Congratulations! You've won a Disney prize Disney Cruise Line!",
+      "file": "assets/audio/vo/trip-prizes/trips/disney_cruise_line.mp3"
+    },
+    {
+      "id": "to_rome",
+      "wording": "FEATURED DISNEY PRIZE: Rome",
+      "congratsText": "Good work — you've won a Disney vacation to Rome!",
+      "voText": "Congrats! You've won a Disney vacation to Rome!",
+      "spoken": "[excitedly] Congrats! You've won a Disney vacation to Rome!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_rome.mp3"
+    },
+    {
+      "id": "ten_day_expedition_through_valbard_and_the_arctic_circle",
+      "wording": "FEATURED EXPEDITION CRUISE: 10d through Svalbard and the Arctic Circle",
+      "congratsText": "You've won a ten-day expedition through valbard and the Arctic Circle!",
+      "voText": "Good work! You've won a ten-day expedition through valbard and the Arctic Circle!",
+      "spoken": "[excitedly] Good work! You've won a ten-day expedition through valbard and the Arctic Circle!",
+      "file": "assets/audio/vo/trip-prizes/trips/ten_day_expedition_through_valbard_and_the_arctic_circle.mp3"
+    },
+    {
+      "id": "eight_day_expedition_to_the_azores",
+      "wording": "FEATURED EXPEDITION: 8 days in the Azores",
+      "congratsText": "Congratulations, you've won an eight-day expedition to the Azores!",
+      "voText": "You've won! An eight-day expedition to the Azores!",
+      "spoken": "[excitedly] You've won! An eight-day expedition to the Azores!",
+      "file": "assets/audio/vo/trip-prizes/trips/eight_day_expedition_to_the_azores.mp3"
+    },
+    {
+      "id": "expedition_to_antarctica",
+      "wording": "FEATURED EXPEDITION: Antarctica",
+      "congratsText": "Congrats, you've won an expedition to Antarctica!",
+      "voText": "Great news! You've won an expedition to Antarctica!",
+      "spoken": "[excitedly] Great news! You've won an expedition to Antarctica!",
+      "file": "assets/audio/vo/trip-prizes/trips/expedition_to_antarctica.mp3"
+    },
+    {
+      "id": "expedition_to_croatia_montenegro",
+      "wording": "FEATURED EXPEDITION: Croatia & Montenegro",
+      "congratsText": "Good work — you've won an expedition to Croatia & Montenegro!",
+      "voText": "Congratulations! You've won an expedition to Croatia & Montenegro!",
+      "spoken": "[excitedly] Congratulations! You've won an expedition to Croatia & Montenegro!",
+      "file": "assets/audio/vo/trip-prizes/trips/expedition_to_croatia_montenegro.mp3"
+    },
+    {
+      "id": "eight_day_expedition_to_iceland",
+      "wording": "FEATURED EXPEDITION: Eight days in Iceland",
+      "congratsText": "You've won an eight-day expedition to Iceland!",
+      "voText": "Congrats! You've won an eight-day expedition to Iceland!",
+      "spoken": "[excitedly] Congrats! You've won an eight-day expedition to Iceland!",
+      "file": "assets/audio/vo/trip-prizes/trips/eight_day_expedition_to_iceland.mp3"
+    },
+    {
+      "id": "eleven_day_expedition_to_greece_turkey",
+      "wording": "FEATURED EXPEDITION: Eleven days in Greece & Turkey",
+      "congratsText": "Congratulations, you've won an eleven-day expedition to Greece & Turkey!",
+      "voText": "Good work! You've won an eleven-day expedition to Greece & Turkey!",
+      "spoken": "[excitedly] Good work! You've won an eleven-day expedition to Greece & Turkey!",
+      "file": "assets/audio/vo/trip-prizes/trips/eleven_day_expedition_to_greece_turkey.mp3"
+    },
+    {
+      "id": "twelve_day_expedition_to_antarctica_2",
+      "wording": "FEATURED EXPEDITION: Twelve days in Antarctica",
+      "congratsText": "Congrats, you've won a twelve-day expedition to Antarctica!",
+      "voText": "You've won! A twelve-day expedition to Antarctica!",
+      "spoken": "[excitedly] You've won! A twelve-day expedition to Antarctica!",
+      "file": "assets/audio/vo/trip-prizes/trips/twelve_day_expedition_to_antarctica_2.mp3"
+    },
+    {
+      "id": "3_island_tour",
+      "wording": "FEATURED HAWAIIAN VACATION: 3-island tour",
+      "congratsText": "Good work — you've won a Hawaiian vacation 3-island tour!",
+      "voText": "Great news! You've won a Hawaiian vacation 3-island tour!",
+      "spoken": "[excitedly] Great news! You've won a Hawaiian vacation 3-island tour!",
+      "file": "assets/audio/vo/trip-prizes/trips/3_island_tour.mp3"
+    },
+    {
+      "id": "hilton_waikiki_beach_resort_spa",
+      "wording": "FEATURED HAWAIIAN VACATION: Hilton WAIKIKI Beach Resort & Spa",
+      "congratsText": "You've won a Hawaiian vacation Hilton Waikiki Beach Resort & Spa!",
+      "voText": "Congratulations! You've won a Hawaiian vacation Hilton Waikiki Beach Resort & Spa!",
+      "spoken": "[excitedly] Congratulations! You've won a Hawaiian vacation Hilton Waikiki Beach Resort & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/hilton_waikiki_beach_resort_spa.mp3"
+    },
+    {
+      "id": "collette_tour_of_new_england",
+      "wording": "FEATURED ISLAND TRIP: collette tour of New England",
+      "congratsText": "Congratulations, you've won an island trip collette tour of New England!",
+      "voText": "Congrats! You've won an island trip collette tour of New England!",
+      "spoken": "[excitedly] Congrats! You've won an island trip collette tour of New England!",
+      "file": "assets/audio/vo/trip-prizes/trips/collette_tour_of_new_england.mp3"
+    },
+    {
+      "id": "iheartradio_theater_la_event",
+      "wording": "FEATURED MUSIC TRIP: iHEARTRADIO THEATER LA event",
+      "congratsText": "Congrats, you've won a music trip iHeartRadio Theater LA event!",
+      "voText": "Good work! You've won a music trip iHeartRadio Theater LA event!",
+      "spoken": "[excitedly] Good work! You've won a music trip iHeartRadio Theater LA event!",
+      "file": "assets/audio/vo/trip-prizes/trips/iheartradio_theater_la_event.mp3"
+    },
+    {
+      "id": "nashville_music_city",
+      "wording": "FEATURED MUSIC TRIP: NASHVILLE MUSIC CITY",
+      "congratsText": "Good work — you've won a music trip Nashville Music City!",
+      "voText": "You've won! A music trip Nashville Music City!",
+      "spoken": "[excitedly] You've won! A music trip Nashville Music City!",
+      "file": "assets/audio/vo/trip-prizes/trips/nashville_music_city.mp3"
+    },
+    {
+      "id": "nyc_including_a_vip_tour_of_elvis_duran_and_the_morning_show",
+      "wording": "FEATURED MUSIC TRIP: NYC including a VIP tour of “ELVIS DURAN AND THE MORNING SHOW”",
+      "congratsText": "You've won a music trip NYC including a VIP tour of “Elvis Duran and the Morning Show”!",
+      "voText": "Great news! You've won a music trip NYC including a VIP tour of “Elvis Duran and the Morning Show”!",
+      "spoken": "[excitedly] Great news! You've won a music trip NYC including a VIP tour of “Elvis Duran and the Morning Show”!",
+      "file": "assets/audio/vo/trip-prizes/trips/nyc_including_a_vip_tour_of_elvis_duran_and_the_morning_show.mp3"
+    },
+    {
+      "id": "to_caesars_palace_in_vegas",
+      "wording": "FEATURED TRIP ALL WEEK LONG: Caesar’s Palace in Vegas",
+      "congratsText": "Congratulations, you've won an all-week-long vacation to Caesar’s Palace in Vegas!",
+      "voText": "Congratulations! You've won an all-week-long vacation to Caesar’s Palace in Vegas!",
+      "spoken": "[excitedly] Congratulations! You've won an all-week-long vacation to Caesar’s Palace in Vegas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_caesars_palace_in_vegas.mp3"
+    },
+    {
+      "id": "to_myrtle_beach",
+      "wording": "FEATURED TRIP ALL WEEK LONG: MYRTLE BEACH",
+      "congratsText": "Congrats, you've won an all-week-long vacation to Myrtle Beach!",
+      "voText": "Congrats! You've won an all-week-long vacation to Myrtle Beach!",
+      "spoken": "[excitedly] Congrats! You've won an all-week-long vacation to Myrtle Beach!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_myrtle_beach.mp3"
+    },
+    {
+      "id": "to_sandals_emerald_bay_in_the_bahamas",
+      "wording": "FEATURED TRIP ALL WEEK LONG: Sandals Emerald Bay in the Bahamas",
+      "congratsText": "Good work — you've won an all-week-long vacation to Sandals Emerald Bay in the Bahamas!",
+      "voText": "Good work! You've won an all-week-long vacation to Sandals Emerald Bay in the Bahamas!",
+      "spoken": "[excitedly] Good work! You've won an all-week-long vacation to Sandals Emerald Bay in the Bahamas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sandals_emerald_bay_in_the_bahamas.mp3"
+    },
+    {
+      "id": "to_1_week_at_jamala_wildlife_lodge",
+      "wording": "FEATURED TRIP: 1-week at Jamala Wildlife Lodge",
+      "congratsText": "You've won a trip to 1-week at Jamala Wildlife Lodge!",
+      "voText": "You've won! A trip to 1-week at Jamala Wildlife Lodge!",
+      "spoken": "[excitedly] You've won! A trip to 1-week at Jamala Wildlife Lodge!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_1_week_at_jamala_wildlife_lodge.mp3"
+    },
+    {
+      "id": "to_6d_in_chicago",
+      "wording": "FEATURED TRIP: 6d in CHICAGO",
+      "congratsText": "Congratulations, you've won a trip to 6d in Chicago!",
+      "voText": "Great news! You've won a trip to 6d in Chicago!",
+      "spoken": "[excitedly] Great news! You've won a trip to 6d in Chicago!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_6d_in_chicago.mp3"
+    },
+    {
+      "id": "a_mediterranean_cruise",
+      "wording": "FEATURED TRIP: a Mediterranean Cruise",
+      "congratsText": "Congrats, you've won a Mediterranean cruise!",
+      "voText": "Congratulations! You've won a Mediterranean cruise!",
+      "spoken": "[excitedly] Congratulations! You've won a Mediterranean cruise!",
+      "file": "assets/audio/vo/trip-prizes/trips/a_mediterranean_cruise.mp3"
+    },
+    {
+      "id": "a_tour_of_rio_de_janeiro_and_sao_paulo_brazil",
+      "wording": "FEATURED TRIP: a tour of Rio de Janeiro and Sao Paulo, Brazil",
+      "congratsText": "Good work — you've won a tour of Rio de Janeiro and Sao Paulo, Brazil!",
+      "voText": "Congrats! You've won a tour of Rio de Janeiro and Sao Paulo, Brazil!",
+      "spoken": "[excitedly] Congrats! You've won a tour of Rio de Janeiro and Sao Paulo, Brazil!",
+      "file": "assets/audio/vo/trip-prizes/trips/a_tour_of_rio_de_janeiro_and_sao_paulo_brazil.mp3"
+    },
+    {
+      "id": "to_amsterdam",
+      "wording": "FEATURED TRIP: Amsterdam",
+      "congratsText": "You've won a trip to Amsterdam!",
+      "voText": "Good work! You've won a trip to Amsterdam!",
+      "spoken": "[excitedly] Good work! You've won a trip to Amsterdam!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_amsterdam.mp3"
+    },
+    {
+      "id": "to_aulani",
+      "wording": "FEATURED TRIP: AULANI",
+      "congratsText": "Congratulations, you've won a trip to Aulani!",
+      "voText": "You've won! A trip to Aulani!",
+      "spoken": "[excitedly] You've won! A trip to Aulani!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_aulani.mp3"
+    },
+    {
+      "id": "to_bellagio_in_las_vegas",
+      "wording": "FEATURED TRIP: Bellagio in Las Vegas",
+      "congratsText": "Congrats, you've won a trip to Bellagio in Las Vegas!",
+      "voText": "Great news! You've won a trip to Bellagio in Las Vegas!",
+      "spoken": "[excitedly] Great news! You've won a trip to Bellagio in Las Vegas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_bellagio_in_las_vegas.mp3"
+    },
+    {
+      "id": "to_bernardus_lodge_in_carmel_valley_ca",
+      "wording": "FEATURED TRIP: Bernardus Lodge in Carmel Valley, CA",
+      "congratsText": "Good work — you've won a trip to Bernardus Lodge in Carmel Valley, CA!",
+      "voText": "Congratulations! You've won a trip to Bernardus Lodge in Carmel Valley, CA!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Bernardus Lodge in Carmel Valley, CA!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_bernardus_lodge_in_carmel_valley_ca.mp3"
+    },
+    {
+      "id": "to_bluenose_inn_bar_harbor_hotel_in_maine",
+      "wording": "FEATURED TRIP: Bluenose Inn Bar Harbor Hotel in Maine",
+      "congratsText": "You've won a trip to Bluenose Inn Bar Harbor Hotel in Maine!",
+      "voText": "Congrats! You've won a trip to Bluenose Inn Bar Harbor Hotel in Maine!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Bluenose Inn Bar Harbor Hotel in Maine!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_bluenose_inn_bar_harbor_hotel_in_maine.mp3"
+    },
+    {
+      "id": "to_british_colonial_hilton_nassau_in_the_bahamas",
+      "wording": "FEATURED TRIP: British Colonial Hilton Nassau in the Bahamas",
+      "congratsText": "Congratulations, you've won a trip to British Colonial Hilton Nassau in the Bahamas!",
+      "voText": "Good work! You've won a trip to British Colonial Hilton Nassau in the Bahamas!",
+      "spoken": "[excitedly] Good work! You've won a trip to British Colonial Hilton Nassau in the Bahamas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_british_colonial_hilton_nassau_in_the_bahamas.mp3"
+    },
+    {
+      "id": "to_canyon_country_vegas",
+      "wording": "FEATURED TRIP: Canyon Country & Vegas",
+      "congratsText": "Congrats, you've won a trip to Canyon Country & Vegas!",
+      "voText": "You've won! A trip to Canyon Country & Vegas!",
+      "spoken": "[excitedly] You've won! A trip to Canyon Country & Vegas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_canyon_country_vegas.mp3"
+    },
+    {
+      "id": "to_chicago",
+      "wording": "FEATURED TRIP: Chicago",
+      "congratsText": "Good work — you've won a trip to Chicago!",
+      "voText": "Great news! You've won a trip to Chicago!",
+      "spoken": "[excitedly] Great news! You've won a trip to Chicago!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_chicago.mp3"
+    },
+    {
+      "id": "to_club_med_sandpiper_bay_in_fl",
+      "wording": "FEATURED TRIP: Club Med Sandpiper Bay in FL",
+      "congratsText": "You've won a trip to Club Med Sandpiper Bay in FL!",
+      "voText": "Congratulations! You've won a trip to Club Med Sandpiper Bay in FL!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Club Med Sandpiper Bay in FL!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_club_med_sandpiper_bay_in_fl.mp3"
+    },
+    {
+      "id": "to_corazon_cabo_resort_spa_in_mexico",
+      "wording": "FEATURED TRIP: Corazon Cabo Resort & Spa in MEXICO",
+      "congratsText": "Congratulations, you've won a trip to Corazon Cabo Resort & Spa in Mexico!",
+      "voText": "Congrats! You've won a trip to Corazon Cabo Resort & Spa in Mexico!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Corazon Cabo Resort & Spa in Mexico!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_corazon_cabo_resort_spa_in_mexico.mp3"
+    },
+    {
+      "id": "to_discover_puerto_rico",
+      "wording": "FEATURED TRIP: DISCOVER PUERTO RICO",
+      "congratsText": "Congrats, you've won a trip to Discover Puerto Rico!",
+      "voText": "Good work! You've won a trip to Discover Puerto Rico!",
+      "spoken": "[excitedly] Good work! You've won a trip to Discover Puerto Rico!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_discover_puerto_rico.mp3"
+    },
+    {
+      "id": "to_divi_southwinds_beach_resort_in_barbados",
+      "wording": "FEATURED TRIP: Divi Southwinds Beach Resort in BARBADOS",
+      "congratsText": "Good work — you've won a trip to Divi Southwinds Beach Resort in Barbados!",
+      "voText": "You've won! A trip to Divi Southwinds Beach Resort in Barbados!",
+      "spoken": "[excitedly] You've won! A trip to Divi Southwinds Beach Resort in Barbados!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_divi_southwinds_beach_resort_in_barbados.mp3"
+    },
+    {
+      "id": "to_emily_morgan_hotel_in_san_antonio",
+      "wording": "FEATURED TRIP: Emily Morgan Hotel in San Antonio",
+      "congratsText": "You've won a trip to Emily Morgan Hotel in San Antonio!",
+      "voText": "Great news! You've won a trip to Emily Morgan Hotel in San Antonio!",
+      "spoken": "[excitedly] Great news! You've won a trip to Emily Morgan Hotel in San Antonio!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_emily_morgan_hotel_in_san_antonio.mp3"
+    },
+    {
+      "id": "to_hanoi_vietnam",
+      "wording": "FEATURED TRIP: Hanoi, Vietnam",
+      "congratsText": "Congratulations, you've won a trip to Hanoi, Vietnam!",
+      "voText": "Congratulations! You've won a trip to Hanoi, Vietnam!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Hanoi, Vietnam!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hanoi_vietnam.mp3"
+    },
+    {
+      "id": "to_hawks_cay_island_resort_marina_villas_in_the_fl_keys",
+      "wording": "FEATURED TRIP: Hawks Cay Island Resort, Marina & Villas in the FL Keys",
+      "congratsText": "Congrats, you've won a trip to Hawks Cay Island Resort, Marina & Villas in the FL Keys!",
+      "voText": "Congrats! You've won a trip to Hawks Cay Island Resort, Marina & Villas in the FL Keys!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Hawks Cay Island Resort, Marina & Villas in the FL Keys!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hawks_cay_island_resort_marina_villas_in_the_fl_keys.mp3"
+    },
+    {
+      "id": "to_hilton_waikoloa_village_in_hawaii",
+      "wording": "FEATURED TRIP: Hilton Waikoloa Village in HAWAII",
+      "congratsText": "Good work — you've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "voText": "Good work! You've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "spoken": "[excitedly] Good work! You've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hilton_waikoloa_village_in_hawaii.mp3"
+    },
+    {
+      "id": "a_holland_america_cruise_of_alaska",
+      "wording": "FEATURED TRIP: Holland America CRUISE of Alaska",
+      "congratsText": "You've won a Holland America cruise of Alaska!",
+      "voText": "You've won! A Holland America cruise of Alaska!",
+      "spoken": "[excitedly] You've won! A Holland America cruise of Alaska!",
+      "file": "assets/audio/vo/trip-prizes/trips/a_holland_america_cruise_of_alaska.mp3"
+    },
+    {
+      "id": "to_hyatt_regency_trinidad_in_trinidad_tobago",
+      "wording": "FEATURED TRIP: Hyatt Regency Trinidad in Trinidad & Tobago",
+      "congratsText": "Congratulations, you've won a trip to Hyatt Regency Trinidad in Trinidad & Tobago!",
+      "voText": "Great news! You've won a trip to Hyatt Regency Trinidad in Trinidad & Tobago!",
+      "spoken": "[excitedly] Great news! You've won a trip to Hyatt Regency Trinidad in Trinidad & Tobago!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hyatt_regency_trinidad_in_trinidad_tobago.mp3"
+    },
+    {
+      "id": "to_iceland_2",
+      "wording": "FEATURED TRIP: ICELAND",
+      "congratsText": "Congrats, you've won a trip to Iceland!",
+      "voText": "Congratulations! You've won a trip to Iceland!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Iceland!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_iceland_2.mp3"
+    },
+    {
+      "id": "to_kimberly_hotel_in_nyc",
+      "wording": "FEATURED TRIP: Kimberly Hotel in NYC",
+      "congratsText": "Good work — you've won a trip to Kimberly Hotel in NYC!",
+      "voText": "Congrats! You've won a trip to Kimberly Hotel in NYC!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Kimberly Hotel in NYC!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_kimberly_hotel_in_nyc.mp3"
+    },
+    {
+      "id": "to_koa_kea",
+      "wording": "FEATURED TRIP: Ko’a Kea",
+      "congratsText": "You've won a trip to Ko’a Kea!",
+      "voText": "Good work! You've won a trip to Ko’a Kea!",
+      "spoken": "[excitedly] Good work! You've won a trip to Ko’a Kea!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_koa_kea.mp3"
+    },
+    {
+      "id": "to_la_paz_waterfall_gardens_in_costa_rica",
+      "wording": "FEATURED TRIP: La Paz Waterfall Gardens in Costa Rica",
+      "congratsText": "Congratulations, you've won a trip to La Paz Waterfall Gardens in Costa Rica!",
+      "voText": "You've won! A trip to La Paz Waterfall Gardens in Costa Rica!",
+      "spoken": "[excitedly] You've won! A trip to La Paz Waterfall Gardens in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_la_paz_waterfall_gardens_in_costa_rica.mp3"
+    },
+    {
+      "id": "to_lake_tahoe_at_the_resort_at_squaw_creek",
+      "wording": "FEATURED TRIP: Lake Tahoe at the Resort at Squaw Creek",
+      "congratsText": "Congrats, you've won a trip to Lake Tahoe at the Resort at Squaw Creek!",
+      "voText": "Great news! You've won a trip to Lake Tahoe at the Resort at Squaw Creek!",
+      "spoken": "[excitedly] Great news! You've won a trip to Lake Tahoe at the Resort at Squaw Creek!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_lake_tahoe_at_the_resort_at_squaw_creek.mp3"
+    },
+    {
+      "id": "to_lexington_at_jackson_hole_in_wy",
+      "wording": "FEATURED TRIP: Lexington at Jackson Hole in WY",
+      "congratsText": "Good work — you've won a trip to Lexington at Jackson Hole in WY!",
+      "voText": "Congratulations! You've won a trip to Lexington at Jackson Hole in WY!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Lexington at Jackson Hole in WY!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_lexington_at_jackson_hole_in_wy.mp3"
+    },
+    {
+      "id": "to_mirror_lake_inn_resort_spa_in_lake_placid_ny",
+      "wording": "FEATURED TRIP: Mirror Lake Inn Resort & Spa in Lake Placid, NY",
+      "congratsText": "You've won a trip to Mirror Lake Inn Resort & Spa in Lake Placid, NY!",
+      "voText": "Congrats! You've won a trip to Mirror Lake Inn Resort & Spa in Lake Placid, NY!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Mirror Lake Inn Resort & Spa in Lake Placid, NY!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_mirror_lake_inn_resort_spa_in_lake_placid_ny.mp3"
+    },
+    {
+      "id": "to_monarch_beach_golf_links_in_southern_california",
+      "wording": "FEATURED TRIP: MONARCH BEACH Golf Links in Southern California",
+      "congratsText": "Congratulations, you've won a trip to Monarch Beach Golf Links in Southern California!",
+      "voText": "Good work! You've won a trip to Monarch Beach Golf Links in Southern California!",
+      "spoken": "[excitedly] Good work! You've won a trip to Monarch Beach Golf Links in Southern California!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_monarch_beach_golf_links_in_southern_california.mp3"
+    },
+    {
+      "id": "to_monterey_california",
+      "wording": "FEATURED TRIP: MONTEREY, CALIFORNIA",
+      "congratsText": "Congrats, you've won a trip to Monterey, California!",
+      "voText": "You've won! A trip to Monterey, California!",
+      "spoken": "[excitedly] You've won! A trip to Monterey, California!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_monterey_california.mp3"
+    },
+    {
+      "id": "to_myrtle_beach_2",
+      "wording": "FEATURED TRIP: Myrtle Beach",
+      "congratsText": "Good work — you've won a trip to Myrtle Beach!",
+      "voText": "Great news! You've won a trip to Myrtle Beach!",
+      "spoken": "[excitedly] Great news! You've won a trip to Myrtle Beach!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_myrtle_beach_2.mp3"
+    },
+    {
+      "id": "to_newport_beach_marriott_bayview_in_ca",
+      "wording": "FEATURED TRIP: Newport Beach Marriott Bayview in CA",
+      "congratsText": "You've won a trip to Newport Beach Marriott Bayview in CA!",
+      "voText": "Congratulations! You've won a trip to Newport Beach Marriott Bayview in CA!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Newport Beach Marriott Bayview in CA!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_newport_beach_marriott_bayview_in_ca.mp3"
+    },
+    {
+      "id": "to_omni_amelia_island_plantation_resort_in_florida",
+      "wording": "FEATURED TRIP: Omni Amelia Island Plantation Resort in FLORIDA",
+      "congratsText": "Congratulations, you've won a trip to Omni Amelia Island Plantation Resort in Florida!",
+      "voText": "Congrats! You've won a trip to Omni Amelia Island Plantation Resort in Florida!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Omni Amelia Island Plantation Resort in Florida!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_omni_amelia_island_plantation_resort_in_florida.mp3"
+    },
+    {
+      "id": "to_parc_55_hotel_in_san_francisco",
+      "wording": "FEATURED TRIP: Parc 55 hotel in SAN FRANCISCO",
+      "congratsText": "Congrats, you've won a trip to Parc 55 hotel in San Francisco!",
+      "voText": "Good work! You've won a trip to Parc 55 hotel in San Francisco!",
+      "spoken": "[excitedly] Good work! You've won a trip to Parc 55 hotel in San Francisco!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_parc_55_hotel_in_san_francisco.mp3"
+    },
+    {
+      "id": "to_pineapple_beach_club_in_antigua",
+      "wording": "FEATURED TRIP: Pineapple Beach Club in Antigua",
+      "congratsText": "Good work — you've won a trip to Pineapple Beach Club in Antigua!",
+      "voText": "You've won! A trip to Pineapple Beach Club in Antigua!",
+      "spoken": "[excitedly] You've won! A trip to Pineapple Beach Club in Antigua!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_pineapple_beach_club_in_antigua.mp3"
+    },
+    {
+      "id": "to_puerto_rico",
+      "wording": "FEATURED TRIP: PUERTO RICO",
+      "congratsText": "You've won a trip to Puerto Rico!",
+      "voText": "Great news! You've won a trip to Puerto Rico!",
+      "spoken": "[excitedly] Great news! You've won a trip to Puerto Rico!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_puerto_rico.mp3"
+    },
+    {
+      "id": "to_ramons_village_resort_in_belize",
+      "wording": "FEATURED TRIP: Ramon’s Village Rsort in Belize",
+      "congratsText": "Congratulations, you've won a trip to Ramon’s Village Resort in Belize!",
+      "voText": "Congratulations! You've won a trip to Ramon’s Village Resort in Belize!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Ramon’s Village Resort in Belize!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_ramons_village_resort_in_belize.mp3"
+    },
+    {
+      "id": "to_rocky_mountaineer_railroad_tour_of_western_canada",
+      "wording": "FEATURED TRIP: Rocky Mountaineer railroad tour of Western Canada",
+      "congratsText": "Congrats, you've won a trip to Rocky Mountaineer railroad tour of Western Canada!",
+      "voText": "Congrats! You've won a trip to Rocky Mountaineer railroad tour of Western Canada!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Rocky Mountaineer railroad tour of Western Canada!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_rocky_mountaineer_railroad_tour_of_western_canada.mp3"
+    },
+    {
+      "id": "to_sala_lodges_in_siem_reap_cambodia",
+      "wording": "FEATURED TRIP: Sala Lodges in Siem Reap, CAMBODIA",
+      "congratsText": "Good work — you've won a trip to Sala Lodges in Siem Reap, Cambodia!",
+      "voText": "Good work! You've won a trip to Sala Lodges in Siem Reap, Cambodia!",
+      "spoken": "[excitedly] Good work! You've won a trip to Sala Lodges in Siem Reap, Cambodia!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sala_lodges_in_siem_reap_cambodia.mp3"
+    },
+    {
+      "id": "to_sandals_royal_curacao",
+      "wording": "FEATURED TRIP: Sandals Royal Curaçao",
+      "congratsText": "You've won a trip to Sandals Royal Curaçao!",
+      "voText": "You've won! A trip to Sandals Royal Curaçao!",
+      "spoken": "[excitedly] You've won! A trip to Sandals Royal Curaçao!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sandals_royal_curacao.mp3"
+    },
+    {
+      "id": "to_scotland",
+      "wording": "FEATURED TRIP: Scotland",
+      "congratsText": "Congratulations, you've won a trip to Scotland!",
+      "voText": "Great news! You've won a trip to Scotland!",
+      "spoken": "[excitedly] Great news! You've won a trip to Scotland!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_scotland.mp3"
+    },
+    {
+      "id": "to_ski_trip_to_moonlight_basin_in_big_sky_montana",
+      "wording": "FEATURED TRIP: ski trip to Moonlight Basin in Big Sky, MONTANA",
+      "congratsText": "Congrats, you've won a trip to ski trip to Moonlight Basin in Big Sky, Montana!",
+      "voText": "Congratulations! You've won a trip to ski trip to Moonlight Basin in Big Sky, Montana!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to ski trip to Moonlight Basin in Big Sky, Montana!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_ski_trip_to_moonlight_basin_in_big_sky_montana.mp3"
+    },
+    {
+      "id": "to_smugglers_notch_in_vermont",
+      "wording": "FEATURED TRIP: Smuggler’s Notch in VERMONT",
+      "congratsText": "Good work — you've won a trip to Smuggler’s Notch in Vermont!",
+      "voText": "Congrats! You've won a trip to Smuggler’s Notch in Vermont!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Smuggler’s Notch in Vermont!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_smugglers_notch_in_vermont.mp3"
+    },
+    {
+      "id": "the_lodge_at_breckenridge_colorado",
+      "wording": "FEATURED TRIP: The Lodge at BRECKENRIDGE , Colorado",
+      "congratsText": "You've won The Lodge at Breckenridge , Colorado!",
+      "voText": "Good work! You've won The Lodge at Breckenridge , Colorado!",
+      "spoken": "[excitedly] Good work! You've won The Lodge at Breckenridge , Colorado!",
+      "file": "assets/audio/vo/trip-prizes/trips/the_lodge_at_breckenridge_colorado.mp3"
+    },
+    {
+      "id": "the_new_hotel_mediteran_villa_edition_and_a_tour_of_old_castle_in_montenegro",
+      "wording": "FEATURED TRIP: The New Hotel Mediteran “Villa Edition” and a tour of Old Castle in MONTENEGRO",
+      "congratsText": "Congratulations, you've won The New Hotel Mediteran “Villa Edition” and a tour of Old Castle in Montenegro!",
+      "voText": "You've won! The New Hotel Mediteran “Villa Edition” and a tour of Old Castle in Montenegro!",
+      "spoken": "[excitedly] You've won! The New Hotel Mediteran “Villa Edition” and a tour of Old Castle in Montenegro!",
+      "file": "assets/audio/vo/trip-prizes/trips/the_new_hotel_mediteran_villa_edition_and_a_tour_of_old_castle_in_montenegro.mp3"
+    },
+    {
+      "id": "the_new_hotel_mediteran_villa_edition_in_montenegro",
+      "wording": "FEATURED TRIP: The New Hotel Mediteran “Villa Edition” in MONTENEGRO",
+      "congratsText": "Congrats, you've won The New Hotel Mediteran “Villa Edition” in Montenegro!",
+      "voText": "Great news! You've won The New Hotel Mediteran “Villa Edition” in Montenegro!",
+      "spoken": "[excitedly] Great news! You've won The New Hotel Mediteran “Villa Edition” in Montenegro!",
+      "file": "assets/audio/vo/trip-prizes/trips/the_new_hotel_mediteran_villa_edition_in_montenegro.mp3"
+    },
+    {
+      "id": "the_radisson_fishermans_wharf_in_san_francisco",
+      "wording": "FEATURED TRIP: the Radisson Fisherman’s Wharf in San Francisco",
+      "congratsText": "Good work — you've won the Radisson Fisherman’s Wharf in San Francisco!",
+      "voText": "Congratulations! You've won the Radisson Fisherman’s Wharf in San Francisco!",
+      "spoken": "[excitedly] Congratulations! You've won the Radisson Fisherman’s Wharf in San Francisco!",
+      "file": "assets/audio/vo/trip-prizes/trips/the_radisson_fishermans_wharf_in_san_francisco.mp3"
+    },
+    {
+      "id": "the_silverado_resort_spa_in_napa_valley",
+      "wording": "FEATURED TRIP: the Silverado Resort & Spa in Napa Valley",
+      "congratsText": "You've won the Silverado Resort & Spa in Napa Valley!",
+      "voText": "Congrats! You've won the Silverado Resort & Spa in Napa Valley!",
+      "spoken": "[excitedly] Congrats! You've won the Silverado Resort & Spa in Napa Valley!",
+      "file": "assets/audio/vo/trip-prizes/trips/the_silverado_resort_spa_in_napa_valley.mp3"
+    },
+    {
+      "id": "to_thermae_sylla_spa_wellness_hotel_in_greece",
+      "wording": "FEATURED TRIP: Thermae Sylla Spa Wellness Hotel in GREECE",
+      "congratsText": "Congratulations, you've won a trip to Thermae Sylla Spa Wellness Hotel in Greece!",
+      "voText": "Good work! You've won a trip to Thermae Sylla Spa Wellness Hotel in Greece!",
+      "spoken": "[excitedly] Good work! You've won a trip to Thermae Sylla Spa Wellness Hotel in Greece!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_thermae_sylla_spa_wellness_hotel_in_greece.mp3"
+    },
+    {
+      "id": "to_cape_eleuthera_resort_yacht_club_in_the_bahamas",
+      "wording": "FEATURED TRIP: to the Cape Eleuthera Resort & Yacht Club in the Bahamas",
+      "congratsText": "Congrats, you've won a trip to Cape Eleuthera Resort & Yacht Club in the Bahamas!",
+      "voText": "You've won! A trip to Cape Eleuthera Resort & Yacht Club in the Bahamas!",
+      "spoken": "[excitedly] You've won! A trip to Cape Eleuthera Resort & Yacht Club in the Bahamas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_cape_eleuthera_resort_yacht_club_in_the_bahamas.mp3"
+    },
+    {
+      "id": "to_pacific_edge_hotel_in_laguna_beach_ca",
+      "wording": "FEATURED TRIP: to the Pacific Edge Hotel in Laguna Beach, CA",
+      "congratsText": "Good work — you've won a trip to Pacific Edge Hotel in Laguna Beach, CA!",
+      "voText": "Great news! You've won a trip to Pacific Edge Hotel in Laguna Beach, CA!",
+      "spoken": "[excitedly] Great news! You've won a trip to Pacific Edge Hotel in Laguna Beach, CA!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_pacific_edge_hotel_in_laguna_beach_ca.mp3"
+    },
+    {
+      "id": "to_rabbit_hill_inn_in_vermont",
+      "wording": "FEATURED TRIP: to the Rabbit Hill Inn in Vermont",
+      "congratsText": "You've won a trip to Rabbit Hill Inn in Vermont!",
+      "voText": "Congratulations! You've won a trip to Rabbit Hill Inn in Vermont!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Rabbit Hill Inn in Vermont!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_rabbit_hill_inn_in_vermont.mp3"
+    },
+    {
+      "id": "to_salish_lodge_spa_in_washington",
+      "wording": "FEATURED TRIP: to the Salish Lodge & Spa in Washington",
+      "congratsText": "Congratulations, you've won a trip to Salish Lodge & Spa in Washington!",
+      "voText": "Congrats! You've won a trip to Salish Lodge & Spa in Washington!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Salish Lodge & Spa in Washington!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_salish_lodge_spa_in_washington.mp3"
+    },
+    {
+      "id": "to_cova_hotel_in_san_francisco",
+      "wording": "FEATURED TRIP: trip to the Cova Hotel in San Francisco",
+      "congratsText": "Congrats, you've won a trip to Cova Hotel in San Francisco!",
+      "voText": "Good work! You've won a trip to Cova Hotel in San Francisco!",
+      "spoken": "[excitedly] Good work! You've won a trip to Cova Hotel in San Francisco!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_cova_hotel_in_san_francisco.mp3"
+    },
+    {
+      "id": "to_viva_wyndham_fortuna_beach_resort_on_grand_bahama_island",
+      "wording": "FEATURED TRIP: Viva Wyndham Fortuna Beach resort on Grand Bahama Island",
+      "congratsText": "Good work — you've won a trip to Viva Wyndham Fortuna Beach resort on Grand Bahama Island!",
+      "voText": "You've won! A trip to Viva Wyndham Fortuna Beach resort on Grand Bahama Island!",
+      "spoken": "[excitedly] You've won! A trip to Viva Wyndham Fortuna Beach resort on Grand Bahama Island!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_viva_wyndham_fortuna_beach_resort_on_grand_bahama_island.mp3"
+    },
+    {
+      "id": "to_viva_wyndham_playa_dorado_in_the_dominican_republic",
+      "wording": "FEATURED TRIP: Viva Wyndham Playa Dorado in the Dominican Republic",
+      "congratsText": "You've won a trip to Viva Wyndham Playa Dorado in the Dominican Republic!",
+      "voText": "Great news! You've won a trip to Viva Wyndham Playa Dorado in the Dominican Republic!",
+      "spoken": "[excitedly] Great news! You've won a trip to Viva Wyndham Playa Dorado in the Dominican Republic!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_viva_wyndham_playa_dorado_in_the_dominican_republic.mp3"
+    },
+    {
+      "id": "to_waianuhea_bed_breakfast_in_honokaa_hi",
+      "wording": "FEATURED TRIP: Waianuhea Bed & Breakfast in Honokaa, HI",
+      "congratsText": "Congratulations, you've won a trip to Waianuhea Bed & Breakfast in Honokaa, HI!",
+      "voText": "Congratulations! You've won a trip to Waianuhea Bed & Breakfast in Honokaa, HI!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Waianuhea Bed & Breakfast in Honokaa, HI!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_waianuhea_bed_breakfast_in_honokaa_hi.mp3"
+    },
+    {
+      "id": "los_establos_boutique_resort_in_panama",
+      "wording": "FEATURED TRIPS: Los Establos Boutique Resort in PANAMA",
+      "congratsText": "Congrats, you've won a trip to Los Establos Boutique Resort in Panama!",
+      "voText": "Congrats! You've won a trip to Los Establos Boutique Resort in Panama!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Los Establos Boutique Resort in Panama!",
+      "file": "assets/audio/vo/trip-prizes/trips/los_establos_boutique_resort_in_panama.mp3"
+    },
+    {
+      "id": "canadian_rockies_glacier_national_park_tour",
+      "wording": "FEATURED WE: Canadian Rockies & Glacier National Park Tour",
+      "congratsText": "Good work — you've won a vacation Canadian Rockies & Glacier National Park Tour!",
+      "voText": "Good work! You've won a vacation Canadian Rockies & Glacier National Park Tour!",
+      "spoken": "[excitedly] Good work! You've won a vacation Canadian Rockies & Glacier National Park Tour!",
+      "file": "assets/audio/vo/trip-prizes/trips/canadian_rockies_glacier_national_park_tour.mp3"
+    },
+    {
+      "id": "durango_mountain_resort_in_colorado",
+      "wording": "FEATURED WE: Durango Mountain Resort in Colorado",
+      "congratsText": "You've won a vacation Durango Mountain Resort in Colorado!",
+      "voText": "You've won! A vacation Durango Mountain Resort in Colorado!",
+      "spoken": "[excitedly] You've won! A vacation Durango Mountain Resort in Colorado!",
+      "file": "assets/audio/vo/trip-prizes/trips/durango_mountain_resort_in_colorado.mp3"
+    },
+    {
+      "id": "switzerland_italy",
+      "wording": "FEATURED WE: Switzerland/Italy",
+      "congratsText": "Congratulations, you've won a vacation Switzerland/Italy!",
+      "voText": "Great news! You've won a vacation Switzerland/Italy!",
+      "spoken": "[excitedly] Great news! You've won a vacation Switzerland/Italy!",
+      "file": "assets/audio/vo/trip-prizes/trips/switzerland_italy.mp3"
+    },
+    {
+      "id": "collette_tour_of_finland",
+      "wording": "FEATURED WINTER WONDERLAND: Collette tour of FINLAND",
+      "congratsText": "Congrats, you've won a winter vacation Collette tour of Finland!",
+      "voText": "Congratulations! You've won a winter vacation Collette tour of Finland!",
+      "spoken": "[excitedly] Congratulations! You've won a winter vacation Collette tour of Finland!",
+      "file": "assets/audio/vo/trip-prizes/trips/collette_tour_of_finland.mp3"
+    },
+    {
+      "id": "to_japan",
+      "wording": "Overseas Adventure Travel Trip to JAPAN (incl",
+      "congratsText": "Good work — you've won an adventure travel trip to Japan!",
+      "voText": "Congrats! You've won an adventure travel trip to Japan!",
+      "spoken": "[excitedly] Congrats! You've won an adventure travel trip to Japan!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_japan.mp3"
+    },
+    {
+      "id": "to_sala_lodges_in_siem_reap",
+      "wording": "Thrive Travel Trip to SALA Lodges in Siem Reap",
+      "congratsText": "You've won a trip to Sala Lodges in Siem Reap!",
+      "voText": "Good work! You've won a trip to Sala Lodges in Siem Reap!",
+      "spoken": "[excitedly] Good work! You've won a trip to Sala Lodges in Siem Reap!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sala_lodges_in_siem_reap.mp3"
+    },
+    {
+      "id": "to_casa_brancas_boutique_hotel_spa_in_brazil",
+      "wording": "Thrive Travel Trip to the Casa Brancas Boutique Hotel & Spa in BRAZIL",
+      "congratsText": "Congratulations, you've won a trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "voText": "You've won! A trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "spoken": "[excitedly] You've won! A trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_casa_brancas_boutique_hotel_spa_in_brazil.mp3"
+    },
+    {
+      "id": "to_divi_village_golf_beach_resort_in_aruba",
+      "wording": "Thrive Travel Trip to the Divi Village Golf & Beach Resort in ARUBA",
+      "congratsText": "Congrats, you've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "voText": "Great news! You've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "spoken": "[excitedly] Great news! You've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_divi_village_golf_beach_resort_in_aruba.mp3"
+    },
+    {
+      "id": "to_izla_hotel_in_isla_mujeres",
+      "wording": "Thrive Travel Trip to the IZLA Hotel in Isla Mujeres",
+      "congratsText": "Good work — you've won a trip to Izla Hotel in Isla Mujeres!",
+      "voText": "Congratulations! You've won a trip to Izla Hotel in Isla Mujeres!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Izla Hotel in Isla Mujeres!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_izla_hotel_in_isla_mujeres.mp3"
+    },
+    {
+      "id": "to_rumours_luxury_villas_spa",
+      "wording": "Thrive Travel Trip to the Rumours Luxury Villas & Spa",
+      "congratsText": "You've won a trip to Rumours Luxury Villas & Spa!",
+      "voText": "Congrats! You've won a trip to Rumours Luxury Villas & Spa!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Rumours Luxury Villas & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_rumours_luxury_villas_spa.mp3"
+    },
+    {
+      "id": "to_sunset_at_the_palms_in_jamaica",
+      "wording": "Thrive Travel Trip to the Sunset At The Palms in JAMAICA",
+      "congratsText": "Congratulations, you've won a trip to Sunset At The Palms in Jamaica!",
+      "voText": "Good work! You've won a trip to Sunset At The Palms in Jamaica!",
+      "spoken": "[excitedly] Good work! You've won a trip to Sunset At The Palms in Jamaica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sunset_at_the_palms_in_jamaica.mp3"
+    },
+    {
+      "id": "to_ylang_ylang_beach_resort_in_costa_rica_includes_a_full_day_fishing_adventure",
+      "wording": "Thrive Travel Trip to the Ylang Ylang Beach Resort in COSTA RICA (includes a full-day fishing adventure",
+      "congratsText": "Congrats, you've won a trip to Ylang Ylang Beach Resort in Costa Rica (includes a full-day fishing adventure!",
+      "voText": "You've won! A trip to Ylang Ylang Beach Resort in Costa Rica (includes a full-day fishing adventure!",
+      "spoken": "[excitedly] You've won! A trip to Ylang Ylang Beach Resort in Costa Rica (includes a full-day fishing adventure!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_ylang_ylang_beach_resort_in_costa_rica_includes_a_full_day_fishing_adventure.mp3"
+    },
+    {
+      "id": "to_a_bright_and_breezy_place_called_the_curacao_marriott_beach_resort",
+      "wording": "Trip to a BRIGHT AND BREEZY place called the CURAÇAO Marriott Beach Resort",
+      "congratsText": "Good work — you've won a trip to a bright and breezy place called the Curaçao Marriott Beach Resort!",
+      "voText": "Great news! You've won a trip to a bright and breezy place called the Curaçao Marriott Beach Resort!",
+      "spoken": "[excitedly] Great news! You've won a trip to a bright and breezy place called the Curaçao Marriott Beach Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_a_bright_and_breezy_place_called_the_curacao_marriott_beach_resort.mp3"
+    },
+    {
+      "id": "to_a_resort",
+      "wording": "Trip to a resort",
+      "congratsText": "You've won a trip to a resort!",
+      "voText": "Congratulations! You've won a trip to a resort!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to a resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_a_resort.mp3"
+    },
+    {
+      "id": "to_acapulco",
+      "wording": "Trip to Acapulco",
+      "congratsText": "Congratulations, you've won a trip to Acapulco!",
+      "voText": "Congrats! You've won a trip to Acapulco!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Acapulco!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_acapulco.mp3"
+    },
+    {
+      "id": "to_adventure_lodge_in_belize",
+      "wording": "Trip to Adventure Lodge in BELIZE",
+      "congratsText": "Congrats, you've won a trip to Adventure Lodge in Belize!",
+      "voText": "Good work! You've won a trip to Adventure Lodge in Belize!",
+      "spoken": "[excitedly] Good work! You've won a trip to Adventure Lodge in Belize!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_adventure_lodge_in_belize.mp3"
+    },
+    {
+      "id": "to_alma_resort_cam_ranh",
+      "wording": "Trip to Alma Resort Cam Ranh",
+      "congratsText": "Good work — you've won a trip to Alma Resort Cam Ranh!",
+      "voText": "You've won! A trip to Alma Resort Cam Ranh!",
+      "spoken": "[excitedly] You've won! A trip to Alma Resort Cam Ranh!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_alma_resort_cam_ranh.mp3"
+    },
+    {
+      "id": "to_almond_casuarina_beach_resort_in_barbados",
+      "wording": "Trip to Almond Casuarina Beach Resort in BARBADOS",
+      "congratsText": "You've won a trip to Almond Casuarina Beach Resort in Barbados!",
+      "voText": "Great news! You've won a trip to Almond Casuarina Beach Resort in Barbados!",
+      "spoken": "[excitedly] Great news! You've won a trip to Almond Casuarina Beach Resort in Barbados!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_almond_casuarina_beach_resort_in_barbados.mp3"
+    },
+    {
+      "id": "to_amsterdam_manor_beach_resort_aruba",
+      "wording": "Trip to Amsterdam Manor Beach Resort ARUBA",
+      "congratsText": "Congratulations, you've won a trip to Amsterdam Manor Beach Resort Aruba!",
+      "voText": "Congratulations! You've won a trip to Amsterdam Manor Beach Resort Aruba!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Amsterdam Manor Beach Resort Aruba!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_amsterdam_manor_beach_resort_aruba.mp3"
+    },
+    {
+      "id": "to_amsterdam_manor_beach_resort_in_aruba",
+      "wording": "Trip to Amsterdam Manor Beach Resort in ARUBA",
+      "congratsText": "Congrats, you've won a trip to Amsterdam Manor Beach Resort in Aruba!",
+      "voText": "Congrats! You've won a trip to Amsterdam Manor Beach Resort in Aruba!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Amsterdam Manor Beach Resort in Aruba!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_amsterdam_manor_beach_resort_in_aruba.mp3"
+    },
+    {
+      "id": "to_astarte_suites_in_greece",
+      "wording": "Trip to Astarte Suites in GREECE",
+      "congratsText": "Good work — you've won a trip to Astarte Suites in Greece!",
+      "voText": "Good work! You've won a trip to Astarte Suites in Greece!",
+      "spoken": "[excitedly] Good work! You've won a trip to Astarte Suites in Greece!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_astarte_suites_in_greece.mp3"
+    },
+    {
+      "id": "to_balsams_grand_resort_hotel_in_new_hampshire",
+      "wording": "Trip to Balsams Grand Resort Hotel in New Hampshire",
+      "congratsText": "You've won a trip to Balsams Grand Resort Hotel in New Hampshire!",
+      "voText": "You've won! A trip to Balsams Grand Resort Hotel in New Hampshire!",
+      "spoken": "[excitedly] You've won! A trip to Balsams Grand Resort Hotel in New Hampshire!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_balsams_grand_resort_hotel_in_new_hampshire.mp3"
+    },
+    {
+      "id": "to_beacon_hotel_in_miami",
+      "wording": "Trip to Beacon Hotel in MIAMI",
+      "congratsText": "Congratulations, you've won a trip to Beacon Hotel in Miami!",
+      "voText": "Great news! You've won a trip to Beacon Hotel in Miami!",
+      "spoken": "[excitedly] Great news! You've won a trip to Beacon Hotel in Miami!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_beacon_hotel_in_miami.mp3"
+    },
+    {
+      "id": "to_borgo_il_poggio_estate_farm_in_italy",
+      "wording": "Trip to Borgo Il Poggio Estate & Farm in ITALY",
+      "congratsText": "Congrats, you've won a trip to Borgo Il Poggio Estate & Farm in Italy!",
+      "voText": "Congratulations! You've won a trip to Borgo Il Poggio Estate & Farm in Italy!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Borgo Il Poggio Estate & Farm in Italy!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_borgo_il_poggio_estate_farm_in_italy.mp3"
+    },
+    {
+      "id": "to_bougainvillea_barbados",
+      "wording": "Trip to Bougainvillea BARBADOS",
+      "congratsText": "Good work — you've won a trip to Bougainvillea Barbados!",
+      "voText": "Congrats! You've won a trip to Bougainvillea Barbados!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Bougainvillea Barbados!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_bougainvillea_barbados.mp3"
+    },
+    {
+      "id": "to_cambridge_beach_resort_in_bermuda",
+      "wording": "Trip to Cambridge Beach Resort in BERMUDA",
+      "congratsText": "You've won a trip to Cambridge Beach Resort in Bermuda!",
+      "voText": "Good work! You've won a trip to Cambridge Beach Resort in Bermuda!",
+      "spoken": "[excitedly] Good work! You've won a trip to Cambridge Beach Resort in Bermuda!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_cambridge_beach_resort_in_bermuda.mp3"
+    },
+    {
+      "id": "to_canadian_princess_lodge_marina_in_canada",
+      "wording": "Trip to Canadian Princess Lodge & Marina in CANADA",
+      "congratsText": "Congratulations, you've won a trip to Canadian Princess Lodge & Marina in Canada!",
+      "voText": "You've won! A trip to Canadian Princess Lodge & Marina in Canada!",
+      "spoken": "[excitedly] You've won! A trip to Canadian Princess Lodge & Marina in Canada!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_canadian_princess_lodge_marina_in_canada.mp3"
+    },
+    {
+      "id": "to_casa_brancas_boutique_hotel_spa_in_brazil_2",
+      "wording": "Trip to Casa Brancas Boutique Hotel & Spa in BRAZIL",
+      "congratsText": "Congrats, you've won a trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "voText": "Great news! You've won a trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "spoken": "[excitedly] Great news! You've won a trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_casa_brancas_boutique_hotel_spa_in_brazil_2.mp3"
+    },
+    {
+      "id": "to_center_hotels_by_icelandia",
+      "wording": "Trip to Center Hotels by Icelandia",
+      "congratsText": "Good work — you've won a trip to Center Hotels by Icelandia!",
+      "voText": "Congratulations! You've won a trip to Center Hotels by Icelandia!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Center Hotels by Icelandia!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_center_hotels_by_icelandia.mp3"
+    },
+    {
+      "id": "to_chile_from_earth_river_expeditions",
+      "wording": "Trip to Chile from Earth River Expeditions",
+      "congratsText": "You've won a trip to Chile from Earth River Expeditions!",
+      "voText": "Congrats! You've won a trip to Chile from Earth River Expeditions!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Chile from Earth River Expeditions!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_chile_from_earth_river_expeditions.mp3"
+    },
+    {
+      "id": "to_club_barbados_resort_spa",
+      "wording": "Trip to Club BARBADOS Resort & Spa",
+      "congratsText": "Congratulations, you've won a trip to Club Barbados Resort & Spa!",
+      "voText": "Good work! You've won a trip to Club Barbados Resort & Spa!",
+      "spoken": "[excitedly] Good work! You've won a trip to Club Barbados Resort & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_club_barbados_resort_spa.mp3"
+    },
+    {
+      "id": "to_clydesdale_outpost_in_montana",
+      "wording": "Trip to Clydesdale Outpost in MONTANA",
+      "congratsText": "Congrats, you've won a trip to Clydesdale Outpost in Montana!",
+      "voText": "You've won! A trip to Clydesdale Outpost in Montana!",
+      "spoken": "[excitedly] You've won! A trip to Clydesdale Outpost in Montana!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_clydesdale_outpost_in_montana.mp3"
+    },
+    {
+      "id": "to_compass_hotel_by_margaritaville_in_anna_maria_sound_on_the_southwest_florida_",
+      "wording": "Trip to Compass Hotel by Margaritaville in Anna Maria Sound on the SOUTHWEST FLORIDA COAST",
+      "congratsText": "Good work — you've won a trip to Compass Hotel by Margaritaville in Anna Maria Sound on the Southwest Florida coast!",
+      "voText": "Great news! You've won a trip to Compass Hotel by Margaritaville in Anna Maria Sound on the Southwest Florida coast!",
+      "spoken": "[excitedly] Great news! You've won a trip to Compass Hotel by Margaritaville in Anna Maria Sound on the Southwest Florida coast!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_compass_hotel_by_margaritaville_in_anna_maria_sound_on_the_southwest_florida_.mp3"
+    },
+    {
+      "id": "to_conrad_new_york_downtown",
+      "wording": "Trip to Conrad NEW YORK Downtown",
+      "congratsText": "You've won a trip to Conrad New York Downtown!",
+      "voText": "Congratulations! You've won a trip to Conrad New York Downtown!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Conrad New York Downtown!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_conrad_new_york_downtown.mp3"
+    },
+    {
+      "id": "to_costa_rica",
+      "wording": "Trip to COSTA RICA",
+      "congratsText": "Congratulations, you've won a trip to Costa Rica!",
+      "voText": "Congrats! You've won a trip to Costa Rica!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_costa_rica.mp3"
+    },
+    {
+      "id": "to_cova_hotel_in_san_francisco_2",
+      "wording": "Trip to Cova Hotel in San Francisco",
+      "congratsText": "Congrats, you've won a trip to Cova Hotel in San Francisco!",
+      "voText": "Good work! You've won a trip to Cova Hotel in San Francisco!",
+      "spoken": "[excitedly] Good work! You've won a trip to Cova Hotel in San Francisco!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_cova_hotel_in_san_francisco_2.mp3"
+    },
+    {
+      "id": "to_crocodile_bay_resort_in_costa_rica",
+      "wording": "Trip to Crocodile Bay Resort in COSTA RICA",
+      "congratsText": "Good work — you've won a trip to Crocodile Bay Resort in Costa Rica!",
+      "voText": "You've won! A trip to Crocodile Bay Resort in Costa Rica!",
+      "spoken": "[excitedly] You've won! A trip to Crocodile Bay Resort in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_crocodile_bay_resort_in_costa_rica.mp3"
+    },
+    {
+      "id": "to_divi_aruba_phoenix_beach_resort",
+      "wording": "Trip to Divi ARUBA Phoenix Bach Resort",
+      "congratsText": "You've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "voText": "Great news! You've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "spoken": "[excitedly] Great news! You've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_divi_aruba_phoenix_beach_resort.mp3"
+    },
+    {
+      "id": "to_divi_aruba_phoenix_beach_resort_2",
+      "wording": "Trip to Divi ARUBA Phoenix Beach Resort",
+      "congratsText": "Congratulations, you've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "voText": "Congratulations! You've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_divi_aruba_phoenix_beach_resort_2.mp3"
+    },
+    {
+      "id": "to_divi_dutch_village_beach_resort_in_aruba",
+      "wording": "Trip to Divi Dutch Village Beach Resort in ARUBA",
+      "congratsText": "Congrats, you've won a trip to Divi Dutch Village Beach Resort in Aruba!",
+      "voText": "Congrats! You've won a trip to Divi Dutch Village Beach Resort in Aruba!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Divi Dutch Village Beach Resort in Aruba!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_divi_dutch_village_beach_resort_in_aruba.mp3"
+    },
+    {
+      "id": "to_divi_village_golf_beach_resort_in_aruba_2",
+      "wording": "Trip to Divi Village Golf & Beach Resort in ARUBA",
+      "congratsText": "Good work — you've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "voText": "Good work! You've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "spoken": "[excitedly] Good work! You've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_divi_village_golf_beach_resort_in_aruba_2.mp3"
+    },
+    {
+      "id": "to_elbow_beach_hotel_in_bermuda",
+      "wording": "Trip to Elbow Beach Hotel in BERMUDA",
+      "congratsText": "You've won a trip to Elbow Beach Hotel in Bermuda!",
+      "voText": "You've won! A trip to Elbow Beach Hotel in Bermuda!",
+      "spoken": "[excitedly] You've won! A trip to Elbow Beach Hotel in Bermuda!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_elbow_beach_hotel_in_bermuda.mp3"
+    },
+    {
+      "id": "to_fairmont_acapulco_princess",
+      "wording": "Trip to Fairmont ACAPULCO Princess",
+      "congratsText": "Congratulations, you've won a trip to Fairmont Acapulco Princess!",
+      "voText": "Great news! You've won a trip to Fairmont Acapulco Princess!",
+      "spoken": "[excitedly] Great news! You've won a trip to Fairmont Acapulco Princess!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_fairmont_acapulco_princess.mp3"
+    },
+    {
+      "id": "to_falls_creek",
+      "wording": "Trip to Falls Creek",
+      "congratsText": "Congrats, you've won a trip to Falls Creek!",
+      "voText": "Congratulations! You've won a trip to Falls Creek!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Falls Creek!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_falls_creek.mp3"
+    },
+    {
+      "id": "to_festival_of_arts_pageant_of_the_masters_holiday_with_a_stay_at_the_ritz_carlt",
+      "wording": "Trip to Festival of Arts Pageant of the Masters holiday with a stay at the Ritz-Carlton Laguna Niguel",
+      "congratsText": "Good work — you've won a trip to Festival of Arts Pageant of the Masters holiday with a stay at the Ritz-Carlton Laguna Niguel!",
+      "voText": "Congrats! You've won a trip to Festival of Arts Pageant of the Masters holiday with a stay at the Ritz-Carlton Laguna Niguel!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Festival of Arts Pageant of the Masters holiday with a stay at the Ritz-Carlton Laguna Niguel!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_festival_of_arts_pageant_of_the_masters_holiday_with_a_stay_at_the_ritz_carlt.mp3"
+    },
+    {
+      "id": "to_florida_keys_key_west_at_the_casa_marina_key_west",
+      "wording": "Trip to FLORIDA KEYS & KEY WEST at the Casa Marina Key West",
+      "congratsText": "You've won a trip to Florida Keys & Key West at the Casa Marina Key West!",
+      "voText": "Good work! You've won a trip to Florida Keys & Key West at the Casa Marina Key West!",
+      "spoken": "[excitedly] Good work! You've won a trip to Florida Keys & Key West at the Casa Marina Key West!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_florida_keys_key_west_at_the_casa_marina_key_west.mp3"
+    },
+    {
+      "id": "to_galley_bay_resort_in_antigua",
+      "wording": "Trip to Galley Bay Resort in ANTIGUA",
+      "congratsText": "Congratulations, you've won a trip to Galley Bay Resort in Antigua!",
+      "voText": "You've won! A trip to Galley Bay Resort in Antigua!",
+      "spoken": "[excitedly] You've won! A trip to Galley Bay Resort in Antigua!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_galley_bay_resort_in_antigua.mp3"
+    },
+    {
+      "id": "to_gamboa_rainforest_reserve",
+      "wording": "Trip to Gamboa Rainforest Reserve",
+      "congratsText": "Congrats, you've won a trip to Gamboa Rainforest Reserve!",
+      "voText": "Great news! You've won a trip to Gamboa Rainforest Reserve!",
+      "spoken": "[excitedly] Great news! You've won a trip to Gamboa Rainforest Reserve!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_gamboa_rainforest_reserve.mp3"
+    },
+    {
+      "id": "to_hard_rock_hotel_palm_springs",
+      "wording": "Trip to Hard Rock Hotel PALM SPRINGS",
+      "congratsText": "Good work — you've won a trip to Hard Rock Hotel Palm Springs!",
+      "voText": "Congratulations! You've won a trip to Hard Rock Hotel Palm Springs!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Hard Rock Hotel Palm Springs!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hard_rock_hotel_palm_springs.mp3"
+    },
+    {
+      "id": "to_the_pueblo_bonito_rose_resort_spa_in_cabo",
+      "wording": "Trip to he the Pueblo Bonito Rose Resort & Spa in CABO",
+      "congratsText": "You've won a trip to the Pueblo Bonito Rose Resort & Spa in Cabo!",
+      "voText": "Congrats! You've won a trip to the Pueblo Bonito Rose Resort & Spa in Cabo!",
+      "spoken": "[excitedly] Congrats! You've won a trip to the Pueblo Bonito Rose Resort & Spa in Cabo!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_the_pueblo_bonito_rose_resort_spa_in_cabo.mp3"
+    },
+    {
+      "id": "to_hilton_and_flamingo_casino_in_new_orleans",
+      "wording": "Trip to Hilton and Flamingo Casino in NEW ORLEANS",
+      "congratsText": "Congratulations, you've won a trip to Hilton and Flamingo Casino in New Orleans!",
+      "voText": "Good work! You've won a trip to Hilton and Flamingo Casino in New Orleans!",
+      "spoken": "[excitedly] Good work! You've won a trip to Hilton and Flamingo Casino in New Orleans!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hilton_and_flamingo_casino_in_new_orleans.mp3"
+    },
+    {
+      "id": "to_hilton_aruba_caribbean_resort_casino",
+      "wording": "Trip to Hilton ARUBA Caribbean Resort & Casino",
+      "congratsText": "Congrats, you've won a trip to Hilton Aruba Caribbean Resort & Casino!",
+      "voText": "You've won! A trip to Hilton Aruba Caribbean Resort & Casino!",
+      "spoken": "[excitedly] You've won! A trip to Hilton Aruba Caribbean Resort & Casino!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hilton_aruba_caribbean_resort_casino.mp3"
+    },
+    {
+      "id": "to_hilton_waikoloa_village",
+      "wording": "Trip to Hilton Waikoloa Village",
+      "congratsText": "Good work — you've won a trip to Hilton Waikoloa Village!",
+      "voText": "Great news! You've won a trip to Hilton Waikoloa Village!",
+      "spoken": "[excitedly] Great news! You've won a trip to Hilton Waikoloa Village!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hilton_waikoloa_village.mp3"
+    },
+    {
+      "id": "to_hilton_waikoloa_village_in_hawaii_2",
+      "wording": "Trip to Hilton Waikoloa Village in HAWAII",
+      "congratsText": "You've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "voText": "Congratulations! You've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hilton_waikoloa_village_in_hawaii_2.mp3"
+    },
+    {
+      "id": "to_hilton_waikoloa_village_on_the_big_island_of_hawaii",
+      "wording": "Trip to Hilton Waikoloa Village on the Big Island of Hawaii",
+      "congratsText": "Congratulations, you've won a trip to Hilton Waikoloa Village on the Big Island of Hawaii!",
+      "voText": "Congrats! You've won a trip to Hilton Waikoloa Village on the Big Island of Hawaii!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Hilton Waikoloa Village on the Big Island of Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hilton_waikoloa_village_on_the_big_island_of_hawaii.mp3"
+    },
+    {
+      "id": "to_hotel_azura_in_costa_rica",
+      "wording": "Trip to Hotel AZURA in COSTA RICA",
+      "congratsText": "Congrats, you've won a trip to Hotel Azura in Costa Rica!",
+      "voText": "Good work! You've won a trip to Hotel Azura in Costa Rica!",
+      "spoken": "[excitedly] Good work! You've won a trip to Hotel Azura in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hotel_azura_in_costa_rica.mp3"
+    },
+    {
+      "id": "to_hotel_casa_1800_granada_in_spain",
+      "wording": "Trip to Hotel Casa 1800 Granada in SPAIN",
+      "congratsText": "Good work — you've won a trip to Hotel Casa 1800 Granada in Spain!",
+      "voText": "You've won! A trip to Hotel Casa 1800 Granada in Spain!",
+      "spoken": "[excitedly] You've won! A trip to Hotel Casa 1800 Granada in Spain!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hotel_casa_1800_granada_in_spain.mp3"
+    },
+    {
+      "id": "to_hotel_chinzanso_tokyo",
+      "wording": "Trip to Hotel Chinzanso TOKYO",
+      "congratsText": "You've won a trip to Hotel Chinzanso Tokyo!",
+      "voText": "Great news! You've won a trip to Hotel Chinzanso Tokyo!",
+      "spoken": "[excitedly] Great news! You've won a trip to Hotel Chinzanso Tokyo!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hotel_chinzanso_tokyo.mp3"
+    },
+    {
+      "id": "to_hotel_kura_hulanda_in_curacao",
+      "wording": "Trip to Hotel Kura Hulanda in CURAÇAO",
+      "congratsText": "Congratulations, you've won a trip to Hotel Kura Hulanda in Curaçao!",
+      "voText": "Congratulations! You've won a trip to Hotel Kura Hulanda in Curaçao!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Hotel Kura Hulanda in Curaçao!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hotel_kura_hulanda_in_curacao.mp3"
+    },
+    {
+      "id": "to_hotel_palace_luzern_in_switzerland",
+      "wording": "Trip to Hotel Palace Luzern in Switzerland",
+      "congratsText": "Congrats, you've won a trip to Hotel Palace Luzern in Switzerland!",
+      "voText": "Congrats! You've won a trip to Hotel Palace Luzern in Switzerland!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Hotel Palace Luzern in Switzerland!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hotel_palace_luzern_in_switzerland.mp3"
+    },
+    {
+      "id": "to_house_of_blues_hotel_in_chicago",
+      "wording": "Trip to House of Blues Hotel in Chicago",
+      "congratsText": "Good work — you've won a trip to House of Blues Hotel in Chicago!",
+      "voText": "Good work! You've won a trip to House of Blues Hotel in Chicago!",
+      "spoken": "[excitedly] Good work! You've won a trip to House of Blues Hotel in Chicago!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_house_of_blues_hotel_in_chicago.mp3"
+    },
+    {
+      "id": "to_hyatt_regency_grand_reserve_puerto_rico",
+      "wording": "Trip to Hyatt Regency Grand Reserve PUERTO RICO",
+      "congratsText": "You've won a trip to Hyatt Regency Grand Reserve Puerto Rico!",
+      "voText": "You've won! A trip to Hyatt Regency Grand Reserve Puerto Rico!",
+      "spoken": "[excitedly] You've won! A trip to Hyatt Regency Grand Reserve Puerto Rico!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hyatt_regency_grand_reserve_puerto_rico.mp3"
+    },
+    {
+      "id": "to_hyatt_regency_maui_resort_spa",
+      "wording": "Trip to Hyatt Regency MAUI Resort & Spa",
+      "congratsText": "Congratulations, you've won a trip to Hyatt Regency Maui Resort & Spa!",
+      "voText": "Great news! You've won a trip to Hyatt Regency Maui Resort & Spa!",
+      "spoken": "[excitedly] Great news! You've won a trip to Hyatt Regency Maui Resort & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_hyatt_regency_maui_resort_spa.mp3"
+    },
+    {
+      "id": "to_iceland_3",
+      "wording": "Trip to Iceland",
+      "congratsText": "Congrats, you've won a trip to Iceland!",
+      "voText": "Congratulations! You've won a trip to Iceland!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Iceland!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_iceland_3.mp3"
+    },
+    {
+      "id": "to_iheartradio_music_festival_presented_by_capital_one_in_las_vegas",
+      "wording": "Trip to iHeartRadio Music Festival presented by Capital One in LAS VEGAS",
+      "congratsText": "Good work — you've won a trip to iHeartRadio Music Festival presented by Capital One in Las Vegas!",
+      "voText": "Congrats! You've won a trip to iHeartRadio Music Festival presented by Capital One in Las Vegas!",
+      "spoken": "[excitedly] Congrats! You've won a trip to iHeartRadio Music Festival presented by Capital One in Las Vegas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_iheartradio_music_festival_presented_by_capital_one_in_las_vegas.mp3"
+    },
+    {
+      "id": "to_ireland",
+      "wording": "Trip to IRELAND",
+      "congratsText": "You've won a trip to Ireland!",
+      "voText": "Good work! You've won a trip to Ireland!",
+      "spoken": "[excitedly] Good work! You've won a trip to Ireland!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_ireland.mp3"
+    },
+    {
+      "id": "to_islands_of_antigua_at_the_verandah_resort_spa",
+      "wording": "Trip to ISLANDS of ANTIGUA at The Verandah Resort & Spa",
+      "congratsText": "Congratulations, you've won a trip to Islands of Antigua at The Verandah Resort & Spa!",
+      "voText": "You've won! A trip to Islands of Antigua at The Verandah Resort & Spa!",
+      "spoken": "[excitedly] You've won! A trip to Islands of Antigua at The Verandah Resort & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_islands_of_antigua_at_the_verandah_resort_spa.mp3"
+    },
+    {
+      "id": "to_jekyll_island_club_resort_in_georgia",
+      "wording": "Trip to Jekyll Island club resort in GEORGIA",
+      "congratsText": "Congrats, you've won a trip to Jekyll Island club resort in Georgia!",
+      "voText": "Great news! You've won a trip to Jekyll Island club resort in Georgia!",
+      "spoken": "[excitedly] Great news! You've won a trip to Jekyll Island club resort in Georgia!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_jekyll_island_club_resort_in_georgia.mp3"
+    },
+    {
+      "id": "to_kapalua_villas_in_maui",
+      "wording": "Trip to Kapalua Villas in MAUI",
+      "congratsText": "Good work — you've won a trip to Kapalua Villas in Maui!",
+      "voText": "Congratulations! You've won a trip to Kapalua Villas in Maui!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Kapalua Villas in Maui!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_kapalua_villas_in_maui.mp3"
+    },
+    {
+      "id": "to_kimberly_hotel_in_nyc_2",
+      "wording": "Trip to Kimberly Hotel in NYC",
+      "congratsText": "You've won a trip to Kimberly Hotel in NYC!",
+      "voText": "Congrats! You've won a trip to Kimberly Hotel in NYC!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Kimberly Hotel in NYC!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_kimberly_hotel_in_nyc_2.mp3"
+    },
+    {
+      "id": "to_kissimmee",
+      "wording": "Trip to Kissimmee",
+      "congratsText": "Congratulations, you've won a trip to Kissimmee!",
+      "voText": "Good work! You've won a trip to Kissimmee!",
+      "spoken": "[excitedly] Good work! You've won a trip to Kissimmee!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_kissimmee.mp3"
+    },
+    {
+      "id": "to_la_paz_waterfall_gardens_in_costa_rica_2",
+      "wording": "Trip to Lapaz Waterfall Gardens in COSTA RICA",
+      "congratsText": "Congrats, you've won a trip to La Paz Waterfall Gardens in Costa Rica!",
+      "voText": "You've won! A trip to La Paz Waterfall Gardens in Costa Rica!",
+      "spoken": "[excitedly] You've won! A trip to La Paz Waterfall Gardens in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_la_paz_waterfall_gardens_in_costa_rica_2.mp3"
+    },
+    {
+      "id": "to_le_parc_hotel_in_france",
+      "wording": "Trip to Le Parc Hotel in France",
+      "congratsText": "Good work — you've won a trip to Le Parc Hotel in France!",
+      "voText": "Great news! You've won a trip to Le Parc Hotel in France!",
+      "spoken": "[excitedly] Great news! You've won a trip to Le Parc Hotel in France!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_le_parc_hotel_in_france.mp3"
+    },
+    {
+      "id": "to_macarthur_place_hotel_in_sonoma_valley",
+      "wording": "Trip to MacArthur Place Hotel in SONOMA VALLEY",
+      "congratsText": "You've won a trip to MacArthur Place Hotel in Sonoma Valley!",
+      "voText": "Congratulations! You've won a trip to MacArthur Place Hotel in Sonoma Valley!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to MacArthur Place Hotel in Sonoma Valley!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_macarthur_place_hotel_in_sonoma_valley.mp3"
+    },
+    {
+      "id": "to_margaritaville_hotel_nashville",
+      "wording": "Trip to Margaritaville Hotel NASHVILLE",
+      "congratsText": "Congratulations, you've won a trip to Margaritaville Hotel Nashville!",
+      "voText": "Congrats! You've won a trip to Margaritaville Hotel Nashville!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Margaritaville Hotel Nashville!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_margaritaville_hotel_nashville.mp3"
+    },
+    {
+      "id": "to_margaritaville_resort_lake_tahoe",
+      "wording": "Trip to Margaritaville Resort LAKE TAHOE",
+      "congratsText": "Congrats, you've won a trip to Margaritaville Resort Lake Tahoe!",
+      "voText": "Good work! You've won a trip to Margaritaville Resort Lake Tahoe!",
+      "spoken": "[excitedly] Good work! You've won a trip to Margaritaville Resort Lake Tahoe!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_margaritaville_resort_lake_tahoe.mp3"
+    },
+    {
+      "id": "to_marival_grand_club_suites_in_nuevo_vallarta",
+      "wording": "Trip to Marival Grand & Club Suites in NUEVO VALLARTA",
+      "congratsText": "Good work — you've won a trip to Marival Grand & Club Suites in Nuevo Vallarta!",
+      "voText": "You've won! A trip to Marival Grand & Club Suites in Nuevo Vallarta!",
+      "spoken": "[excitedly] You've won! A trip to Marival Grand & Club Suites in Nuevo Vallarta!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_marival_grand_club_suites_in_nuevo_vallarta.mp3"
+    },
+    {
+      "id": "to_marriott_kauai_resort_beach_club",
+      "wording": "Trip to Marriott KAUAI Resort & Beach Club",
+      "congratsText": "You've won a trip to Marriott Kauai Resort & Beach Club!",
+      "voText": "Great news! You've won a trip to Marriott Kauai Resort & Beach Club!",
+      "spoken": "[excitedly] Great news! You've won a trip to Marriott Kauai Resort & Beach Club!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_marriott_kauai_resort_beach_club.mp3"
+    },
+    {
+      "id": "to_marriott_tampa_water_street",
+      "wording": "Trip to Marriott Tampa Water Street",
+      "congratsText": "Congratulations, you've won a trip to Marriott Tampa Water Street!",
+      "voText": "Congratulations! You've won a trip to Marriott Tampa Water Street!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Marriott Tampa Water Street!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_marriott_tampa_water_street.mp3"
+    },
+    {
+      "id": "to_marriott_waikiki_beach_resort_spa",
+      "wording": "Trip to Marriott Waikiki Beach Resort & Spa",
+      "congratsText": "Congrats, you've won a trip to Marriott Waikiki Beach Resort & Spa!",
+      "voText": "Congrats! You've won a trip to Marriott Waikiki Beach Resort & Spa!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Marriott Waikiki Beach Resort & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_marriott_waikiki_beach_resort_spa.mp3"
+    },
+    {
+      "id": "to_marriott_waikoloa_beach_resort_spa_in_hawaii",
+      "wording": "Trip to Marriott Waikoloa Beach Resort & Spa in HAWAII",
+      "congratsText": "Good work — you've won a trip to Marriott Waikoloa Beach Resort & Spa in Hawaii!",
+      "voText": "Good work! You've won a trip to Marriott Waikoloa Beach Resort & Spa in Hawaii!",
+      "spoken": "[excitedly] Good work! You've won a trip to Marriott Waikoloa Beach Resort & Spa in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_marriott_waikoloa_beach_resort_spa_in_hawaii.mp3"
+    },
+    {
+      "id": "to_melia_braco_village_in_jamaica",
+      "wording": "Trip to Melia Braco Village in JAMAICA",
+      "congratsText": "You've won a trip to Melia Braco Village in Jamaica!",
+      "voText": "You've won! A trip to Melia Braco Village in Jamaica!",
+      "spoken": "[excitedly] You've won! A trip to Melia Braco Village in Jamaica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_melia_braco_village_in_jamaica.mp3"
+    },
+    {
+      "id": "to_merv_griffins_the_beverly_hilton",
+      "wording": "Trip to Merv Griffin’s The Beverly Hilton",
+      "congratsText": "Congratulations, you've won a trip to Merv Griffin’s The Beverly Hilton!",
+      "voText": "Great news! You've won a trip to Merv Griffin’s The Beverly Hilton!",
+      "spoken": "[excitedly] Great news! You've won a trip to Merv Griffin’s The Beverly Hilton!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_merv_griffins_the_beverly_hilton.mp3"
+    },
+    {
+      "id": "to_mesm_tokyo_autograph_collection",
+      "wording": "Trip to mesm TOKYO Autograph Collection",
+      "congratsText": "Congrats, you've won a trip to mesm Tokyo Autograph Collection!",
+      "voText": "Congratulations! You've won a trip to mesm Tokyo Autograph Collection!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to mesm Tokyo Autograph Collection!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_mesm_tokyo_autograph_collection.mp3"
+    },
+    {
+      "id": "to_millennium_alaska",
+      "wording": "Trip to Millennium ALASKA",
+      "congratsText": "Good work — you've won a trip to Millennium Alaska!",
+      "voText": "Congrats! You've won a trip to Millennium Alaska!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Millennium Alaska!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_millennium_alaska.mp3"
+    },
+    {
+      "id": "to_minnesota",
+      "wording": "Trip to Minnesota",
+      "congratsText": "You've won a trip to Minnesota!",
+      "voText": "Good work! You've won a trip to Minnesota!",
+      "spoken": "[excitedly] Good work! You've won a trip to Minnesota!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_minnesota.mp3"
+    },
+    {
+      "id": "to_mount_cinnamon_resort_in_grenada",
+      "wording": "Trip to Mount Cinnamon Resort in GRENADA",
+      "congratsText": "Congratulations, you've won a trip to Mount Cinnamon Resort in Grenada!",
+      "voText": "You've won! A trip to Mount Cinnamon Resort in Grenada!",
+      "spoken": "[excitedly] You've won! A trip to Mount Cinnamon Resort in Grenada!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_mount_cinnamon_resort_in_grenada.mp3"
+    },
+    {
+      "id": "to_new_york_at_the_holiday_valley_resort",
+      "wording": "Trip to NEW YORK at the Holiday Valley Resort",
+      "congratsText": "Congrats, you've won a trip to New York at the Holiday Valley Resort!",
+      "voText": "Great news! You've won a trip to New York at the Holiday Valley Resort!",
+      "spoken": "[excitedly] Great news! You've won a trip to New York at the Holiday Valley Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_new_york_at_the_holiday_valley_resort.mp3"
+    },
+    {
+      "id": "to_nobu_hotel_caesars_atlantic_city",
+      "wording": "Trip to Nobu Hotel Caesars ATLANTIC CITY",
+      "congratsText": "Good work — you've won a trip to Nobu Hotel Caesars Atlantic City!",
+      "voText": "Congratulations! You've won a trip to Nobu Hotel Caesars Atlantic City!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Nobu Hotel Caesars Atlantic City!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_nobu_hotel_caesars_atlantic_city.mp3"
+    },
+    {
+      "id": "to_outrigger_kauai_beach_resort_spa",
+      "wording": "Trip to Outrigger KAUAI Beach Resort & Spa",
+      "congratsText": "You've won a trip to Outrigger Kauai Beach Resort & Spa!",
+      "voText": "Congrats! You've won a trip to Outrigger Kauai Beach Resort & Spa!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Outrigger Kauai Beach Resort & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_outrigger_kauai_beach_resort_spa.mp3"
+    },
+    {
+      "id": "to_outrigger_kaanapali_beach_resort_in_hawaii",
+      "wording": "Trip to Outrigger Ka’anapali Beach Resort in HAWAII",
+      "congratsText": "Congratulations, you've won a trip to Outrigger Ka’anapali Beach Resort in Hawaii!",
+      "voText": "Good work! You've won a trip to Outrigger Ka’anapali Beach Resort in Hawaii!",
+      "spoken": "[excitedly] Good work! You've won a trip to Outrigger Ka’anapali Beach Resort in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_outrigger_kaanapali_beach_resort_in_hawaii.mp3"
+    },
+    {
+      "id": "to_outrigger_reef_on_the_beach",
+      "wording": "Trip to Outrigger Reef on the Beach",
+      "congratsText": "Congrats, you've won a trip to Outrigger Reef on the Beach!",
+      "voText": "You've won! A trip to Outrigger Reef on the Beach!",
+      "spoken": "[excitedly] You've won! A trip to Outrigger Reef on the Beach!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_outrigger_reef_on_the_beach.mp3"
+    },
+    {
+      "id": "to_outrigger_waikiki_in_hawaii",
+      "wording": "Trip to Outrigger Waikiki in HAWAII",
+      "congratsText": "Good work — you've won a trip to Outrigger Waikiki in Hawaii!",
+      "voText": "Great news! You've won a trip to Outrigger Waikiki in Hawaii!",
+      "spoken": "[excitedly] Great news! You've won a trip to Outrigger Waikiki in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_outrigger_waikiki_in_hawaii.mp3"
+    },
+    {
+      "id": "to_outrigger_waikiki_on_the_beach_in_hawaii",
+      "wording": "Trip to Outrigger Waikiki on the Beach in HAWAII",
+      "congratsText": "You've won a trip to Outrigger Waikiki on the Beach in Hawaii!",
+      "voText": "Congratulations! You've won a trip to Outrigger Waikiki on the Beach in Hawaii!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Outrigger Waikiki on the Beach in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_outrigger_waikiki_on_the_beach_in_hawaii.mp3"
+    },
+    {
+      "id": "to_peace_lodge_in_costa_rica",
+      "wording": "Trip to Peace Lodge in COSTA RICA",
+      "congratsText": "Congratulations, you've won a trip to Peace Lodge in Costa Rica!",
+      "voText": "Congrats! You've won a trip to Peace Lodge in Costa Rica!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Peace Lodge in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_peace_lodge_in_costa_rica.mp3"
+    },
+    {
+      "id": "to_peace_lodge_la_paz_waterfall_gardens_in_costa_rica",
+      "wording": "Trip to Peace Lodge/Lapaz Waterfall Gardens in COSTA RICA",
+      "congratsText": "Congrats, you've won a trip to Peace Lodge/La Paz Waterfall Gardens in Costa Rica!",
+      "voText": "Good work! You've won a trip to Peace Lodge/La Paz Waterfall Gardens in Costa Rica!",
+      "spoken": "[excitedly] Good work! You've won a trip to Peace Lodge/La Paz Waterfall Gardens in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_peace_lodge_la_paz_waterfall_gardens_in_costa_rica.mp3"
+    },
+    {
+      "id": "to_pensacola",
+      "wording": "Trip to Pensacola",
+      "congratsText": "Good work — you've won a trip to Pensacola!",
+      "voText": "You've won! A trip to Pensacola!",
+      "spoken": "[excitedly] You've won! A trip to Pensacola!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_pensacola.mp3"
+    },
+    {
+      "id": "to_presidente_intercontinental_in_puerto_vallarta",
+      "wording": "Trip to Presidente Intercontinental in PUERTO VALLARTA",
+      "congratsText": "You've won a trip to Presidente Intercontinental in Puerto Vallarta!",
+      "voText": "Great news! You've won a trip to Presidente Intercontinental in Puerto Vallarta!",
+      "spoken": "[excitedly] Great news! You've won a trip to Presidente Intercontinental in Puerto Vallarta!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_presidente_intercontinental_in_puerto_vallarta.mp3"
+    },
+    {
+      "id": "to_punta_cana_in_the_dominican_republic",
+      "wording": "Trip to Punta Cana in the DOMINICAN REPUBLIC",
+      "congratsText": "Congratulations, you've won a trip to Punta Cana in the Dominican Republic!",
+      "voText": "Congratulations! You've won a trip to Punta Cana in the Dominican Republic!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Punta Cana in the Dominican Republic!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_punta_cana_in_the_dominican_republic.mp3"
+    },
+    {
+      "id": "to_queensland_and_a_stay_at_the_matson_hotel_resort",
+      "wording": "Trip to Queensland and a stay at the Matson Hotel & Resort",
+      "congratsText": "Congrats, you've won a trip to Queensland and a stay at the Matson Hotel & Resort!",
+      "voText": "Congrats! You've won a trip to Queensland and a stay at the Matson Hotel & Resort!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Queensland and a stay at the Matson Hotel & Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_queensland_and_a_stay_at_the_matson_hotel_resort.mp3"
+    },
+    {
+      "id": "to_romania",
+      "wording": "Trip to ROMANIA",
+      "congratsText": "Good work — you've won a trip to Romania!",
+      "voText": "Good work! You've won a trip to Romania!",
+      "spoken": "[excitedly] Good work! You've won a trip to Romania!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_romania.mp3"
+    },
+    {
+      "id": "to_rose_hotel_in_ireland",
+      "wording": "Trip to Rose Hotel in IRELAND",
+      "congratsText": "You've won a trip to Rose Hotel in Ireland!",
+      "voText": "You've won! A trip to Rose Hotel in Ireland!",
+      "spoken": "[excitedly] You've won! A trip to Rose Hotel in Ireland!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_rose_hotel_in_ireland.mp3"
+    },
+    {
+      "id": "to_royal_blue_hotels_resort_dubrovnik_in_croatia",
+      "wording": "Trip to Royal Blue Hotels & Resort Dubrovnik in CROATIA",
+      "congratsText": "Congratulations, you've won a trip to Royal Blue Hotels & Resort Dubrovnik in Croatia!",
+      "voText": "Great news! You've won a trip to Royal Blue Hotels & Resort Dubrovnik in Croatia!",
+      "spoken": "[excitedly] Great news! You've won a trip to Royal Blue Hotels & Resort Dubrovnik in Croatia!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_royal_blue_hotels_resort_dubrovnik_in_croatia.mp3"
+    },
+    {
+      "id": "to_rumours_luxury_villas_spa_2",
+      "wording": "Trip to Rumours Luxury Villas & Spa",
+      "congratsText": "Congrats, you've won a trip to Rumours Luxury Villas & Spa!",
+      "voText": "Congratulations! You've won a trip to Rumours Luxury Villas & Spa!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Rumours Luxury Villas & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_rumours_luxury_villas_spa_2.mp3"
+    },
+    {
+      "id": "to_salterra_luxury_collection_resort_spa_in_turks_and_caicos",
+      "wording": "Trip to Salterra Luxury Collection Resort & Spa in TURKS & CAICOS",
+      "congratsText": "Good work — you've won a trip to Salterra Luxury Collection Resort & Spa in Turks and Caicos!",
+      "voText": "Congrats! You've won a trip to Salterra Luxury Collection Resort & Spa in Turks and Caicos!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Salterra Luxury Collection Resort & Spa in Turks and Caicos!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_salterra_luxury_collection_resort_spa_in_turks_and_caicos.mp3"
+    },
+    {
+      "id": "to_san_diego",
+      "wording": "Trip to San Diego",
+      "congratsText": "You've won a trip to San Diego!",
+      "voText": "Good work! You've won a trip to San Diego!",
+      "spoken": "[excitedly] Good work! You've won a trip to San Diego!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_san_diego.mp3"
+    },
+    {
+      "id": "to_sandals_royal_curacao_2",
+      "wording": "Trip to Sandals Royal CURAÇAO",
+      "congratsText": "Congratulations, you've won a trip to Sandals Royal Curaçao!",
+      "voText": "You've won! A trip to Sandals Royal Curaçao!",
+      "spoken": "[excitedly] You've won! A trip to Sandals Royal Curaçao!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sandals_royal_curacao_2.mp3"
+    },
+    {
+      "id": "to_sands_at_grace_bay_in_turks_and_caicos",
+      "wording": "Trip to Sands At Grace Bay in TURKS & CAICOS",
+      "congratsText": "Congrats, you've won a trip to Sands At Grace Bay in Turks and Caicos!",
+      "voText": "Great news! You've won a trip to Sands At Grace Bay in Turks and Caicos!",
+      "spoken": "[excitedly] Great news! You've won a trip to Sands At Grace Bay in Turks and Caicos!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sands_at_grace_bay_in_turks_and_caicos.mp3"
+    },
+    {
+      "id": "to_scrub_island_resort",
+      "wording": "Trip to Scrub Island Resort",
+      "congratsText": "Good work — you've won a trip to Scrub Island Resort!",
+      "voText": "Congratulations! You've won a trip to Scrub Island Resort!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Scrub Island Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_scrub_island_resort.mp3"
+    },
+    {
+      "id": "to_seadust_cancun_family_resort",
+      "wording": "Trip to Seadust CANCUN Family Resort",
+      "congratsText": "You've won a trip to Seadust Cancun Family Resort!",
+      "voText": "Congrats! You've won a trip to Seadust Cancun Family Resort!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Seadust Cancun Family Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_seadust_cancun_family_resort.mp3"
+    },
+    {
+      "id": "to_sheraton_kauai_resort_in_hawaii",
+      "wording": "Trip to Sheraton Kauai Resort in HAWAII",
+      "congratsText": "Congratulations, you've won a trip to Sheraton Kauai Resort in Hawaii!",
+      "voText": "Good work! You've won a trip to Sheraton Kauai Resort in Hawaii!",
+      "spoken": "[excitedly] Good work! You've won a trip to Sheraton Kauai Resort in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sheraton_kauai_resort_in_hawaii.mp3"
+    },
+    {
+      "id": "to_silverado_resort_spa_in_napa_valley",
+      "wording": "Trip to Silverado Resort & Spa in NAPA VALLEY",
+      "congratsText": "Congrats, you've won a trip to Silverado Resort & Spa in Napa Valley!",
+      "voText": "You've won! A trip to Silverado Resort & Spa in Napa Valley!",
+      "spoken": "[excitedly] You've won! A trip to Silverado Resort & Spa in Napa Valley!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_silverado_resort_spa_in_napa_valley.mp3"
+    },
+    {
+      "id": "to_springs_resort_spa_in_costa_rica",
+      "wording": "Trip to Springs Resort & Spa in COSTA RICA",
+      "congratsText": "Good work — you've won a trip to Springs Resort & Spa in Costa Rica!",
+      "voText": "Great news! You've won a trip to Springs Resort & Spa in Costa Rica!",
+      "spoken": "[excitedly] Great news! You've won a trip to Springs Resort & Spa in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_springs_resort_spa_in_costa_rica.mp3"
+    },
+    {
+      "id": "to_sunseeker_resort_charlotte_harbor_in_florida",
+      "wording": "Trip to Sunseeker Resort Charlotte Harbor in FLORIDA",
+      "congratsText": "You've won a trip to Sunseeker Resort Charlotte Harbor in Florida!",
+      "voText": "Congratulations! You've won a trip to Sunseeker Resort Charlotte Harbor in Florida!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Sunseeker Resort Charlotte Harbor in Florida!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sunseeker_resort_charlotte_harbor_in_florida.mp3"
+    },
+    {
+      "id": "to_sunset_at_the_palms_in_jamaica_2",
+      "wording": "Trip to Sunset At The Palms in JAMAICA",
+      "congratsText": "Congratulations, you've won a trip to Sunset At The Palms in Jamaica!",
+      "voText": "Congrats! You've won a trip to Sunset At The Palms in Jamaica!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Sunset At The Palms in Jamaica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sunset_at_the_palms_in_jamaica_2.mp3"
+    },
+    {
+      "id": "to_superclubs_breezes_runaway_bay_resort_golf_club_in_jamaica",
+      "wording": "Trip to SuperClubs Breezes Runaway Bay Resort & Golf Club in JAMAICA",
+      "congratsText": "Congrats, you've won a trip to SuperClubs Breezes Runaway Bay Resort & Golf Club in Jamaica!",
+      "voText": "Good work! You've won a trip to SuperClubs Breezes Runaway Bay Resort & Golf Club in Jamaica!",
+      "spoken": "[excitedly] Good work! You've won a trip to SuperClubs Breezes Runaway Bay Resort & Golf Club in Jamaica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_superclubs_breezes_runaway_bay_resort_golf_club_in_jamaica.mp3"
+    },
+    {
+      "id": "to_sydney_marriott",
+      "wording": "Trip to Sydney Marriott",
+      "congratsText": "Good work — you've won a trip to Sydney Marriott!",
+      "voText": "You've won! A trip to Sydney Marriott!",
+      "spoken": "[excitedly] You've won! A trip to Sydney Marriott!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_sydney_marriott.mp3"
+    },
+    {
+      "id": "to_tamarijn_aruba",
+      "wording": "Trip to Tamarijn ARUBA",
+      "congratsText": "You've won a trip to Tamarijn Aruba!",
+      "voText": "Great news! You've won a trip to Tamarijn Aruba!",
+      "spoken": "[excitedly] Great news! You've won a trip to Tamarijn Aruba!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_tamarijn_aruba.mp3"
+    },
+    {
+      "id": "to_tia_wellness_resort_in_vietnam",
+      "wording": "Trip to TIA Wellness Resort in VIETNAM",
+      "congratsText": "Congratulations, you've won a trip to Tia Wellness Resort in Vietnam!",
+      "voText": "Congratulations! You've won a trip to Tia Wellness Resort in Vietnam!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Tia Wellness Resort in Vietnam!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_tia_wellness_resort_in_vietnam.mp3"
+    },
+    {
+      "id": "to_trs_yucatan_hotel",
+      "wording": "Trip to TRS Yucatan Hotel",
+      "congratsText": "Congrats, you've won a trip to Trs Yucatan Hotel!",
+      "voText": "Congrats! You've won a trip to Trs Yucatan Hotel!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Trs Yucatan Hotel!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_trs_yucatan_hotel.mp3"
+    },
+    {
+      "id": "to_verandah_resort_spa",
+      "wording": "Trip to Verandah Resort & Spa",
+      "congratsText": "Good work — you've won a trip to Verandah Resort & Spa!",
+      "voText": "Good work! You've won a trip to Verandah Resort & Spa!",
+      "spoken": "[excitedly] Good work! You've won a trip to Verandah Resort & Spa!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_verandah_resort_spa.mp3"
+    },
+    {
+      "id": "to_villa_del_arco_beach_resort_in_cabo_san_lucas",
+      "wording": "Trip to Villa del Arco Beach Resort in CABO SAN LUCAS",
+      "congratsText": "You've won a trip to Villa del Arco Beach Resort in Cabo San Lucas!",
+      "voText": "You've won! A trip to Villa del Arco Beach Resort in Cabo San Lucas!",
+      "spoken": "[excitedly] You've won! A trip to Villa del Arco Beach Resort in Cabo San Lucas!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_villa_del_arco_beach_resort_in_cabo_san_lucas.mp3"
+    },
+    {
+      "id": "to_villa_del_palmar_beach_resort_spa_in_puerto_vallarta",
+      "wording": "Trip to Villa del Palmar Beach Resort & Spa in PUERTO VALLARTA",
+      "congratsText": "Congratulations, you've won a trip to Villa del Palmar Beach Resort & Spa in Puerto Vallarta!",
+      "voText": "Great news! You've won a trip to Villa del Palmar Beach Resort & Spa in Puerto Vallarta!",
+      "spoken": "[excitedly] Great news! You've won a trip to Villa del Palmar Beach Resort & Spa in Puerto Vallarta!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_villa_del_palmar_beach_resort_spa_in_puerto_vallarta.mp3"
+    },
+    {
+      "id": "to_viva_wyndham_v_samana_in_the_dominican_republic",
+      "wording": "Trip to Viva Wyndham V Samana in the DOMINICAN REPUBLIC",
+      "congratsText": "Congrats, you've won a trip to Viva Wyndham V Samana in the Dominican Republic!",
+      "voText": "Congratulations! You've won a trip to Viva Wyndham V Samana in the Dominican Republic!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Viva Wyndham V Samana in the Dominican Republic!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_viva_wyndham_v_samana_in_the_dominican_republic.mp3"
+    },
+    {
+      "id": "to_waikiki_beach_in_hawaii",
+      "wording": "Trip to Waikiki Beach in Hawaii",
+      "congratsText": "Good work — you've won a trip to Waikiki Beach in Hawaii!",
+      "voText": "Congrats! You've won a trip to Waikiki Beach in Hawaii!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Waikiki Beach in Hawaii!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_waikiki_beach_in_hawaii.mp3"
+    },
+    {
+      "id": "to_walt_disney_world",
+      "wording": "Trip to Walt Disney World",
+      "congratsText": "You've won a trip to Walt Disney World!",
+      "voText": "Good work! You've won a trip to Walt Disney World!",
+      "spoken": "[excitedly] Good work! You've won a trip to Walt Disney World!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_walt_disney_world.mp3"
+    },
+    {
+      "id": "to_walt_disney_world_disney_springs",
+      "wording": "Trip to Walt Disney World & Disney Springs",
+      "congratsText": "Congratulations, you've won a trip to Walt Disney World & Disney Springs!",
+      "voText": "You've won! A trip to Walt Disney World & Disney Springs!",
+      "spoken": "[excitedly] You've won! A trip to Walt Disney World & Disney Springs!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_walt_disney_world_disney_springs.mp3"
+    },
+    {
+      "id": "to_west_indies_and_stay_at_holiday_inn_trinidad",
+      "wording": "Trip to West Indies and stay at Holiday Inn Trinidad",
+      "congratsText": "Congrats, you've won a trip to West Indies and stay at Holiday Inn Trinidad!",
+      "voText": "Great news! You've won a trip to West Indies and stay at Holiday Inn Trinidad!",
+      "spoken": "[excitedly] Great news! You've won a trip to West Indies and stay at Holiday Inn Trinidad!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_west_indies_and_stay_at_holiday_inn_trinidad.mp3"
+    },
+    {
+      "id": "to_westin_aruba_resort",
+      "wording": "Trip to Westin ARUBA Resort",
+      "congratsText": "Good work — you've won a trip to Westin Aruba Resort!",
+      "voText": "Congratulations! You've won a trip to Westin Aruba Resort!",
+      "spoken": "[excitedly] Congratulations! You've won a trip to Westin Aruba Resort!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_westin_aruba_resort.mp3"
+    },
+    {
+      "id": "to_westin_kaanapali_ocean_resort_villas_in_maui",
+      "wording": "Trip to Westin Ka’anapali Ocean Resort Villas in MAUI",
+      "congratsText": "You've won a trip to Westin Ka’anapali Ocean Resort Villas in Maui!",
+      "voText": "Congrats! You've won a trip to Westin Ka’anapali Ocean Resort Villas in Maui!",
+      "spoken": "[excitedly] Congrats! You've won a trip to Westin Ka’anapali Ocean Resort Villas in Maui!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_westin_kaanapali_ocean_resort_villas_in_maui.mp3"
+    },
+    {
+      "id": "to_whalers_cove_oceanfront_luxury_at_poipu_in_kauai",
+      "wording": "Trip to Whalers Cove Oceanfront Luxury at Poipu in KAUAI",
+      "congratsText": "Congratulations, you've won a trip to Whalers Cove Oceanfront Luxury at Poipu in Kauai!",
+      "voText": "Good work! You've won a trip to Whalers Cove Oceanfront Luxury at Poipu in Kauai!",
+      "spoken": "[excitedly] Good work! You've won a trip to Whalers Cove Oceanfront Luxury at Poipu in Kauai!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_whalers_cove_oceanfront_luxury_at_poipu_in_kauai.mp3"
+    },
+    {
+      "id": "to_yacht_club_in_belize",
+      "wording": "Trip to Yacht Club in BELIZE",
+      "congratsText": "Congrats, you've won a trip to Yacht Club in Belize!",
+      "voText": "You've won! A trip to Yacht Club in Belize!",
+      "spoken": "[excitedly] You've won! A trip to Yacht Club in Belize!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_yacht_club_in_belize.mp3"
+    },
+    {
+      "id": "to_ylang_ylang_beach_resort_in_costa_rica",
+      "wording": "Trip to Ylang Ylang Beach Resort in COSTA RICA",
+      "congratsText": "Good work — you've won a trip to Ylang Ylang Beach Resort in Costa Rica!",
+      "voText": "Great news! You've won a trip to Ylang Ylang Beach Resort in Costa Rica!",
+      "spoken": "[excitedly] Great news! You've won a trip to Ylang Ylang Beach Resort in Costa Rica!",
+      "file": "assets/audio/vo/trip-prizes/trips/to_ylang_ylang_beach_resort_in_costa_rica.mp3"
+    }
+  ],
+  "congrats": {
+    "text": "Congratulations on your trip!",
+    "spoken": "[excitedly] Congratulations on your trip!",
+    "file": "assets/audio/vo/trip-prizes/congrats.mp3"
+  }
+}

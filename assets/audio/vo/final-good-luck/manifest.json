@@ -1,0 +1,67 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "tag_prefix": "[hopefully] [optimistic]",
+  "clips": [
+    {
+      "id": "gl_01",
+      "text": "Good luck in the bonus round!",
+      "spoken": "[hopefully] [optimistic] Good luck in the bonus round!",
+      "file": "assets/audio/vo/final-good-luck/gl_01.mp3"
+    },
+    {
+      "id": "gl_02",
+      "text": "Best of luck — let's go!",
+      "spoken": "[hopefully] [optimistic] Best of luck — let's go!",
+      "file": "assets/audio/vo/final-good-luck/gl_02.mp3"
+    },
+    {
+      "id": "gl_03",
+      "text": "You've got this. Good luck!",
+      "spoken": "[hopefully] [optimistic] You've got this. Good luck!",
+      "file": "assets/audio/vo/final-good-luck/gl_03.mp3"
+    },
+    {
+      "id": "gl_04",
+      "text": "Wishing you the best of luck!",
+      "spoken": "[hopefully] [optimistic] Wishing you the best of luck!",
+      "file": "assets/audio/vo/final-good-luck/gl_04.mp3"
+    },
+    {
+      "id": "gl_05",
+      "text": "Good luck — we're rooting for you!",
+      "spoken": "[hopefully] [optimistic] Good luck — we're rooting for you!",
+      "file": "assets/audio/vo/final-good-luck/gl_05.mp3"
+    },
+    {
+      "id": "gl_06",
+      "text": "Here's hoping for a big win. Good luck!",
+      "spoken": "[hopefully] [optimistic] Here's hoping for a big win. Good luck!",
+      "file": "assets/audio/vo/final-good-luck/gl_06.mp3"
+    },
+    {
+      "id": "gl_07",
+      "text": "Let's see some letters. Good luck!",
+      "spoken": "[hopefully] [optimistic] Let's see some letters. Good luck!",
+      "file": "assets/audio/vo/final-good-luck/gl_07.mp3"
+    },
+    {
+      "id": "gl_08",
+      "text": "Fingers crossed — good luck!",
+      "spoken": "[hopefully] [optimistic] Fingers crossed — good luck!",
+      "file": "assets/audio/vo/final-good-luck/gl_08.mp3"
+    },
+    {
+      "id": "gl_09",
+      "text": "This is it. Good luck in the Final Round!",
+      "spoken": "[hopefully] [optimistic] This is it. Good luck in the Final Round!",
+      "file": "assets/audio/vo/final-good-luck/gl_09.mp3"
+    },
+    {
+      "id": "gl_10",
+      "text": "Alright, good luck — make it count!",
+      "spoken": "[hopefully] [optimistic] Alright, good luck — make it count!",
+      "file": "assets/audio/vo/final-good-luck/gl_10.mp3"
+    }
+  ]
+}

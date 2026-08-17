@@ -1,0 +1,313 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "win_prefix": "[excitedly]",
+  "win_intro": "You've won",
+  "cars": [
+    {
+      "id": "audi_a3",
+      "name": "Audi A3",
+      "spoken": "[excitedly] You've won... an Audi A3!",
+      "file": "assets/audio/vo/car-prizes/cars/audi_a3.mp3"
+    },
+    {
+      "id": "bmw_2_series",
+      "name": "BMW 2 Series",
+      "spoken": "[excitedly] You've won... a BMW 2 Series!",
+      "file": "assets/audio/vo/car-prizes/cars/bmw_2_series.mp3"
+    },
+    {
+      "id": "buick_park_avenue",
+      "name": "Buick Park Avenue",
+      "spoken": "[excitedly] You've won... a Buick Park Avenue!",
+      "file": "assets/audio/vo/car-prizes/cars/buick_park_avenue.mp3"
+    },
+    {
+      "id": "cadillac_ct4",
+      "name": "Cadillac CT4",
+      "spoken": "[excitedly] You've won... a Cadillac CT4!",
+      "file": "assets/audio/vo/car-prizes/cars/cadillac_ct4.mp3"
+    },
+    {
+      "id": "cadillac_fleetwood",
+      "name": "Cadillac Fleetwood",
+      "spoken": "[excitedly] You've won... a Cadillac Fleetwood!",
+      "file": "assets/audio/vo/car-prizes/cars/cadillac_fleetwood.mp3"
+    },
+    {
+      "id": "chevrolet_camaro",
+      "name": "Chevrolet Camaro",
+      "spoken": "[excitedly] You've won... a Chevrolet Camaro!",
+      "file": "assets/audio/vo/car-prizes/cars/chevrolet_camaro.mp3"
+    },
+    {
+      "id": "chevrolet_cavalier_convertible",
+      "name": "Chevrolet Cavalier Convertible",
+      "spoken": "[excitedly] You've won... a Chevrolet Cavalier Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/chevrolet_cavalier_convertible.mp3"
+    },
+    {
+      "id": "chevrolet_corvette",
+      "name": "Chevrolet Corvette",
+      "spoken": "[excitedly] You've won... a Chevrolet Corvette!",
+      "file": "assets/audio/vo/car-prizes/cars/chevrolet_corvette.mp3"
+    },
+    {
+      "id": "chevrolet_equinox",
+      "name": "Chevrolet Equinox",
+      "spoken": "[excitedly] You've won... a Chevrolet Equinox!",
+      "file": "assets/audio/vo/car-prizes/cars/chevrolet_equinox.mp3"
+    },
+    {
+      "id": "chevrolet_s10_blazer",
+      "name": "Chevrolet S10 Blazer",
+      "spoken": "[excitedly] You've won... a Chevrolet S10 Blazer!",
+      "file": "assets/audio/vo/car-prizes/cars/chevrolet_s10_blazer.mp3"
+    },
+    {
+      "id": "chrysler_200_convertible",
+      "name": "Chrysler 200 Convertible",
+      "spoken": "[excitedly] You've won... a Chrysler 200 Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/chrysler_200_convertible.mp3"
+    },
+    {
+      "id": "chrysler_conquest",
+      "name": "Chrysler Conquest",
+      "spoken": "[excitedly] You've won... a Chrysler Conquest!",
+      "file": "assets/audio/vo/car-prizes/cars/chrysler_conquest.mp3"
+    },
+    {
+      "id": "chrysler_town_country",
+      "name": "Chrysler Town & Country",
+      "spoken": "[excitedly] You've won... a Chrysler Town & Country!",
+      "file": "assets/audio/vo/car-prizes/cars/chrysler_town_country.mp3"
+    },
+    {
+      "id": "dodge_ram_50_pickup",
+      "name": "Dodge Ram 50 Pickup Truck",
+      "spoken": "[excitedly] You've won... a Dodge Ram 50 Pickup Truck!",
+      "file": "assets/audio/vo/car-prizes/cars/dodge_ram_50_pickup.mp3"
+    },
+    {
+      "id": "ford_bronco",
+      "name": "Ford Bronco",
+      "spoken": "[excitedly] You've won... a Ford Bronco!",
+      "file": "assets/audio/vo/car-prizes/cars/ford_bronco.mp3"
+    },
+    {
+      "id": "ford_bronco_sport",
+      "name": "Ford Bronco Sport",
+      "spoken": "[excitedly] You've won... a Ford Bronco Sport!",
+      "file": "assets/audio/vo/car-prizes/cars/ford_bronco_sport.mp3"
+    },
+    {
+      "id": "ford_edge",
+      "name": "Ford Edge",
+      "spoken": "[excitedly] You've won... a Ford Edge!",
+      "file": "assets/audio/vo/car-prizes/cars/ford_edge.mp3"
+    },
+    {
+      "id": "ford_explorer",
+      "name": "Ford Explorer",
+      "spoken": "[excitedly] You've won... a Ford Explorer!",
+      "file": "assets/audio/vo/car-prizes/cars/ford_explorer.mp3"
+    },
+    {
+      "id": "ford_fiesta",
+      "name": "Ford Fiesta",
+      "spoken": "[excitedly] You've won... a Ford Fiesta!",
+      "file": "assets/audio/vo/car-prizes/cars/ford_fiesta.mp3"
+    },
+    {
+      "id": "ford_maverick",
+      "name": "Ford Maverick",
+      "spoken": "[excitedly] You've won... a Ford Maverick!",
+      "file": "assets/audio/vo/car-prizes/cars/ford_maverick.mp3"
+    },
+    {
+      "id": "ford_mustang_convertible",
+      "name": "Ford Mustang Convertible",
+      "spoken": "[excitedly] You've won... a Ford Mustang Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/ford_mustang_convertible.mp3"
+    },
+    {
+      "id": "geo_tracker_convertible",
+      "name": "Geo Tracker Convertible",
+      "spoken": "[excitedly] You've won... a Geo Tracker Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/geo_tracker_convertible.mp3"
+    },
+    {
+      "id": "holden_astra",
+      "name": "Holden Astra",
+      "spoken": "[excitedly] You've won... a Holden Astra!",
+      "file": "assets/audio/vo/car-prizes/cars/holden_astra.mp3"
+    },
+    {
+      "id": "holden_barina",
+      "name": "Holden Barina",
+      "spoken": "[excitedly] You've won... a Holden Barina!",
+      "file": "assets/audio/vo/car-prizes/cars/holden_barina.mp3"
+    },
+    {
+      "id": "holden_nova",
+      "name": "Holden Nova",
+      "spoken": "[excitedly] You've won... a Holden Nova!",
+      "file": "assets/audio/vo/car-prizes/cars/holden_nova.mp3"
+    },
+    {
+      "id": "honda_crv",
+      "name": "Honda CR-V",
+      "spoken": "[excitedly] You've won... a Honda CR-V!",
+      "file": "assets/audio/vo/car-prizes/cars/honda_crv.mp3"
+    },
+    {
+      "id": "isuzu_impulse",
+      "name": "Isuzu Impulse",
+      "spoken": "[excitedly] You've won... an Isuzu Impulse!",
+      "file": "assets/audio/vo/car-prizes/cars/isuzu_impulse.mp3"
+    },
+    {
+      "id": "isuzu_pup_pickup",
+      "name": "Isuzu Pup Pickup Truck",
+      "spoken": "[excitedly] You've won... an Isuzu Pup Pickup Truck!",
+      "file": "assets/audio/vo/car-prizes/cars/isuzu_pup_pickup.mp3"
+    },
+    {
+      "id": "jaguar_xj6",
+      "name": "Jaguar XJ6",
+      "spoken": "[excitedly] You've won... a Jaguar XJ6!",
+      "file": "assets/audio/vo/car-prizes/cars/jaguar_xj6.mp3"
+    },
+    {
+      "id": "jeep_wrangler",
+      "name": "Jeep Wrangler",
+      "spoken": "[excitedly] You've won... a Jeep Wrangler!",
+      "file": "assets/audio/vo/car-prizes/cars/jeep_wrangler.mp3"
+    },
+    {
+      "id": "kia_soul",
+      "name": "Kia Soul",
+      "spoken": "[excitedly] You've won... a Kia Soul!",
+      "file": "assets/audio/vo/car-prizes/cars/kia_soul.mp3"
+    },
+    {
+      "id": "land_rover_freelander",
+      "name": "Land Rover Freelander",
+      "spoken": "[excitedly] You've won... a Land Rover Freelander!",
+      "file": "assets/audio/vo/car-prizes/cars/land_rover_freelander.mp3"
+    },
+    {
+      "id": "lincoln_navigator",
+      "name": "Lincoln Navigator",
+      "spoken": "[excitedly] You've won... a Lincoln Navigator!",
+      "file": "assets/audio/vo/car-prizes/cars/lincoln_navigator.mp3"
+    },
+    {
+      "id": "mazda_b2000_pickup",
+      "name": "Mazda B2000 Pickup Truck",
+      "spoken": "[excitedly] You've won... a Mazda B2000 Pickup Truck!",
+      "file": "assets/audio/vo/car-prizes/cars/mazda_b2000_pickup.mp3"
+    },
+    {
+      "id": "mazda_mx5_miata_convertible",
+      "name": "Mazda MX-5 Miata Convertible",
+      "spoken": "[excitedly] You've won... a Mazda MX-5 Miata Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/mazda_mx5_miata_convertible.mp3"
+    },
+    {
+      "id": "mercedes_gla",
+      "name": "Mercedes-Benz GLA",
+      "spoken": "[excitedly] You've won... a Mercedes-Benz GLA!",
+      "file": "assets/audio/vo/car-prizes/cars/mercedes_gla.mp3"
+    },
+    {
+      "id": "mercedes_glb",
+      "name": "Mercedes-Benz GLB",
+      "spoken": "[excitedly] You've won... a Mercedes-Benz GLB!",
+      "file": "assets/audio/vo/car-prizes/cars/mercedes_glb.mp3"
+    },
+    {
+      "id": "mercedes_glk",
+      "name": "Mercedes-Benz GLK",
+      "spoken": "[excitedly] You've won... a Mercedes-Benz GLK!",
+      "file": "assets/audio/vo/car-prizes/cars/mercedes_glk.mp3"
+    },
+    {
+      "id": "mini_cooper_convertible",
+      "name": "MINI Cooper Convertible",
+      "spoken": "[excitedly] You've won... a MINI Cooper Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/mini_cooper_convertible.mp3"
+    },
+    {
+      "id": "nissan_z",
+      "name": "Nissan Z",
+      "spoken": "[excitedly] You've won... a Nissan Z!",
+      "file": "assets/audio/vo/car-prizes/cars/nissan_z.mp3"
+    },
+    {
+      "id": "pontiac_firebird",
+      "name": "Pontiac Firebird",
+      "spoken": "[excitedly] You've won... a Pontiac Firebird!",
+      "file": "assets/audio/vo/car-prizes/cars/pontiac_firebird.mp3"
+    },
+    {
+      "id": "pontiac_g6_convertible",
+      "name": "Pontiac G6 Convertible",
+      "spoken": "[excitedly] You've won... a Pontiac G6 Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/pontiac_g6_convertible.mp3"
+    },
+    {
+      "id": "proton_persona",
+      "name": "Proton Persona",
+      "spoken": "[excitedly] You've won... a Proton Persona!",
+      "file": "assets/audio/vo/car-prizes/cars/proton_persona.mp3"
+    },
+    {
+      "id": "proton_satria",
+      "name": "Proton Satria",
+      "spoken": "[excitedly] You've won... a Proton Satria!",
+      "file": "assets/audio/vo/car-prizes/cars/proton_satria.mp3"
+    },
+    {
+      "id": "renault_alliance_convertible",
+      "name": "Renault Alliance Convertible",
+      "spoken": "[excitedly] You've won... a Renault Alliance Convertible!",
+      "file": "assets/audio/vo/car-prizes/cars/renault_alliance_convertible.mp3"
+    },
+    {
+      "id": "toyota_corolla",
+      "name": "Toyota Corolla",
+      "spoken": "[excitedly] You've won... a Toyota Corolla!",
+      "file": "assets/audio/vo/car-prizes/cars/toyota_corolla.mp3"
+    },
+    {
+      "id": "toyota_gr86",
+      "name": "Toyota GR86",
+      "spoken": "[excitedly] You've won... a Toyota GR86!",
+      "file": "assets/audio/vo/car-prizes/cars/toyota_gr86.mp3"
+    },
+    {
+      "id": "toyota_rav4",
+      "name": "Toyota RAV4",
+      "spoken": "[excitedly] You've won... a Toyota RAV4!",
+      "file": "assets/audio/vo/car-prizes/cars/toyota_rav4.mp3"
+    },
+    {
+      "id": "volkswagen_jetta",
+      "name": "Volkswagen Jetta",
+      "spoken": "[excitedly] You've won... a Volkswagen Jetta!",
+      "file": "assets/audio/vo/car-prizes/cars/volkswagen_jetta.mp3"
+    },
+    {
+      "id": "volkswagen_tiguan",
+      "name": "Volkswagen Tiguan",
+      "spoken": "[excitedly] You've won... a Volkswagen Tiguan!",
+      "file": "assets/audio/vo/car-prizes/cars/volkswagen_tiguan.mp3"
+    }
+  ],
+  "congrats": {
+    "text": "Congratulations on your new car!",
+    "spoken": "[excitedly] Congratulations on your new car!",
+    "file": "assets/audio/vo/car-prizes/congrats.mp3"
+  }
+}

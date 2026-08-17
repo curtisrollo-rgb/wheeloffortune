@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wheel of Fortune — TV Display</title>
+  <link rel="stylesheet" href="../css/game.css?v=40" />
+  <link rel="stylesheet" href="css/multiplayer.css?v=1" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+</head>
+<body class="host-page is-loading">
+  <div id="loading-screen" class="loading-screen" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-labelledby="loading-label">
+    <div class="loading-screen-inner">
+      <p class="loading-brand">Wheel of Fortune</p>
+      <p id="loading-label" class="loading-label">Connecting to room…</p>
+      <div class="loading-track">
+        <div id="loading-bar" class="loading-bar"></div>
+      </div>
+      <p id="loading-percent" class="loading-percent">0%</p>
+    </div>
+  </div>
+
+  <header class="top-bar">
+    <div class="brand">
+      <h1>Wheel of Fortune</h1>
+    </div>
+    <div id="category-pill" class="category-headline" aria-live="polite">—</div>
+    <div class="status-pills">
+      <span id="score-pill" class="pill" title="Room code">------</span>
+      <span id="round-money-pill" class="pill" title="Game status">Waiting</span>
+    </div>
+    <span class="host-badge">TV Display</span>
+  </header>
+
+  <div id="scoreboard" class="scoreboard" aria-live="polite"></div>
+
+  <p id="message-bar" class="message-bar">Connect to a room to begin.</p>
+
+  <main class="layout">
+    <section class="board-section">
+      <div id="prize-banner" class="prize-banner is-hidden" aria-live="polite">
+        <p class="prize-banner-subtitle">New Car</p>
+        <p class="prize-banner-title">You Won!</p>
+        <p class="prize-banner-name"></p>
+      </div>
+      <div id="puzzle-board" class="puzzle-board" aria-label="Puzzle board"></div>
+    </section>
+
+    <section id="wheel-section" class="wheel-section">
+      <div id="final-envelope-panel" class="final-envelope-panel is-hidden">
+        <p class="final-envelope-heading">Bonus Envelopes</p>
+        <div id="envelope-tray" class="envelope-tray" aria-label="Final Round envelope tray"></div>
+        <p id="sealed-envelope-note" class="sealed-envelope-note is-hidden">Your bonus is sealed in the highlighted envelope.</p>
+      </div>
+      <div class="wheel-wrap">
+        <div class="wheel-inner">
+          <div class="wheel-pointer" aria-hidden="true"></div>
+          <div id="wheel-host"></div>
+        </div>
+        <div class="wheel-bottom-pointer" aria-hidden="true"></div>
+      </div>
+      <div id="wedge-result" class="wedge-result">—</div>
+    </section>
+  </main>
+
+  <section class="host-controls">
+    <p class="host-room-code">Room code: <strong id="host-room-code">------</strong></p>
+    <button id="btn-start-game" type="button" class="btn btn-primary" disabled>Start Game</button>
+    <button id="btn-new-puzzle" type="button" class="btn btn-secondary" disabled>New Puzzle</button>
+  </section>
+
+  <div id="envelope-reveal-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="envelope-reveal-title">
+    <div class="modal envelope-reveal-modal">
+      <div class="envelope-graphic" aria-hidden="true">
+        <div class="envelope-flap"></div>
+        <div class="envelope-body">
+          <p id="envelope-reveal-amount" class="envelope-reveal-amount">$0</p>
+        </div>
+      </div>
+      <h2 id="envelope-reveal-title">Opening envelope…</h2>
+      <p id="envelope-reveal-detail" class="envelope-reveal-detail"></p>
+      <div class="modal-actions">
+        <button id="btn-envelope-dismiss" type="button" class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/host-app.js?v=1"></script>
+</body>
+</html>

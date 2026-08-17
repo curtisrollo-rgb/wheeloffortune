@@ -1,0 +1,27 @@
+{
+  "tag_prefix": "[excitedly]",
+  "only_vowels_remain": [
+    { "id": "only_vowels_01", "text": "Only vowels left!" },
+    { "id": "only_vowels_02", "text": "That's all the consonants!" },
+    { "id": "only_vowels_03", "text": "No more consonants — only vowels remain!" },
+    { "id": "only_vowels_04", "text": "You've got all the consonants — time for vowels!" },
+    { "id": "only_vowels_05", "text": "Consonants are done — vowels only from here!" },
+    { "id": "only_vowels_06", "text": "All consonants revealed — buy a vowel or solve!" },
+    { "id": "only_vowels_07", "text": "That's every consonant in the puzzle!" },
+    { "id": "only_vowels_08", "text": "Consonants complete — only vowels left on the board!" },
+    { "id": "only_vowels_09", "text": "Nice work — only vowels remain!" },
+    { "id": "only_vowels_10", "text": "All the consonants are up there — vowels only now!" }
+  ],
+  "no_more_vowels": [
+    { "id": "no_vowels_01", "text": "No more vowels!" },
+    { "id": "no_vowels_02", "text": "That's all the vowels in this puzzle!" },
+    { "id": "no_vowels_03", "text": "No vowels left to buy for this puzzle!" },
+    { "id": "no_vowels_04", "text": "You've called every vowel in the puzzle!" },
+    { "id": "no_vowels_05", "text": "No more vowels in this one!" },
+    { "id": "no_vowels_06", "text": "That's it for vowels — time to solve!" },
+    { "id": "no_vowels_07", "text": "All vowels in the puzzle have been called!" },
+    { "id": "no_vowels_08", "text": "No vowels remaining in the puzzle!" },
+    { "id": "no_vowels_09", "text": "Every vowel in the puzzle has been called!" },
+    { "id": "no_vowels_10", "text": "You can't buy any more vowels for this puzzle!" }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "tag_prefix": "[hopefully] [optimistic]",
+  "lines": [
+    { "id": "gl_01", "text": "Good luck in the bonus round!" },
+    { "id": "gl_02", "text": "Best of luck — let's go!" },
+    { "id": "gl_03", "text": "You've got this. Good luck!" },
+    { "id": "gl_04", "text": "Wishing you the best of luck!" },
+    { "id": "gl_05", "text": "Good luck — we're rooting for you!" },
+    { "id": "gl_06", "text": "Here's hoping for a big win. Good luck!" },
+    { "id": "gl_07", "text": "Let's see some letters. Good luck!" },
+    { "id": "gl_08", "text": "Fingers crossed — good luck!" },
+    { "id": "gl_09", "text": "This is it. Good luck in the Final Round!" },
+    { "id": "gl_10", "text": "Alright, good luck — make it count!" }
+  ]
+}

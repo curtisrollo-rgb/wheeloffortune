@@ -1,0 +1,17 @@
+{
+  "tag_prefix": "[sad voice]",
+  "bankrupt": [
+    { "id": "bankrupt", "text": "Bankrupt!" },
+    { "id": "bankrupt_oh_no", "text": "Oh no — bankrupt!" },
+    { "id": "bankrupt_tough", "text": "Tough break — that's bankrupt." },
+    { "id": "bankrupt_sorry", "text": "Sorry, that's bankrupt." },
+    { "id": "bankrupt_again", "text": "Bankrupt — round earnings are gone." }
+  ],
+  "loseTurn": [
+    { "id": "lose_turn", "text": "Lose a turn." },
+    { "id": "lose_turn_sorry", "text": "Sorry — lose a turn." },
+    { "id": "lose_turn_over", "text": "Your turn is over." },
+    { "id": "lose_turn_again", "text": "Lose a turn — spin again next time." },
+    { "id": "lose_turn_ugh", "text": "Oh — lose a turn." }
+  ]
+}

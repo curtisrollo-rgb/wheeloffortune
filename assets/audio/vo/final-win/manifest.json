@@ -1,0 +1,120 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "tag_prefix": "[excitedly]",
+  "intro": "You've won",
+  "clips": [
+    {
+      "id": "win_25000",
+      "value": 25000,
+      "text": "Twenty Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Twenty Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_25000.mp3"
+    },
+    {
+      "id": "win_30000",
+      "value": 30000,
+      "text": "Thirty Thousand dollars!",
+      "spoken": "[excitedly] You've won... Thirty Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_30000.mp3"
+    },
+    {
+      "id": "win_35000",
+      "value": 35000,
+      "text": "Thirty Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Thirty Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_35000.mp3"
+    },
+    {
+      "id": "win_40000",
+      "value": 40000,
+      "text": "Forty Thousand dollars!",
+      "spoken": "[excitedly] You've won... Forty Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_40000.mp3"
+    },
+    {
+      "id": "win_45000",
+      "value": 45000,
+      "text": "Forty Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Forty Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_45000.mp3"
+    },
+    {
+      "id": "win_50000",
+      "value": 50000,
+      "text": "Fifty Thousand dollars!",
+      "spoken": "[excitedly] You've won... Fifty Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_50000.mp3"
+    },
+    {
+      "id": "win_55000",
+      "value": 55000,
+      "text": "Fifty Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Fifty Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_55000.mp3"
+    },
+    {
+      "id": "win_60000",
+      "value": 60000,
+      "text": "Sixty Thousand dollars!",
+      "spoken": "[excitedly] You've won... Sixty Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_60000.mp3"
+    },
+    {
+      "id": "win_65000",
+      "value": 65000,
+      "text": "Sixty Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Sixty Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_65000.mp3"
+    },
+    {
+      "id": "win_70000",
+      "value": 70000,
+      "text": "Seventy Thousand dollars!",
+      "spoken": "[excitedly] You've won... Seventy Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_70000.mp3"
+    },
+    {
+      "id": "win_75000",
+      "value": 75000,
+      "text": "Seventy Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Seventy Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_75000.mp3"
+    },
+    {
+      "id": "win_80000",
+      "value": 80000,
+      "text": "Eighty Thousand dollars!",
+      "spoken": "[excitedly] You've won... Eighty Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_80000.mp3"
+    },
+    {
+      "id": "win_85000",
+      "value": 85000,
+      "text": "Eighty Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Eighty Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_85000.mp3"
+    },
+    {
+      "id": "win_90000",
+      "value": 90000,
+      "text": "Ninety Thousand dollars!",
+      "spoken": "[excitedly] You've won... Ninety Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_90000.mp3"
+    },
+    {
+      "id": "win_95000",
+      "value": 95000,
+      "text": "Ninety Five Thousand dollars!",
+      "spoken": "[excitedly] You've won... Ninety Five Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_95000.mp3"
+    },
+    {
+      "id": "win_100000",
+      "value": 100000,
+      "text": "One Hundred Thousand dollars!",
+      "spoken": "[excitedly] You've won... One Hundred Thousand dollars!",
+      "file": "assets/audio/vo/final-win/win_100000.mp3"
+    }
+  ]
+}

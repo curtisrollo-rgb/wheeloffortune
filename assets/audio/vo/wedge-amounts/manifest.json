@@ -1,0 +1,98 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "tag_prefix": "[matter of factly]",
+  "clips": [
+    {
+      "id": "amount_300",
+      "value": 300,
+      "text": "Three hundred dollars.",
+      "spoken": "[matter of factly] Three hundred dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_300.mp3"
+    },
+    {
+      "id": "amount_350",
+      "value": 350,
+      "text": "Three hundred fifty dollars.",
+      "spoken": "[matter of factly] Three hundred fifty dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_350.mp3"
+    },
+    {
+      "id": "amount_400",
+      "value": 400,
+      "text": "Four hundred dollars.",
+      "spoken": "[matter of factly] Four hundred dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_400.mp3"
+    },
+    {
+      "id": "amount_450",
+      "value": 450,
+      "text": "Four hundred fifty dollars.",
+      "spoken": "[matter of factly] Four hundred fifty dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_450.mp3"
+    },
+    {
+      "id": "amount_500",
+      "value": 500,
+      "text": "Five hundred dollars.",
+      "spoken": "[matter of factly] Five hundred dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_500.mp3"
+    },
+    {
+      "id": "amount_600",
+      "value": 600,
+      "text": "Six hundred dollars.",
+      "spoken": "[matter of factly] Six hundred dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_600.mp3"
+    },
+    {
+      "id": "amount_650",
+      "value": 650,
+      "text": "Six hundred fifty dollars.",
+      "spoken": "[matter of factly] Six hundred fifty dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_650.mp3"
+    },
+    {
+      "id": "amount_700",
+      "value": 700,
+      "text": "Seven hundred dollars.",
+      "spoken": "[matter of factly] Seven hundred dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_700.mp3"
+    },
+    {
+      "id": "amount_750",
+      "value": 750,
+      "text": "Seven hundred fifty dollars.",
+      "spoken": "[matter of factly] Seven hundred fifty dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_750.mp3"
+    },
+    {
+      "id": "amount_800",
+      "value": 800,
+      "text": "Eight hundred dollars.",
+      "spoken": "[matter of factly] Eight hundred dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_800.mp3"
+    },
+    {
+      "id": "amount_900",
+      "value": 900,
+      "text": "Nine hundred dollars.",
+      "spoken": "[matter of factly] Nine hundred dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_900.mp3"
+    },
+    {
+      "id": "amount_1000",
+      "value": 1000,
+      "text": "One thousand dollars.",
+      "spoken": "[matter of factly] One thousand dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_1000.mp3"
+    },
+    {
+      "id": "amount_3000",
+      "value": 3000,
+      "text": "Three thousand dollars.",
+      "spoken": "[matter of factly] Three thousand dollars.",
+      "file": "assets/audio/vo/wedge-amounts/amount_3000.mp3"
+    }
+  ]
+}

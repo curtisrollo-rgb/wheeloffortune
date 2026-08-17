@@ -1,0 +1,21 @@
+{
+  "tag_prefix": "[congratulatory]",
+  "letters": "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+  "counts": {
+    "1": [
+      "One {L}.",
+      "A single {L}.",
+      "Just one {L}."
+    ],
+    "2": [
+      "There are two {L}'s.",
+      "Two {L}'s.",
+      "You've got two {L}'s."
+    ],
+    "3": [
+      "Three {L}'s.",
+      "There are three {L}'s.",
+      "3 {L}'s."
+    ]
+  }
+}

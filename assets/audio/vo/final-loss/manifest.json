@@ -1,0 +1,183 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "consolation_prefix": "[sympathetically]",
+  "amount_prefix": "[matter of factly]",
+  "amount_intro": "You did not win",
+  "consolation": [
+    {
+      "id": "loss_01",
+      "text": "I'm sorry, you didn't solve it.",
+      "spoken": "[sympathetically] I'm sorry, you didn't solve it.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_01.mp3"
+    },
+    {
+      "id": "loss_02",
+      "text": "Oh, that's too bad — not this time.",
+      "spoken": "[sympathetically] Oh, that's too bad — not this time.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_02.mp3"
+    },
+    {
+      "id": "loss_03",
+      "text": "I'm afraid that's not it.",
+      "spoken": "[sympathetically] I'm afraid that's not it.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_03.mp3"
+    },
+    {
+      "id": "loss_04",
+      "text": "Sorry, the puzzle got away from you.",
+      "spoken": "[sympathetically] Sorry, the puzzle got away from you.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_04.mp3"
+    },
+    {
+      "id": "loss_05",
+      "text": "Tough luck on that one.",
+      "spoken": "[sympathetically] Tough luck on that one.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_05.mp3"
+    },
+    {
+      "id": "loss_06",
+      "text": "I'm sorry — so close, but not quite.",
+      "spoken": "[sympathetically] I'm sorry — so close, but not quite.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_06.mp3"
+    },
+    {
+      "id": "loss_07",
+      "text": "Ohhhh, that's not the answer.",
+      "spoken": "[sympathetically] Ohhhh, that's not the answer.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_07.mp3"
+    },
+    {
+      "id": "loss_08",
+      "text": "Sorry about that — it wasn't meant to be.",
+      "spoken": "[sympathetically] Sorry about that — it wasn't meant to be.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_08.mp3"
+    },
+    {
+      "id": "loss_09",
+      "text": "I'm afraid you didn't get it.",
+      "spoken": "[sympathetically] I'm afraid you didn't get it.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_09.mp3"
+    },
+    {
+      "id": "loss_10",
+      "text": "That's a shame — you gave it a good try.",
+      "spoken": "[sympathetically] That's a shame — you gave it a good try.",
+      "file": "assets/audio/vo/final-loss/consolation/loss_10.mp3"
+    }
+  ],
+  "amounts": [
+    {
+      "id": "loss_amt_25000",
+      "value": 25000,
+      "text": "Twenty Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Twenty Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_25000.mp3"
+    },
+    {
+      "id": "loss_amt_30000",
+      "value": 30000,
+      "text": "Thirty Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Thirty Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_30000.mp3"
+    },
+    {
+      "id": "loss_amt_35000",
+      "value": 35000,
+      "text": "Thirty Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Thirty Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_35000.mp3"
+    },
+    {
+      "id": "loss_amt_40000",
+      "value": 40000,
+      "text": "Forty Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Forty Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_40000.mp3"
+    },
+    {
+      "id": "loss_amt_45000",
+      "value": 45000,
+      "text": "Forty Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Forty Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_45000.mp3"
+    },
+    {
+      "id": "loss_amt_50000",
+      "value": 50000,
+      "text": "Fifty Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Fifty Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_50000.mp3"
+    },
+    {
+      "id": "loss_amt_55000",
+      "value": 55000,
+      "text": "Fifty Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Fifty Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_55000.mp3"
+    },
+    {
+      "id": "loss_amt_60000",
+      "value": 60000,
+      "text": "Sixty Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Sixty Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_60000.mp3"
+    },
+    {
+      "id": "loss_amt_65000",
+      "value": 65000,
+      "text": "Sixty Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Sixty Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_65000.mp3"
+    },
+    {
+      "id": "loss_amt_70000",
+      "value": 70000,
+      "text": "Seventy Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Seventy Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_70000.mp3"
+    },
+    {
+      "id": "loss_amt_75000",
+      "value": 75000,
+      "text": "Seventy Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Seventy Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_75000.mp3"
+    },
+    {
+      "id": "loss_amt_80000",
+      "value": 80000,
+      "text": "Eighty Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Eighty Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_80000.mp3"
+    },
+    {
+      "id": "loss_amt_85000",
+      "value": 85000,
+      "text": "Eighty Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Eighty Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_85000.mp3"
+    },
+    {
+      "id": "loss_amt_90000",
+      "value": 90000,
+      "text": "Ninety Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Ninety Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_90000.mp3"
+    },
+    {
+      "id": "loss_amt_95000",
+      "value": 95000,
+      "text": "Ninety Five Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... Ninety Five Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_95000.mp3"
+    },
+    {
+      "id": "loss_amt_100000",
+      "value": 100000,
+      "text": "One Hundred Thousand dollars.",
+      "spoken": "[matter of factly] You did not win... One Hundred Thousand dollars.",
+      "file": "assets/audio/vo/final-loss/amounts/loss_amt_100000.mp3"
+    }
+  ]
+}

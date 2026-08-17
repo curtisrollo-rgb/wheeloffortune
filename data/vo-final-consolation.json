@@ -1,0 +1,15 @@
+{
+  "tag_prefix": "[sympathetically]",
+  "lines": [
+    { "id": "loss_01", "text": "I'm sorry, you didn't solve it." },
+    { "id": "loss_02", "text": "Oh, that's too bad — not this time." },
+    { "id": "loss_03", "text": "I'm afraid that's not it." },
+    { "id": "loss_04", "text": "Sorry, the puzzle got away from you." },
+    { "id": "loss_05", "text": "Tough luck on that one." },
+    { "id": "loss_06", "text": "I'm sorry — so close, but not quite." },
+    { "id": "loss_07", "text": "Ohhhh, that's not the answer." },
+    { "id": "loss_08", "text": "Sorry about that — it wasn't meant to be." },
+    { "id": "loss_09", "text": "I'm afraid you didn't get it." },
+    { "id": "loss_10", "text": "That's a shame — you gave it a good try." }
+  ]
+}

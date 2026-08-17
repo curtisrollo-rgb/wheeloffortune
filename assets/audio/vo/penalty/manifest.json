@@ -1,0 +1,69 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "tag_prefix": "[sad voice]",
+  "bankrupt": [
+    {
+      "id": "bankrupt",
+      "text": "Bankrupt!",
+      "spoken": "[sad voice] Bankrupt!",
+      "file": "assets/audio/vo/penalty/bankrupt.mp3"
+    },
+    {
+      "id": "bankrupt_oh_no",
+      "text": "Oh no — bankrupt!",
+      "spoken": "[sad voice] Oh no — bankrupt!",
+      "file": "assets/audio/vo/penalty/bankrupt_oh_no.mp3"
+    },
+    {
+      "id": "bankrupt_tough",
+      "text": "Tough break — that's bankrupt.",
+      "spoken": "[sad voice] Tough break — that's bankrupt.",
+      "file": "assets/audio/vo/penalty/bankrupt_tough.mp3"
+    },
+    {
+      "id": "bankrupt_sorry",
+      "text": "Sorry, that's bankrupt.",
+      "spoken": "[sad voice] Sorry, that's bankrupt.",
+      "file": "assets/audio/vo/penalty/bankrupt_sorry.mp3"
+    },
+    {
+      "id": "bankrupt_again",
+      "text": "Bankrupt — round earnings are gone.",
+      "spoken": "[sad voice] Bankrupt — round earnings are gone.",
+      "file": "assets/audio/vo/penalty/bankrupt_again.mp3"
+    }
+  ],
+  "loseTurn": [
+    {
+      "id": "lose_turn",
+      "text": "Lose a turn.",
+      "spoken": "[sad voice] Lose a turn.",
+      "file": "assets/audio/vo/penalty/lose_turn.mp3"
+    },
+    {
+      "id": "lose_turn_sorry",
+      "text": "Sorry — lose a turn.",
+      "spoken": "[sad voice] Sorry — lose a turn.",
+      "file": "assets/audio/vo/penalty/lose_turn_sorry.mp3"
+    },
+    {
+      "id": "lose_turn_over",
+      "text": "Your turn is over.",
+      "spoken": "[sad voice] Your turn is over.",
+      "file": "assets/audio/vo/penalty/lose_turn_over.mp3"
+    },
+    {
+      "id": "lose_turn_again",
+      "text": "Lose a turn — spin again next time.",
+      "spoken": "[sad voice] Lose a turn — spin again next time.",
+      "file": "assets/audio/vo/penalty/lose_turn_again.mp3"
+    },
+    {
+      "id": "lose_turn_ugh",
+      "text": "Oh — lose a turn.",
+      "spoken": "[sad voice] Oh — lose a turn.",
+      "file": "assets/audio/vo/penalty/lose_turn_ugh.mp3"
+    }
+  ]
+}

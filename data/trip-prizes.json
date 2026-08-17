@@ -1,0 +1,1692 @@
+{
+  "comment": "Trip prizes for the TRIP wedge (Andy Nguyen archive).",
+  "trips": [
+    {
+      "id": "to_iceland",
+      "wording": "Collette Trip to Iceland",
+      "value_usd": 10898,
+      "congratsText": "Good work — you've won a Collette trip to Iceland!",
+      "voText": "Great news! You've won a Collette trip to Iceland!"
+    },
+    {
+      "id": "twelve_day_expedition_to_antarctica",
+      "wording": "FEATURED BR EXPEDITION: 12d in Antarctica",
+      "value_usd": 38000,
+      "congratsText": "You've won a twelve-day expedition to Antarctica!",
+      "voText": "Congratulations! You've won a twelve-day expedition to Antarctica!"
+    },
+    {
+      "id": "thirteen_day_expedition_to_sicily_greece_and_sardinia",
+      "wording": "FEATURED BR EXPEDITION: 13d in Sicily, Greece, and Sardinia",
+      "value_usd": 34000,
+      "congratsText": "Congratulations, you've won a thirteen-day expedition to Sicily, Greece, and Sardinia!",
+      "voText": "Congrats! You've won a thirteen-day expedition to Sicily, Greece, and Sardinia!"
+    },
+    {
+      "id": "ten_day_expedition_to_the_galapagos",
+      "wording": "FEATURED BR EXPEDITION: Ten days in the Galapagos",
+      "value_usd": 34000,
+      "congratsText": "Congrats, you've won a ten-day expedition to the Galapagos!",
+      "voText": "Good work! You've won a ten-day expedition to the Galapagos!"
+    },
+    {
+      "id": "ten_day_expedition_to_the_galapagos_islands",
+      "wording": "FEATURED BR EXPEDITION: Ten days in the Galapagos Islands",
+      "value_usd": 34000,
+      "congratsText": "Good work — you've won a ten-day expedition to the Galapagos Islands!",
+      "voText": "You've won! A ten-day expedition to the Galapagos Islands!"
+    },
+    {
+      "id": "twelve_day_expedition_to_england_ireland_and_scotland",
+      "wording": "FEATURED BR EXPEDITION: Twelve days in England, Ireland, and Scotland",
+      "value_usd": 34000,
+      "congratsText": "You've won a twelve-day expedition to England, Ireland, and Scotland!",
+      "voText": "Great news! You've won a twelve-day expedition to England, Ireland, and Scotland!"
+    },
+    {
+      "id": "of_alaska",
+      "wording": "FEATURED COLLETTE TOUR: Alaska",
+      "value_usd": 11698,
+      "congratsText": "Congratulations, you've won a Collette tour of Alaska!",
+      "voText": "Congratulations! You've won a Collette tour of Alaska!"
+    },
+    {
+      "id": "of_costa_rica",
+      "wording": "FEATURED COLLETTE TOUR: Costa Rica",
+      "value_usd": 9498,
+      "congratsText": "Congrats, you've won a Collette tour of Costa Rica!",
+      "voText": "Congrats! You've won a Collette tour of Costa Rica!"
+    },
+    {
+      "id": "of_hawaii",
+      "wording": "FEATURED COLLETTE TOUR: Hawaii",
+      "value_usd": 13398,
+      "congratsText": "Good work — you've won a Collette tour of Hawaii!",
+      "voText": "Good work! You've won a Collette tour of Hawaii!"
+    },
+    {
+      "id": "of_italy",
+      "wording": "FEATURED COLLETTE TOUR: Italy",
+      "value_usd": 9600,
+      "congratsText": "You've won a Collette tour of Italy!",
+      "voText": "You've won! A Collette tour of Italy!"
+    },
+    {
+      "id": "of_southern_italy_sicily",
+      "wording": "FEATURED COLLETTE TOUR: southern Italy & Sicily",
+      "value_usd": 13698,
+      "congratsText": "Congratulations, you've won a Collette tour of southern Italy & Sicily!",
+      "voText": "Great news! You've won a Collette tour of southern Italy & Sicily!"
+    },
+    {
+      "id": "of_switzerland_austria_bavaria",
+      "wording": "FEATURED COLLETTE TOUR: Switzerland, Austria, & Bavaria",
+      "value_usd": 13698,
+      "congratsText": "Congrats, you've won a Collette tour of Switzerland, Austria, & Bavaria!",
+      "voText": "Congratulations! You've won a Collette tour of Switzerland, Austria, & Bavaria!"
+    },
+    {
+      "id": "of_washington_dc",
+      "wording": "FEATURED COLLETTE TOUR: Washington, DC",
+      "value_usd": 7000,
+      "congratsText": "Good work — you've won a Collette tour of Washington, DC!",
+      "voText": "Congrats! You've won a Collette tour of Washington, DC!"
+    },
+    {
+      "id": "3_island_tour_of_hawaii",
+      "wording": "FEATURED COLLETTE TRIP: 3-island tour of Hawaii",
+      "value_usd": 12398,
+      "congratsText": "You've won a Collette trip 3-island tour of Hawaii!",
+      "voText": "Good work! You've won a Collette trip 3-island tour of Hawaii!"
+    },
+    {
+      "id": "american_southwest",
+      "wording": "FEATURED COLLETTE TRIP: American Southwest",
+      "value_usd": 10397,
+      "congratsText": "Congratulations, you've won a Collette trip American Southwest!",
+      "voText": "You've won! A Collette trip American Southwest!"
+    },
+    {
+      "id": "california_dreamin",
+      "wording": "FEATURED COLLETTE TRIP: California Dreamin’",
+      "value_usd": 8498,
+      "congratsText": "Congrats, you've won a Collette trip California Dreamin’!",
+      "voText": "Great news! You've won a Collette trip California Dreamin’!"
+    },
+    {
+      "id": "costa_rica",
+      "wording": "FEATURED COLLETTE TRIP: Costa Rica",
+      "value_usd": 9498,
+      "congratsText": "Good work — you've won a Collette trip Costa Rica!",
+      "voText": "Congratulations! You've won a Collette trip Costa Rica!"
+    },
+    {
+      "id": "ireland",
+      "wording": "FEATURED COLLETTE TRIP: Ireland",
+      "value_usd": 9847,
+      "congratsText": "You've won a Collette trip Ireland!",
+      "voText": "Congrats! You've won a Collette trip Ireland!"
+    },
+    {
+      "id": "portugal",
+      "wording": "FEATURED COLLETTE TRIP: Portugal",
+      "value_usd": 8398,
+      "congratsText": "Congratulations, you've won a Collette trip Portugal!",
+      "voText": "Good work! You've won a Collette trip Portugal!"
+    },
+    {
+      "id": "rome",
+      "wording": "FEATURED COLLETTE TRIP: Rome",
+      "value_usd": 10998,
+      "congratsText": "Congrats, you've won a Collette trip Rome!",
+      "voText": "You've won! A Collette trip Rome!"
+    },
+    {
+      "id": "spain_portugal",
+      "wording": "FEATURED COLLETTE TRIP: Spain & Portugal",
+      "value_usd": 10798,
+      "congratsText": "Good work — you've won a Collette trip Spain & Portugal!",
+      "voText": "Great news! You've won a Collette trip Spain & Portugal!"
+    },
+    {
+      "id": "utahs_national_parks",
+      "wording": "FEATURED COLLETTE TRIP: Utah’s national parks",
+      "value_usd": 8598,
+      "congratsText": "You've won a Collette trip Utah’s national parks!",
+      "voText": "Congratulations! You've won a Collette trip Utah’s national parks!"
+    },
+    {
+      "id": "a_alaska_cruise",
+      "wording": "FEATURED CRUISE: Alaska",
+      "value_usd": 7418,
+      "congratsText": "Congratulations, you've won a Alaska cruise!",
+      "voText": "Congrats! You've won a Alaska cruise!"
+    },
+    {
+      "id": "a_canada_new_england_cruise",
+      "wording": "FEATURED CRUISE: Canada & New England",
+      "value_usd": 7598,
+      "congratsText": "Congrats, you've won a Canada & New England cruise!",
+      "voText": "Good work! You've won a Canada & New England cruise!"
+    },
+    {
+      "id": "a_caribbean_cruise",
+      "wording": "FEATURED CRUISE: Caribbean",
+      "value_usd": 7428,
+      "congratsText": "Good work — you've won a Caribbean cruise!",
+      "voText": "You've won! A Caribbean cruise!"
+    },
+    {
+      "id": "regent_seven_seas_cruise",
+      "wording": "FEATURED CRUISE: Regent Seven Seas Cruise",
+      "value_usd": 10700,
+      "congratsText": "You've won a Regent Seven Seas Cruise!",
+      "voText": "Great news! You've won a Regent Seven Seas Cruise!"
+    },
+    {
+      "id": "a_scotland_and_iceland_cruise",
+      "wording": "FEATURED CRUISE: Scotland and Iceland",
+      "value_usd": 7008,
+      "congratsText": "Congratulations, you've won a Scotland and Iceland cruise!",
+      "voText": "Congratulations! You've won a Scotland and Iceland cruise!"
+    },
+    {
+      "id": "to_bahamas",
+      "wording": "FEATURED DISNEY CRUISE: Bahamas",
+      "value_usd": 13011,
+      "congratsText": "Congrats, you've won a Disney cruise to Bahamas!",
+      "voText": "Congrats! You've won a Disney cruise to Bahamas!"
+    },
+    {
+      "id": "at_aulani",
+      "wording": "FEATURED DISNEY PRIZE: Aulani",
+      "value_usd": 7370,
+      "congratsText": "Good work — you've won a Disney vacation at Aulani!",
+      "voText": "Good work! You've won a Disney vacation at Aulani!"
+    },
+    {
+      "id": "bahamas",
+      "wording": "FEATURED DISNEY PRIZE: Bahamas",
+      "value_usd": 13011,
+      "congratsText": "You've won a Disney vacation Bahamas!",
+      "voText": "You've won! A Disney vacation Bahamas!"
+    },
+    {
+      "id": "caribbean_cruise_featuring_a_marvel_day_at_sea",
+      "wording": "FEATURED DISNEY PRIZE: Caribbean Cruise featuring a MARVEL Day at Sea",
+      "value_usd": 11268,
+      "congratsText": "Congratulations, you've won a Disney prize Caribbean Cruise featuring a Marvel Day at Sea!",
+      "voText": "Great news! You've won a Disney prize Caribbean Cruise featuring a Marvel Day at Sea!"
+    },
+    {
+      "id": "disney_cruise_line",
+      "wording": "FEATURED DISNEY PRIZE: Disney Cruise Line",
+      "value_usd": 13774,
+      "congratsText": "Congrats, you've won a Disney prize Disney Cruise Line!",
+      "voText": "Congratulations! You've won a Disney prize Disney Cruise Line!"
+    },
+    {
+      "id": "to_rome",
+      "wording": "FEATURED DISNEY PRIZE: Rome",
+      "value_usd": 13942,
+      "congratsText": "Good work — you've won a Disney vacation to Rome!",
+      "voText": "Congrats! You've won a Disney vacation to Rome!"
+    },
+    {
+      "id": "ten_day_expedition_through_valbard_and_the_arctic_circle",
+      "wording": "FEATURED EXPEDITION CRUISE: 10d through Svalbard and the Arctic Circle",
+      "value_usd": 35600,
+      "congratsText": "You've won a ten-day expedition through valbard and the Arctic Circle!",
+      "voText": "Good work! You've won a ten-day expedition through valbard and the Arctic Circle!"
+    },
+    {
+      "id": "eight_day_expedition_to_the_azores",
+      "wording": "FEATURED EXPEDITION: 8 days in the Azores",
+      "value_usd": 23320,
+      "congratsText": "Congratulations, you've won an eight-day expedition to the Azores!",
+      "voText": "You've won! An eight-day expedition to the Azores!"
+    },
+    {
+      "id": "expedition_to_antarctica",
+      "wording": "FEATURED EXPEDITION: Antarctica",
+      "value_usd": 36640,
+      "congratsText": "Congrats, you've won an expedition to Antarctica!",
+      "voText": "Great news! You've won an expedition to Antarctica!"
+    },
+    {
+      "id": "expedition_to_croatia_montenegro",
+      "wording": "FEATURED EXPEDITION: Croatia & Montenegro",
+      "value_usd": 20486,
+      "congratsText": "Good work — you've won an expedition to Croatia & Montenegro!",
+      "voText": "Congratulations! You've won an expedition to Croatia & Montenegro!"
+    },
+    {
+      "id": "eight_day_expedition_to_iceland",
+      "wording": "FEATURED EXPEDITION: Eight days in Iceland",
+      "value_usd": 19892,
+      "congratsText": "You've won an eight-day expedition to Iceland!",
+      "voText": "Congrats! You've won an eight-day expedition to Iceland!"
+    },
+    {
+      "id": "eleven_day_expedition_to_greece_turkey",
+      "wording": "FEATURED EXPEDITION: Eleven days in Greece & Turkey",
+      "value_usd": 27458,
+      "congratsText": "Congratulations, you've won an eleven-day expedition to Greece & Turkey!",
+      "voText": "Good work! You've won an eleven-day expedition to Greece & Turkey!"
+    },
+    {
+      "id": "twelve_day_expedition_to_antarctica_2",
+      "wording": "FEATURED EXPEDITION: Twelve days in Antarctica",
+      "value_usd": 36640,
+      "congratsText": "Congrats, you've won a twelve-day expedition to Antarctica!",
+      "voText": "You've won! A twelve-day expedition to Antarctica!"
+    },
+    {
+      "id": "3_island_tour",
+      "wording": "FEATURED HAWAIIAN VACATION: 3-island tour",
+      "value_usd": 12398,
+      "congratsText": "Good work — you've won a Hawaiian vacation 3-island tour!",
+      "voText": "Great news! You've won a Hawaiian vacation 3-island tour!"
+    },
+    {
+      "id": "hilton_waikiki_beach_resort_spa",
+      "wording": "FEATURED HAWAIIAN VACATION: Hilton WAIKIKI Beach Resort & Spa",
+      "value_usd": 7011,
+      "congratsText": "You've won a Hawaiian vacation Hilton Waikiki Beach Resort & Spa!",
+      "voText": "Congratulations! You've won a Hawaiian vacation Hilton Waikiki Beach Resort & Spa!"
+    },
+    {
+      "id": "collette_tour_of_new_england",
+      "wording": "FEATURED ISLAND TRIP: collette tour of New England",
+      "value_usd": 7398,
+      "congratsText": "Congratulations, you've won an island trip collette tour of New England!",
+      "voText": "Congrats! You've won an island trip collette tour of New England!"
+    },
+    {
+      "id": "iheartradio_theater_la_event",
+      "wording": "FEATURED MUSIC TRIP: iHEARTRADIO THEATER LA event",
+      "value_usd": 7600,
+      "congratsText": "Congrats, you've won a music trip iHeartRadio Theater LA event!",
+      "voText": "Good work! You've won a music trip iHeartRadio Theater LA event!"
+    },
+    {
+      "id": "nashville_music_city",
+      "wording": "FEATURED MUSIC TRIP: NASHVILLE MUSIC CITY",
+      "value_usd": 15658,
+      "congratsText": "Good work — you've won a music trip Nashville Music City!",
+      "voText": "You've won! A music trip Nashville Music City!"
+    },
+    {
+      "id": "nyc_including_a_vip_tour_of_elvis_duran_and_the_morning_show",
+      "wording": "FEATURED MUSIC TRIP: NYC including a VIP tour of “ELVIS DURAN AND THE MORNING SHOW”",
+      "value_usd": 7500,
+      "congratsText": "You've won a music trip NYC including a VIP tour of “Elvis Duran and the Morning Show”!",
+      "voText": "Great news! You've won a music trip NYC including a VIP tour of “Elvis Duran and the Morning Show”!"
+    },
+    {
+      "id": "to_caesars_palace_in_vegas",
+      "wording": "FEATURED TRIP ALL WEEK LONG: Caesar’s Palace in Vegas",
+      "value_usd": 7500,
+      "congratsText": "Congratulations, you've won an all-week-long vacation to Caesar’s Palace in Vegas!",
+      "voText": "Congratulations! You've won an all-week-long vacation to Caesar’s Palace in Vegas!"
+    },
+    {
+      "id": "to_myrtle_beach",
+      "wording": "FEATURED TRIP ALL WEEK LONG: MYRTLE BEACH",
+      "value_usd": 7500,
+      "congratsText": "Congrats, you've won an all-week-long vacation to Myrtle Beach!",
+      "voText": "Congrats! You've won an all-week-long vacation to Myrtle Beach!"
+    },
+    {
+      "id": "to_sandals_emerald_bay_in_the_bahamas",
+      "wording": "FEATURED TRIP ALL WEEK LONG: Sandals Emerald Bay in the Bahamas",
+      "value_usd": 9400,
+      "congratsText": "Good work — you've won an all-week-long vacation to Sandals Emerald Bay in the Bahamas!",
+      "voText": "Good work! You've won an all-week-long vacation to Sandals Emerald Bay in the Bahamas!"
+    },
+    {
+      "id": "to_1_week_at_jamala_wildlife_lodge",
+      "wording": "FEATURED TRIP: 1-week at Jamala Wildlife Lodge",
+      "value_usd": 13332,
+      "congratsText": "You've won a trip to 1-week at Jamala Wildlife Lodge!",
+      "voText": "You've won! A trip to 1-week at Jamala Wildlife Lodge!"
+    },
+    {
+      "id": "to_6d_in_chicago",
+      "wording": "FEATURED TRIP: 6d in CHICAGO",
+      "value_usd": 7098,
+      "congratsText": "Congratulations, you've won a trip to 6d in Chicago!",
+      "voText": "Great news! You've won a trip to 6d in Chicago!"
+    },
+    {
+      "id": "a_mediterranean_cruise",
+      "wording": "FEATURED TRIP: a Mediterranean Cruise",
+      "value_usd": 7998,
+      "congratsText": "Congrats, you've won a Mediterranean cruise!",
+      "voText": "Congratulations! You've won a Mediterranean cruise!"
+    },
+    {
+      "id": "a_tour_of_rio_de_janeiro_and_sao_paulo_brazil",
+      "wording": "FEATURED TRIP: a tour of Rio de Janeiro and Sao Paulo, Brazil",
+      "value_usd": 7920,
+      "congratsText": "Good work — you've won a tour of Rio de Janeiro and Sao Paulo, Brazil!",
+      "voText": "Congrats! You've won a tour of Rio de Janeiro and Sao Paulo, Brazil!"
+    },
+    {
+      "id": "to_amsterdam",
+      "wording": "FEATURED TRIP: Amsterdam",
+      "value_usd": 9000,
+      "congratsText": "You've won a trip to Amsterdam!",
+      "voText": "Good work! You've won a trip to Amsterdam!"
+    },
+    {
+      "id": "to_aulani",
+      "wording": "FEATURED TRIP: AULANI",
+      "value_usd": 7428,
+      "congratsText": "Congratulations, you've won a trip to Aulani!",
+      "voText": "You've won! A trip to Aulani!"
+    },
+    {
+      "id": "to_bellagio_in_las_vegas",
+      "wording": "FEATURED TRIP: Bellagio in Las Vegas",
+      "value_usd": 5376,
+      "congratsText": "Congrats, you've won a trip to Bellagio in Las Vegas!",
+      "voText": "Great news! You've won a trip to Bellagio in Las Vegas!"
+    },
+    {
+      "id": "to_bernardus_lodge_in_carmel_valley_ca",
+      "wording": "FEATURED TRIP: Bernardus Lodge in Carmel Valley, CA",
+      "value_usd": 5790,
+      "congratsText": "Good work — you've won a trip to Bernardus Lodge in Carmel Valley, CA!",
+      "voText": "Congratulations! You've won a trip to Bernardus Lodge in Carmel Valley, CA!"
+    },
+    {
+      "id": "to_bluenose_inn_bar_harbor_hotel_in_maine",
+      "wording": "FEATURED TRIP: Bluenose Inn Bar Harbor Hotel in Maine",
+      "value_usd": 5500,
+      "congratsText": "You've won a trip to Bluenose Inn Bar Harbor Hotel in Maine!",
+      "voText": "Congrats! You've won a trip to Bluenose Inn Bar Harbor Hotel in Maine!"
+    },
+    {
+      "id": "to_british_colonial_hilton_nassau_in_the_bahamas",
+      "wording": "FEATURED TRIP: British Colonial Hilton Nassau in the Bahamas",
+      "value_usd": 6250,
+      "congratsText": "Congratulations, you've won a trip to British Colonial Hilton Nassau in the Bahamas!",
+      "voText": "Good work! You've won a trip to British Colonial Hilton Nassau in the Bahamas!"
+    },
+    {
+      "id": "to_canyon_country_vegas",
+      "wording": "FEATURED TRIP: Canyon Country & Vegas",
+      "value_usd": 10418,
+      "congratsText": "Congrats, you've won a trip to Canyon Country & Vegas!",
+      "voText": "You've won! A trip to Canyon Country & Vegas!"
+    },
+    {
+      "id": "to_chicago",
+      "wording": "FEATURED TRIP: Chicago",
+      "value_usd": 7800,
+      "congratsText": "Good work — you've won a trip to Chicago!",
+      "voText": "Great news! You've won a trip to Chicago!"
+    },
+    {
+      "id": "to_club_med_sandpiper_bay_in_fl",
+      "wording": "FEATURED TRIP: Club Med Sandpiper Bay in FL",
+      "value_usd": 5500,
+      "congratsText": "You've won a trip to Club Med Sandpiper Bay in FL!",
+      "voText": "Congratulations! You've won a trip to Club Med Sandpiper Bay in FL!"
+    },
+    {
+      "id": "to_corazon_cabo_resort_spa_in_mexico",
+      "wording": "FEATURED TRIP: Corazon Cabo Resort & Spa in MEXICO",
+      "value_usd": 8000,
+      "congratsText": "Congratulations, you've won a trip to Corazon Cabo Resort & Spa in Mexico!",
+      "voText": "Congrats! You've won a trip to Corazon Cabo Resort & Spa in Mexico!"
+    },
+    {
+      "id": "to_discover_puerto_rico",
+      "wording": "FEATURED TRIP: DISCOVER PUERTO RICO",
+      "value_usd": 7000,
+      "congratsText": "Congrats, you've won a trip to Discover Puerto Rico!",
+      "voText": "Good work! You've won a trip to Discover Puerto Rico!"
+    },
+    {
+      "id": "to_divi_southwinds_beach_resort_in_barbados",
+      "wording": "FEATURED TRIP: Divi Southwinds Beach Resort in BARBADOS",
+      "value_usd": 8700,
+      "congratsText": "Good work — you've won a trip to Divi Southwinds Beach Resort in Barbados!",
+      "voText": "You've won! A trip to Divi Southwinds Beach Resort in Barbados!"
+    },
+    {
+      "id": "to_emily_morgan_hotel_in_san_antonio",
+      "wording": "FEATURED TRIP: Emily Morgan Hotel in San Antonio",
+      "value_usd": 7000,
+      "congratsText": "You've won a trip to Emily Morgan Hotel in San Antonio!",
+      "voText": "Great news! You've won a trip to Emily Morgan Hotel in San Antonio!"
+    },
+    {
+      "id": "to_hanoi_vietnam",
+      "wording": "FEATURED TRIP: Hanoi, Vietnam",
+      "value_usd": 6500,
+      "congratsText": "Congratulations, you've won a trip to Hanoi, Vietnam!",
+      "voText": "Congratulations! You've won a trip to Hanoi, Vietnam!"
+    },
+    {
+      "id": "to_hawks_cay_island_resort_marina_villas_in_the_fl_keys",
+      "wording": "FEATURED TRIP: Hawks Cay Island Resort, Marina & Villas in the FL Keys",
+      "value_usd": 5000,
+      "congratsText": "Congrats, you've won a trip to Hawks Cay Island Resort, Marina & Villas in the FL Keys!",
+      "voText": "Congrats! You've won a trip to Hawks Cay Island Resort, Marina & Villas in the FL Keys!"
+    },
+    {
+      "id": "to_hilton_waikoloa_village_in_hawaii",
+      "wording": "FEATURED TRIP: Hilton Waikoloa Village in HAWAII",
+      "value_usd": 10144,
+      "congratsText": "Good work — you've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "voText": "Good work! You've won a trip to Hilton Waikoloa Village in Hawaii!"
+    },
+    {
+      "id": "a_holland_america_cruise_of_alaska",
+      "wording": "FEATURED TRIP: Holland America CRUISE of Alaska",
+      "value_usd": 6000,
+      "congratsText": "You've won a Holland America cruise of Alaska!",
+      "voText": "You've won! A Holland America cruise of Alaska!"
+    },
+    {
+      "id": "to_hyatt_regency_trinidad_in_trinidad_tobago",
+      "wording": "FEATURED TRIP: Hyatt Regency Trinidad in Trinidad & Tobago",
+      "value_usd": 7000,
+      "congratsText": "Congratulations, you've won a trip to Hyatt Regency Trinidad in Trinidad & Tobago!",
+      "voText": "Great news! You've won a trip to Hyatt Regency Trinidad in Trinidad & Tobago!"
+    },
+    {
+      "id": "to_iceland_2",
+      "wording": "FEATURED TRIP: ICELAND",
+      "value_usd": 8500,
+      "congratsText": "Congrats, you've won a trip to Iceland!",
+      "voText": "Congratulations! You've won a trip to Iceland!"
+    },
+    {
+      "id": "to_kimberly_hotel_in_nyc",
+      "wording": "FEATURED TRIP: Kimberly Hotel in NYC",
+      "value_usd": 7900,
+      "congratsText": "Good work — you've won a trip to Kimberly Hotel in NYC!",
+      "voText": "Congrats! You've won a trip to Kimberly Hotel in NYC!"
+    },
+    {
+      "id": "to_koa_kea",
+      "wording": "FEATURED TRIP: Ko’a Kea",
+      "value_usd": 8858,
+      "congratsText": "You've won a trip to Ko’a Kea!",
+      "voText": "Good work! You've won a trip to Ko’a Kea!"
+    },
+    {
+      "id": "to_la_paz_waterfall_gardens_in_costa_rica",
+      "wording": "FEATURED TRIP: La Paz Waterfall Gardens in Costa Rica",
+      "value_usd": 6100,
+      "congratsText": "Congratulations, you've won a trip to La Paz Waterfall Gardens in Costa Rica!",
+      "voText": "You've won! A trip to La Paz Waterfall Gardens in Costa Rica!"
+    },
+    {
+      "id": "to_lake_tahoe_at_the_resort_at_squaw_creek",
+      "wording": "FEATURED TRIP: Lake Tahoe at the Resort at Squaw Creek",
+      "value_usd": 5500,
+      "congratsText": "Congrats, you've won a trip to Lake Tahoe at the Resort at Squaw Creek!",
+      "voText": "Great news! You've won a trip to Lake Tahoe at the Resort at Squaw Creek!"
+    },
+    {
+      "id": "to_lexington_at_jackson_hole_in_wy",
+      "wording": "FEATURED TRIP: Lexington at Jackson Hole in WY",
+      "value_usd": 6018,
+      "congratsText": "Good work — you've won a trip to Lexington at Jackson Hole in WY!",
+      "voText": "Congratulations! You've won a trip to Lexington at Jackson Hole in WY!"
+    },
+    {
+      "id": "to_mirror_lake_inn_resort_spa_in_lake_placid_ny",
+      "wording": "FEATURED TRIP: Mirror Lake Inn Resort & Spa in Lake Placid, NY",
+      "value_usd": 8000,
+      "congratsText": "You've won a trip to Mirror Lake Inn Resort & Spa in Lake Placid, NY!",
+      "voText": "Congrats! You've won a trip to Mirror Lake Inn Resort & Spa in Lake Placid, NY!"
+    },
+    {
+      "id": "to_monarch_beach_golf_links_in_southern_california",
+      "wording": "FEATURED TRIP: MONARCH BEACH Golf Links in Southern California",
+      "value_usd": 9250,
+      "congratsText": "Congratulations, you've won a trip to Monarch Beach Golf Links in Southern California!",
+      "voText": "Good work! You've won a trip to Monarch Beach Golf Links in Southern California!"
+    },
+    {
+      "id": "to_monterey_california",
+      "wording": "FEATURED TRIP: MONTEREY, CALIFORNIA",
+      "value_usd": 8305,
+      "congratsText": "Congrats, you've won a trip to Monterey, California!",
+      "voText": "You've won! A trip to Monterey, California!"
+    },
+    {
+      "id": "to_myrtle_beach_2",
+      "wording": "FEATURED TRIP: Myrtle Beach",
+      "value_usd": 7500,
+      "congratsText": "Good work — you've won a trip to Myrtle Beach!",
+      "voText": "Great news! You've won a trip to Myrtle Beach!"
+    },
+    {
+      "id": "to_newport_beach_marriott_bayview_in_ca",
+      "wording": "FEATURED TRIP: Newport Beach Marriott Bayview in CA",
+      "value_usd": 6230,
+      "congratsText": "You've won a trip to Newport Beach Marriott Bayview in CA!",
+      "voText": "Congratulations! You've won a trip to Newport Beach Marriott Bayview in CA!"
+    },
+    {
+      "id": "to_omni_amelia_island_plantation_resort_in_florida",
+      "wording": "FEATURED TRIP: Omni Amelia Island Plantation Resort in FLORIDA",
+      "value_usd": 5302,
+      "congratsText": "Congratulations, you've won a trip to Omni Amelia Island Plantation Resort in Florida!",
+      "voText": "Congrats! You've won a trip to Omni Amelia Island Plantation Resort in Florida!"
+    },
+    {
+      "id": "to_parc_55_hotel_in_san_francisco",
+      "wording": "FEATURED TRIP: Parc 55 hotel in SAN FRANCISCO",
+      "value_usd": 6400,
+      "congratsText": "Congrats, you've won a trip to Parc 55 hotel in San Francisco!",
+      "voText": "Good work! You've won a trip to Parc 55 hotel in San Francisco!"
+    },
+    {
+      "id": "to_pineapple_beach_club_in_antigua",
+      "wording": "FEATURED TRIP: Pineapple Beach Club in Antigua",
+      "value_usd": 8460,
+      "congratsText": "Good work — you've won a trip to Pineapple Beach Club in Antigua!",
+      "voText": "You've won! A trip to Pineapple Beach Club in Antigua!"
+    },
+    {
+      "id": "to_puerto_rico",
+      "wording": "FEATURED TRIP: PUERTO RICO",
+      "value_usd": 10610,
+      "congratsText": "You've won a trip to Puerto Rico!",
+      "voText": "Great news! You've won a trip to Puerto Rico!"
+    },
+    {
+      "id": "to_ramons_village_resort_in_belize",
+      "wording": "FEATURED TRIP: Ramon’s Village Rsort in Belize",
+      "value_usd": 6000,
+      "congratsText": "Congratulations, you've won a trip to Ramon’s Village Resort in Belize!",
+      "voText": "Congratulations! You've won a trip to Ramon’s Village Resort in Belize!"
+    },
+    {
+      "id": "to_rocky_mountaineer_railroad_tour_of_western_canada",
+      "wording": "FEATURED TRIP: Rocky Mountaineer railroad tour of Western Canada",
+      "value_usd": 8598,
+      "congratsText": "Congrats, you've won a trip to Rocky Mountaineer railroad tour of Western Canada!",
+      "voText": "Congrats! You've won a trip to Rocky Mountaineer railroad tour of Western Canada!"
+    },
+    {
+      "id": "to_sala_lodges_in_siem_reap_cambodia",
+      "wording": "FEATURED TRIP: Sala Lodges in Siem Reap, CAMBODIA",
+      "value_usd": 8600,
+      "congratsText": "Good work — you've won a trip to Sala Lodges in Siem Reap, Cambodia!",
+      "voText": "Good work! You've won a trip to Sala Lodges in Siem Reap, Cambodia!"
+    },
+    {
+      "id": "to_sandals_royal_curacao",
+      "wording": "FEATURED TRIP: Sandals Royal Curaçao",
+      "value_usd": 11540,
+      "congratsText": "You've won a trip to Sandals Royal Curaçao!",
+      "voText": "You've won! A trip to Sandals Royal Curaçao!"
+    },
+    {
+      "id": "to_scotland",
+      "wording": "FEATURED TRIP: Scotland",
+      "value_usd": 7582,
+      "congratsText": "Congratulations, you've won a trip to Scotland!",
+      "voText": "Great news! You've won a trip to Scotland!"
+    },
+    {
+      "id": "to_ski_trip_to_moonlight_basin_in_big_sky_montana",
+      "wording": "FEATURED TRIP: ski trip to Moonlight Basin in Big Sky, MONTANA",
+      "value_usd": 9900,
+      "congratsText": "Congrats, you've won a trip to ski trip to Moonlight Basin in Big Sky, Montana!",
+      "voText": "Congratulations! You've won a trip to ski trip to Moonlight Basin in Big Sky, Montana!"
+    },
+    {
+      "id": "to_smugglers_notch_in_vermont",
+      "wording": "FEATURED TRIP: Smuggler’s Notch in VERMONT",
+      "value_usd": 8500,
+      "congratsText": "Good work — you've won a trip to Smuggler’s Notch in Vermont!",
+      "voText": "Congrats! You've won a trip to Smuggler’s Notch in Vermont!"
+    },
+    {
+      "id": "the_lodge_at_breckenridge_colorado",
+      "wording": "FEATURED TRIP: The Lodge at BRECKENRIDGE , Colorado",
+      "value_usd": 7000,
+      "congratsText": "You've won The Lodge at Breckenridge , Colorado!",
+      "voText": "Good work! You've won The Lodge at Breckenridge , Colorado!"
+    },
+    {
+      "id": "the_new_hotel_mediteran_villa_edition_and_a_tour_of_old_castle_in_montenegro",
+      "wording": "FEATURED TRIP: The New Hotel Mediteran “Villa Edition” and a tour of Old Castle in MONTENEGRO",
+      "value_usd": 8973,
+      "congratsText": "Congratulations, you've won The New Hotel Mediteran “Villa Edition” and a tour of Old Castle in Montenegro!",
+      "voText": "You've won! The New Hotel Mediteran “Villa Edition” and a tour of Old Castle in Montenegro!"
+    },
+    {
+      "id": "the_new_hotel_mediteran_villa_edition_in_montenegro",
+      "wording": "FEATURED TRIP: The New Hotel Mediteran “Villa Edition” in MONTENEGRO",
+      "value_usd": 8973,
+      "congratsText": "Congrats, you've won The New Hotel Mediteran “Villa Edition” in Montenegro!",
+      "voText": "Great news! You've won The New Hotel Mediteran “Villa Edition” in Montenegro!"
+    },
+    {
+      "id": "the_radisson_fishermans_wharf_in_san_francisco",
+      "wording": "FEATURED TRIP: the Radisson Fisherman’s Wharf in San Francisco",
+      "value_usd": 5400,
+      "congratsText": "Good work — you've won the Radisson Fisherman’s Wharf in San Francisco!",
+      "voText": "Congratulations! You've won the Radisson Fisherman’s Wharf in San Francisco!"
+    },
+    {
+      "id": "the_silverado_resort_spa_in_napa_valley",
+      "wording": "FEATURED TRIP: the Silverado Resort & Spa in Napa Valley",
+      "value_usd": 9250,
+      "congratsText": "You've won the Silverado Resort & Spa in Napa Valley!",
+      "voText": "Congrats! You've won the Silverado Resort & Spa in Napa Valley!"
+    },
+    {
+      "id": "to_thermae_sylla_spa_wellness_hotel_in_greece",
+      "wording": "FEATURED TRIP: Thermae Sylla Spa Wellness Hotel in GREECE",
+      "value_usd": 7134,
+      "congratsText": "Congratulations, you've won a trip to Thermae Sylla Spa Wellness Hotel in Greece!",
+      "voText": "Good work! You've won a trip to Thermae Sylla Spa Wellness Hotel in Greece!"
+    },
+    {
+      "id": "to_cape_eleuthera_resort_yacht_club_in_the_bahamas",
+      "wording": "FEATURED TRIP: to the Cape Eleuthera Resort & Yacht Club in the Bahamas",
+      "value_usd": 9430,
+      "congratsText": "Congrats, you've won a trip to Cape Eleuthera Resort & Yacht Club in the Bahamas!",
+      "voText": "You've won! A trip to Cape Eleuthera Resort & Yacht Club in the Bahamas!"
+    },
+    {
+      "id": "to_pacific_edge_hotel_in_laguna_beach_ca",
+      "wording": "FEATURED TRIP: to the Pacific Edge Hotel in Laguna Beach, CA",
+      "value_usd": 5400,
+      "congratsText": "Good work — you've won a trip to Pacific Edge Hotel in Laguna Beach, CA!",
+      "voText": "Great news! You've won a trip to Pacific Edge Hotel in Laguna Beach, CA!"
+    },
+    {
+      "id": "to_rabbit_hill_inn_in_vermont",
+      "wording": "FEATURED TRIP: to the Rabbit Hill Inn in Vermont",
+      "value_usd": 6000,
+      "congratsText": "You've won a trip to Rabbit Hill Inn in Vermont!",
+      "voText": "Congratulations! You've won a trip to Rabbit Hill Inn in Vermont!"
+    },
+    {
+      "id": "to_salish_lodge_spa_in_washington",
+      "wording": "FEATURED TRIP: to the Salish Lodge & Spa in Washington",
+      "value_usd": 5000,
+      "congratsText": "Congratulations, you've won a trip to Salish Lodge & Spa in Washington!",
+      "voText": "Congrats! You've won a trip to Salish Lodge & Spa in Washington!"
+    },
+    {
+      "id": "to_cova_hotel_in_san_francisco",
+      "wording": "FEATURED TRIP: trip to the Cova Hotel in San Francisco",
+      "value_usd": 5670,
+      "congratsText": "Congrats, you've won a trip to Cova Hotel in San Francisco!",
+      "voText": "Good work! You've won a trip to Cova Hotel in San Francisco!"
+    },
+    {
+      "id": "to_viva_wyndham_fortuna_beach_resort_on_grand_bahama_island",
+      "wording": "FEATURED TRIP: Viva Wyndham Fortuna Beach resort on Grand Bahama Island",
+      "value_usd": 6019,
+      "congratsText": "Good work — you've won a trip to Viva Wyndham Fortuna Beach resort on Grand Bahama Island!",
+      "voText": "You've won! A trip to Viva Wyndham Fortuna Beach resort on Grand Bahama Island!"
+    },
+    {
+      "id": "to_viva_wyndham_playa_dorado_in_the_dominican_republic",
+      "wording": "FEATURED TRIP: Viva Wyndham Playa Dorado in the Dominican Republic",
+      "value_usd": 6028,
+      "congratsText": "You've won a trip to Viva Wyndham Playa Dorado in the Dominican Republic!",
+      "voText": "Great news! You've won a trip to Viva Wyndham Playa Dorado in the Dominican Republic!"
+    },
+    {
+      "id": "to_waianuhea_bed_breakfast_in_honokaa_hi",
+      "wording": "FEATURED TRIP: Waianuhea Bed & Breakfast in Honokaa, HI",
+      "value_usd": 6000,
+      "congratsText": "Congratulations, you've won a trip to Waianuhea Bed & Breakfast in Honokaa, HI!",
+      "voText": "Congratulations! You've won a trip to Waianuhea Bed & Breakfast in Honokaa, HI!"
+    },
+    {
+      "id": "los_establos_boutique_resort_in_panama",
+      "wording": "FEATURED TRIPS: Los Establos Boutique Resort in PANAMA",
+      "value_usd": 8150,
+      "congratsText": "Congrats, you've won a trip to Los Establos Boutique Resort in Panama!",
+      "voText": "Congrats! You've won a trip to Los Establos Boutique Resort in Panama!"
+    },
+    {
+      "id": "canadian_rockies_glacier_national_park_tour",
+      "wording": "FEATURED WE: Canadian Rockies & Glacier National Park Tour",
+      "value_usd": 6000,
+      "congratsText": "Good work — you've won a vacation Canadian Rockies & Glacier National Park Tour!",
+      "voText": "Good work! You've won a vacation Canadian Rockies & Glacier National Park Tour!"
+    },
+    {
+      "id": "durango_mountain_resort_in_colorado",
+      "wording": "FEATURED WE: Durango Mountain Resort in Colorado",
+      "value_usd": 5125,
+      "congratsText": "You've won a vacation Durango Mountain Resort in Colorado!",
+      "voText": "You've won! A vacation Durango Mountain Resort in Colorado!"
+    },
+    {
+      "id": "switzerland_italy",
+      "wording": "FEATURED WE: Switzerland/Italy",
+      "value_usd": 9498,
+      "congratsText": "Congratulations, you've won a vacation Switzerland/Italy!",
+      "voText": "Great news! You've won a vacation Switzerland/Italy!"
+    },
+    {
+      "id": "collette_tour_of_finland",
+      "wording": "FEATURED WINTER WONDERLAND: Collette tour of FINLAND",
+      "value_usd": 12498,
+      "congratsText": "Congrats, you've won a winter vacation Collette tour of Finland!",
+      "voText": "Congratulations! You've won a winter vacation Collette tour of Finland!"
+    },
+    {
+      "id": "to_japan",
+      "wording": "Overseas Adventure Travel Trip to JAPAN (incl",
+      "value_usd": 13790,
+      "congratsText": "Good work — you've won an adventure travel trip to Japan!",
+      "voText": "Congrats! You've won an adventure travel trip to Japan!"
+    },
+    {
+      "id": "to_sala_lodges_in_siem_reap",
+      "wording": "Thrive Travel Trip to SALA Lodges in Siem Reap",
+      "value_usd": 8600,
+      "congratsText": "You've won a trip to Sala Lodges in Siem Reap!",
+      "voText": "Good work! You've won a trip to Sala Lodges in Siem Reap!"
+    },
+    {
+      "id": "to_casa_brancas_boutique_hotel_spa_in_brazil",
+      "wording": "Thrive Travel Trip to the Casa Brancas Boutique Hotel & Spa in BRAZIL",
+      "value_usd": 13000,
+      "congratsText": "Congratulations, you've won a trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "voText": "You've won! A trip to Casa Brancas Boutique Hotel & Spa in Brazil!"
+    },
+    {
+      "id": "to_divi_village_golf_beach_resort_in_aruba",
+      "wording": "Thrive Travel Trip to the Divi Village Golf & Beach Resort in ARUBA",
+      "value_usd": 8657,
+      "congratsText": "Congrats, you've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "voText": "Great news! You've won a trip to Divi Village Golf & Beach Resort in Aruba!"
+    },
+    {
+      "id": "to_izla_hotel_in_isla_mujeres",
+      "wording": "Thrive Travel Trip to the IZLA Hotel in Isla Mujeres",
+      "value_usd": 10500,
+      "congratsText": "Good work — you've won a trip to Izla Hotel in Isla Mujeres!",
+      "voText": "Congratulations! You've won a trip to Izla Hotel in Isla Mujeres!"
+    },
+    {
+      "id": "to_rumours_luxury_villas_spa",
+      "wording": "Thrive Travel Trip to the Rumours Luxury Villas & Spa",
+      "value_usd": 10740,
+      "congratsText": "You've won a trip to Rumours Luxury Villas & Spa!",
+      "voText": "Congrats! You've won a trip to Rumours Luxury Villas & Spa!"
+    },
+    {
+      "id": "to_sunset_at_the_palms_in_jamaica",
+      "wording": "Thrive Travel Trip to the Sunset At The Palms in JAMAICA",
+      "value_usd": 10704,
+      "congratsText": "Congratulations, you've won a trip to Sunset At The Palms in Jamaica!",
+      "voText": "Good work! You've won a trip to Sunset At The Palms in Jamaica!"
+    },
+    {
+      "id": "to_ylang_ylang_beach_resort_in_costa_rica_includes_a_full_day_fishing_adventure",
+      "wording": "Thrive Travel Trip to the Ylang Ylang Beach Resort in COSTA RICA (includes a full-day fishing adventure",
+      "value_usd": 7749,
+      "congratsText": "Congrats, you've won a trip to Ylang Ylang Beach Resort in Costa Rica (includes a full-day fishing adventure!",
+      "voText": "You've won! A trip to Ylang Ylang Beach Resort in Costa Rica (includes a full-day fishing adventure!"
+    },
+    {
+      "id": "to_a_bright_and_breezy_place_called_the_curacao_marriott_beach_resort",
+      "wording": "Trip to a BRIGHT AND BREEZY place called the CURAÇAO Marriott Beach Resort",
+      "value_usd": 8500,
+      "congratsText": "Good work — you've won a trip to a bright and breezy place called the Curaçao Marriott Beach Resort!",
+      "voText": "Great news! You've won a trip to a bright and breezy place called the Curaçao Marriott Beach Resort!"
+    },
+    {
+      "id": "to_a_resort",
+      "wording": "Trip to a resort",
+      "value_usd": 5894,
+      "congratsText": "You've won a trip to a resort!",
+      "voText": "Congratulations! You've won a trip to a resort!"
+    },
+    {
+      "id": "to_acapulco",
+      "wording": "Trip to Acapulco",
+      "value_usd": 4120,
+      "congratsText": "Congratulations, you've won a trip to Acapulco!",
+      "voText": "Congrats! You've won a trip to Acapulco!"
+    },
+    {
+      "id": "to_adventure_lodge_in_belize",
+      "wording": "Trip to Adventure Lodge in BELIZE",
+      "value_usd": 5300,
+      "congratsText": "Congrats, you've won a trip to Adventure Lodge in Belize!",
+      "voText": "Good work! You've won a trip to Adventure Lodge in Belize!"
+    },
+    {
+      "id": "to_alma_resort_cam_ranh",
+      "wording": "Trip to Alma Resort Cam Ranh",
+      "value_usd": 7466,
+      "congratsText": "Good work — you've won a trip to Alma Resort Cam Ranh!",
+      "voText": "You've won! A trip to Alma Resort Cam Ranh!"
+    },
+    {
+      "id": "to_almond_casuarina_beach_resort_in_barbados",
+      "wording": "Trip to Almond Casuarina Beach Resort in BARBADOS",
+      "value_usd": 6900,
+      "congratsText": "You've won a trip to Almond Casuarina Beach Resort in Barbados!",
+      "voText": "Great news! You've won a trip to Almond Casuarina Beach Resort in Barbados!"
+    },
+    {
+      "id": "to_amsterdam_manor_beach_resort_aruba",
+      "wording": "Trip to Amsterdam Manor Beach Resort ARUBA",
+      "value_usd": 9376,
+      "congratsText": "Congratulations, you've won a trip to Amsterdam Manor Beach Resort Aruba!",
+      "voText": "Congratulations! You've won a trip to Amsterdam Manor Beach Resort Aruba!"
+    },
+    {
+      "id": "to_amsterdam_manor_beach_resort_in_aruba",
+      "wording": "Trip to Amsterdam Manor Beach Resort in ARUBA",
+      "value_usd": 6240,
+      "congratsText": "Congrats, you've won a trip to Amsterdam Manor Beach Resort in Aruba!",
+      "voText": "Congrats! You've won a trip to Amsterdam Manor Beach Resort in Aruba!"
+    },
+    {
+      "id": "to_astarte_suites_in_greece",
+      "wording": "Trip to Astarte Suites in GREECE",
+      "value_usd": 11198,
+      "congratsText": "Good work — you've won a trip to Astarte Suites in Greece!",
+      "voText": "Good work! You've won a trip to Astarte Suites in Greece!"
+    },
+    {
+      "id": "to_balsams_grand_resort_hotel_in_new_hampshire",
+      "wording": "Trip to Balsams Grand Resort Hotel in New Hampshire",
+      "value_usd": 5648,
+      "congratsText": "You've won a trip to Balsams Grand Resort Hotel in New Hampshire!",
+      "voText": "You've won! A trip to Balsams Grand Resort Hotel in New Hampshire!"
+    },
+    {
+      "id": "to_beacon_hotel_in_miami",
+      "wording": "Trip to Beacon Hotel in MIAMI",
+      "value_usd": 5000,
+      "congratsText": "Congratulations, you've won a trip to Beacon Hotel in Miami!",
+      "voText": "Great news! You've won a trip to Beacon Hotel in Miami!"
+    },
+    {
+      "id": "to_borgo_il_poggio_estate_farm_in_italy",
+      "wording": "Trip to Borgo Il Poggio Estate & Farm in ITALY",
+      "value_usd": 7295,
+      "congratsText": "Congrats, you've won a trip to Borgo Il Poggio Estate & Farm in Italy!",
+      "voText": "Congratulations! You've won a trip to Borgo Il Poggio Estate & Farm in Italy!"
+    },
+    {
+      "id": "to_bougainvillea_barbados",
+      "wording": "Trip to Bougainvillea BARBADOS",
+      "value_usd": 7590,
+      "congratsText": "Good work — you've won a trip to Bougainvillea Barbados!",
+      "voText": "Congrats! You've won a trip to Bougainvillea Barbados!"
+    },
+    {
+      "id": "to_cambridge_beach_resort_in_bermuda",
+      "wording": "Trip to Cambridge Beach Resort in BERMUDA",
+      "value_usd": 7690,
+      "congratsText": "You've won a trip to Cambridge Beach Resort in Bermuda!",
+      "voText": "Good work! You've won a trip to Cambridge Beach Resort in Bermuda!"
+    },
+    {
+      "id": "to_canadian_princess_lodge_marina_in_canada",
+      "wording": "Trip to Canadian Princess Lodge & Marina in CANADA",
+      "value_usd": 7400,
+      "congratsText": "Congratulations, you've won a trip to Canadian Princess Lodge & Marina in Canada!",
+      "voText": "You've won! A trip to Canadian Princess Lodge & Marina in Canada!"
+    },
+    {
+      "id": "to_casa_brancas_boutique_hotel_spa_in_brazil_2",
+      "wording": "Trip to Casa Brancas Boutique Hotel & Spa in BRAZIL",
+      "value_usd": 13000,
+      "congratsText": "Congrats, you've won a trip to Casa Brancas Boutique Hotel & Spa in Brazil!",
+      "voText": "Great news! You've won a trip to Casa Brancas Boutique Hotel & Spa in Brazil!"
+    },
+    {
+      "id": "to_center_hotels_by_icelandia",
+      "wording": "Trip to Center Hotels by Icelandia",
+      "value_usd": 8500,
+      "congratsText": "Good work — you've won a trip to Center Hotels by Icelandia!",
+      "voText": "Congratulations! You've won a trip to Center Hotels by Icelandia!"
+    },
+    {
+      "id": "to_chile_from_earth_river_expeditions",
+      "wording": "Trip to Chile from Earth River Expeditions",
+      "value_usd": 9400,
+      "congratsText": "You've won a trip to Chile from Earth River Expeditions!",
+      "voText": "Congrats! You've won a trip to Chile from Earth River Expeditions!"
+    },
+    {
+      "id": "to_club_barbados_resort_spa",
+      "wording": "Trip to Club BARBADOS Resort & Spa",
+      "value_usd": 9680,
+      "congratsText": "Congratulations, you've won a trip to Club Barbados Resort & Spa!",
+      "voText": "Good work! You've won a trip to Club Barbados Resort & Spa!"
+    },
+    {
+      "id": "to_clydesdale_outpost_in_montana",
+      "wording": "Trip to Clydesdale Outpost in MONTANA",
+      "value_usd": 8006,
+      "congratsText": "Congrats, you've won a trip to Clydesdale Outpost in Montana!",
+      "voText": "You've won! A trip to Clydesdale Outpost in Montana!"
+    },
+    {
+      "id": "to_compass_hotel_by_margaritaville_in_anna_maria_sound_on_the_southwest_florida_",
+      "wording": "Trip to Compass Hotel by Margaritaville in Anna Maria Sound on the SOUTHWEST FLORIDA COAST",
+      "value_usd": 9130,
+      "congratsText": "Good work — you've won a trip to Compass Hotel by Margaritaville in Anna Maria Sound on the Southwest Florida coast!",
+      "voText": "Great news! You've won a trip to Compass Hotel by Margaritaville in Anna Maria Sound on the Southwest Florida coast!"
+    },
+    {
+      "id": "to_conrad_new_york_downtown",
+      "wording": "Trip to Conrad NEW YORK Downtown",
+      "value_usd": 7000,
+      "congratsText": "You've won a trip to Conrad New York Downtown!",
+      "voText": "Congratulations! You've won a trip to Conrad New York Downtown!"
+    },
+    {
+      "id": "to_costa_rica",
+      "wording": "Trip to COSTA RICA",
+      "value_usd": 5000,
+      "congratsText": "Congratulations, you've won a trip to Costa Rica!",
+      "voText": "Congrats! You've won a trip to Costa Rica!"
+    },
+    {
+      "id": "to_cova_hotel_in_san_francisco_2",
+      "wording": "Trip to Cova Hotel in San Francisco",
+      "value_usd": 5670,
+      "congratsText": "Congrats, you've won a trip to Cova Hotel in San Francisco!",
+      "voText": "Good work! You've won a trip to Cova Hotel in San Francisco!"
+    },
+    {
+      "id": "to_crocodile_bay_resort_in_costa_rica",
+      "wording": "Trip to Crocodile Bay Resort in COSTA RICA",
+      "value_usd": 9270,
+      "congratsText": "Good work — you've won a trip to Crocodile Bay Resort in Costa Rica!",
+      "voText": "You've won! A trip to Crocodile Bay Resort in Costa Rica!"
+    },
+    {
+      "id": "to_divi_aruba_phoenix_beach_resort",
+      "wording": "Trip to Divi ARUBA Phoenix Bach Resort",
+      "value_usd": 6515,
+      "congratsText": "You've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "voText": "Great news! You've won a trip to Divi Aruba Phoenix Beach Resort!"
+    },
+    {
+      "id": "to_divi_aruba_phoenix_beach_resort_2",
+      "wording": "Trip to Divi ARUBA Phoenix Beach Resort",
+      "value_usd": 6000,
+      "congratsText": "Congratulations, you've won a trip to Divi Aruba Phoenix Beach Resort!",
+      "voText": "Congratulations! You've won a trip to Divi Aruba Phoenix Beach Resort!"
+    },
+    {
+      "id": "to_divi_dutch_village_beach_resort_in_aruba",
+      "wording": "Trip to Divi Dutch Village Beach Resort in ARUBA",
+      "value_usd": 5100,
+      "congratsText": "Congrats, you've won a trip to Divi Dutch Village Beach Resort in Aruba!",
+      "voText": "Congrats! You've won a trip to Divi Dutch Village Beach Resort in Aruba!"
+    },
+    {
+      "id": "to_divi_village_golf_beach_resort_in_aruba_2",
+      "wording": "Trip to Divi Village Golf & Beach Resort in ARUBA",
+      "value_usd": 8657,
+      "congratsText": "Good work — you've won a trip to Divi Village Golf & Beach Resort in Aruba!",
+      "voText": "Good work! You've won a trip to Divi Village Golf & Beach Resort in Aruba!"
+    },
+    {
+      "id": "to_elbow_beach_hotel_in_bermuda",
+      "wording": "Trip to Elbow Beach Hotel in BERMUDA",
+      "value_usd": 5210,
+      "congratsText": "You've won a trip to Elbow Beach Hotel in Bermuda!",
+      "voText": "You've won! A trip to Elbow Beach Hotel in Bermuda!"
+    },
+    {
+      "id": "to_fairmont_acapulco_princess",
+      "wording": "Trip to Fairmont ACAPULCO Princess",
+      "value_usd": 5800,
+      "congratsText": "Congratulations, you've won a trip to Fairmont Acapulco Princess!",
+      "voText": "Great news! You've won a trip to Fairmont Acapulco Princess!"
+    },
+    {
+      "id": "to_falls_creek",
+      "wording": "Trip to Falls Creek",
+      "value_usd": 5456,
+      "congratsText": "Congrats, you've won a trip to Falls Creek!",
+      "voText": "Congratulations! You've won a trip to Falls Creek!"
+    },
+    {
+      "id": "to_festival_of_arts_pageant_of_the_masters_holiday_with_a_stay_at_the_ritz_carlt",
+      "wording": "Trip to Festival of Arts Pageant of the Masters holiday with a stay at the Ritz-Carlton Laguna Niguel",
+      "value_usd": 5080,
+      "congratsText": "Good work — you've won a trip to Festival of Arts Pageant of the Masters holiday with a stay at the Ritz-Carlton Laguna Niguel!",
+      "voText": "Congrats! You've won a trip to Festival of Arts Pageant of the Masters holiday with a stay at the Ritz-Carlton Laguna Niguel!"
+    },
+    {
+      "id": "to_florida_keys_key_west_at_the_casa_marina_key_west",
+      "wording": "Trip to FLORIDA KEYS & KEY WEST at the Casa Marina Key West",
+      "value_usd": 10470,
+      "congratsText": "You've won a trip to Florida Keys & Key West at the Casa Marina Key West!",
+      "voText": "Good work! You've won a trip to Florida Keys & Key West at the Casa Marina Key West!"
+    },
+    {
+      "id": "to_galley_bay_resort_in_antigua",
+      "wording": "Trip to Galley Bay Resort in ANTIGUA",
+      "value_usd": 8490,
+      "congratsText": "Congratulations, you've won a trip to Galley Bay Resort in Antigua!",
+      "voText": "You've won! A trip to Galley Bay Resort in Antigua!"
+    },
+    {
+      "id": "to_gamboa_rainforest_reserve",
+      "wording": "Trip to Gamboa Rainforest Reserve",
+      "value_usd": 7500,
+      "congratsText": "Congrats, you've won a trip to Gamboa Rainforest Reserve!",
+      "voText": "Great news! You've won a trip to Gamboa Rainforest Reserve!"
+    },
+    {
+      "id": "to_hard_rock_hotel_palm_springs",
+      "wording": "Trip to Hard Rock Hotel PALM SPRINGS",
+      "value_usd": 7000,
+      "congratsText": "Good work — you've won a trip to Hard Rock Hotel Palm Springs!",
+      "voText": "Congratulations! You've won a trip to Hard Rock Hotel Palm Springs!"
+    },
+    {
+      "id": "to_the_pueblo_bonito_rose_resort_spa_in_cabo",
+      "wording": "Trip to he the Pueblo Bonito Rose Resort & Spa in CABO",
+      "value_usd": 5957,
+      "congratsText": "You've won a trip to the Pueblo Bonito Rose Resort & Spa in Cabo!",
+      "voText": "Congrats! You've won a trip to the Pueblo Bonito Rose Resort & Spa in Cabo!"
+    },
+    {
+      "id": "to_hilton_and_flamingo_casino_in_new_orleans",
+      "wording": "Trip to Hilton and Flamingo Casino in NEW ORLEANS",
+      "value_usd": 3796,
+      "congratsText": "Congratulations, you've won a trip to Hilton and Flamingo Casino in New Orleans!",
+      "voText": "Good work! You've won a trip to Hilton and Flamingo Casino in New Orleans!"
+    },
+    {
+      "id": "to_hilton_aruba_caribbean_resort_casino",
+      "wording": "Trip to Hilton ARUBA Caribbean Resort & Casino",
+      "value_usd": 12482,
+      "congratsText": "Congrats, you've won a trip to Hilton Aruba Caribbean Resort & Casino!",
+      "voText": "You've won! A trip to Hilton Aruba Caribbean Resort & Casino!"
+    },
+    {
+      "id": "to_hilton_waikoloa_village",
+      "wording": "Trip to Hilton Waikoloa Village",
+      "value_usd": 7634,
+      "congratsText": "Good work — you've won a trip to Hilton Waikoloa Village!",
+      "voText": "Great news! You've won a trip to Hilton Waikoloa Village!"
+    },
+    {
+      "id": "to_hilton_waikoloa_village_in_hawaii_2",
+      "wording": "Trip to Hilton Waikoloa Village in HAWAII",
+      "value_usd": 10000,
+      "congratsText": "You've won a trip to Hilton Waikoloa Village in Hawaii!",
+      "voText": "Congratulations! You've won a trip to Hilton Waikoloa Village in Hawaii!"
+    },
+    {
+      "id": "to_hilton_waikoloa_village_on_the_big_island_of_hawaii",
+      "wording": "Trip to Hilton Waikoloa Village on the Big Island of Hawaii",
+      "value_usd": 5000,
+      "congratsText": "Congratulations, you've won a trip to Hilton Waikoloa Village on the Big Island of Hawaii!",
+      "voText": "Congrats! You've won a trip to Hilton Waikoloa Village on the Big Island of Hawaii!"
+    },
+    {
+      "id": "to_hotel_azura_in_costa_rica",
+      "wording": "Trip to Hotel AZURA in COSTA RICA",
+      "value_usd": 8028,
+      "congratsText": "Congrats, you've won a trip to Hotel Azura in Costa Rica!",
+      "voText": "Good work! You've won a trip to Hotel Azura in Costa Rica!"
+    },
+    {
+      "id": "to_hotel_casa_1800_granada_in_spain",
+      "wording": "Trip to Hotel Casa 1800 Granada in SPAIN",
+      "value_usd": 8298,
+      "congratsText": "Good work — you've won a trip to Hotel Casa 1800 Granada in Spain!",
+      "voText": "You've won! A trip to Hotel Casa 1800 Granada in Spain!"
+    },
+    {
+      "id": "to_hotel_chinzanso_tokyo",
+      "wording": "Trip to Hotel Chinzanso TOKYO",
+      "value_usd": 11899,
+      "congratsText": "You've won a trip to Hotel Chinzanso Tokyo!",
+      "voText": "Great news! You've won a trip to Hotel Chinzanso Tokyo!"
+    },
+    {
+      "id": "to_hotel_kura_hulanda_in_curacao",
+      "wording": "Trip to Hotel Kura Hulanda in CURAÇAO",
+      "value_usd": 7644,
+      "congratsText": "Congratulations, you've won a trip to Hotel Kura Hulanda in Curaçao!",
+      "voText": "Congratulations! You've won a trip to Hotel Kura Hulanda in Curaçao!"
+    },
+    {
+      "id": "to_hotel_palace_luzern_in_switzerland",
+      "wording": "Trip to Hotel Palace Luzern in Switzerland",
+      "value_usd": 8480,
+      "congratsText": "Congrats, you've won a trip to Hotel Palace Luzern in Switzerland!",
+      "voText": "Congrats! You've won a trip to Hotel Palace Luzern in Switzerland!"
+    },
+    {
+      "id": "to_house_of_blues_hotel_in_chicago",
+      "wording": "Trip to House of Blues Hotel in Chicago",
+      "value_usd": 3837,
+      "congratsText": "Good work — you've won a trip to House of Blues Hotel in Chicago!",
+      "voText": "Good work! You've won a trip to House of Blues Hotel in Chicago!"
+    },
+    {
+      "id": "to_hyatt_regency_grand_reserve_puerto_rico",
+      "wording": "Trip to Hyatt Regency Grand Reserve PUERTO RICO",
+      "value_usd": 10500,
+      "congratsText": "You've won a trip to Hyatt Regency Grand Reserve Puerto Rico!",
+      "voText": "You've won! A trip to Hyatt Regency Grand Reserve Puerto Rico!"
+    },
+    {
+      "id": "to_hyatt_regency_maui_resort_spa",
+      "wording": "Trip to Hyatt Regency MAUI Resort & Spa",
+      "value_usd": 7700,
+      "congratsText": "Congratulations, you've won a trip to Hyatt Regency Maui Resort & Spa!",
+      "voText": "Great news! You've won a trip to Hyatt Regency Maui Resort & Spa!"
+    },
+    {
+      "id": "to_iceland_3",
+      "wording": "Trip to Iceland",
+      "value_usd": 10898,
+      "congratsText": "Congrats, you've won a trip to Iceland!",
+      "voText": "Congratulations! You've won a trip to Iceland!"
+    },
+    {
+      "id": "to_iheartradio_music_festival_presented_by_capital_one_in_las_vegas",
+      "wording": "Trip to iHeartRadio Music Festival presented by Capital One in LAS VEGAS",
+      "value_usd": 8800,
+      "congratsText": "Good work — you've won a trip to iHeartRadio Music Festival presented by Capital One in Las Vegas!",
+      "voText": "Congrats! You've won a trip to iHeartRadio Music Festival presented by Capital One in Las Vegas!"
+    },
+    {
+      "id": "to_ireland",
+      "wording": "Trip to IRELAND",
+      "value_usd": 7500,
+      "congratsText": "You've won a trip to Ireland!",
+      "voText": "Good work! You've won a trip to Ireland!"
+    },
+    {
+      "id": "to_islands_of_antigua_at_the_verandah_resort_spa",
+      "wording": "Trip to ISLANDS of ANTIGUA at The Verandah Resort & Spa",
+      "value_usd": 7720,
+      "congratsText": "Congratulations, you've won a trip to Islands of Antigua at The Verandah Resort & Spa!",
+      "voText": "You've won! A trip to Islands of Antigua at The Verandah Resort & Spa!"
+    },
+    {
+      "id": "to_jekyll_island_club_resort_in_georgia",
+      "wording": "Trip to Jekyll Island club resort in GEORGIA",
+      "value_usd": 8000,
+      "congratsText": "Congrats, you've won a trip to Jekyll Island club resort in Georgia!",
+      "voText": "Great news! You've won a trip to Jekyll Island club resort in Georgia!"
+    },
+    {
+      "id": "to_kapalua_villas_in_maui",
+      "wording": "Trip to Kapalua Villas in MAUI",
+      "value_usd": 8270,
+      "congratsText": "Good work — you've won a trip to Kapalua Villas in Maui!",
+      "voText": "Congratulations! You've won a trip to Kapalua Villas in Maui!"
+    },
+    {
+      "id": "to_kimberly_hotel_in_nyc_2",
+      "wording": "Trip to Kimberly Hotel in NYC",
+      "value_usd": 7980,
+      "congratsText": "You've won a trip to Kimberly Hotel in NYC!",
+      "voText": "Congrats! You've won a trip to Kimberly Hotel in NYC!"
+    },
+    {
+      "id": "to_kissimmee",
+      "wording": "Trip to Kissimmee",
+      "value_usd": 10220,
+      "congratsText": "Congratulations, you've won a trip to Kissimmee!",
+      "voText": "Good work! You've won a trip to Kissimmee!"
+    },
+    {
+      "id": "to_la_paz_waterfall_gardens_in_costa_rica_2",
+      "wording": "Trip to Lapaz Waterfall Gardens in COSTA RICA",
+      "value_usd": 6100,
+      "congratsText": "Congrats, you've won a trip to La Paz Waterfall Gardens in Costa Rica!",
+      "voText": "You've won! A trip to La Paz Waterfall Gardens in Costa Rica!"
+    },
+    {
+      "id": "to_le_parc_hotel_in_france",
+      "wording": "Trip to Le Parc Hotel in France",
+      "value_usd": 6841,
+      "congratsText": "Good work — you've won a trip to Le Parc Hotel in France!",
+      "voText": "Great news! You've won a trip to Le Parc Hotel in France!"
+    },
+    {
+      "id": "to_macarthur_place_hotel_in_sonoma_valley",
+      "wording": "Trip to MacArthur Place Hotel in SONOMA VALLEY",
+      "value_usd": 5500,
+      "congratsText": "You've won a trip to MacArthur Place Hotel in Sonoma Valley!",
+      "voText": "Congratulations! You've won a trip to MacArthur Place Hotel in Sonoma Valley!"
+    },
+    {
+      "id": "to_margaritaville_hotel_nashville",
+      "wording": "Trip to Margaritaville Hotel NASHVILLE",
+      "value_usd": 10050,
+      "congratsText": "Congratulations, you've won a trip to Margaritaville Hotel Nashville!",
+      "voText": "Congrats! You've won a trip to Margaritaville Hotel Nashville!"
+    },
+    {
+      "id": "to_margaritaville_resort_lake_tahoe",
+      "wording": "Trip to Margaritaville Resort LAKE TAHOE",
+      "value_usd": 7839,
+      "congratsText": "Congrats, you've won a trip to Margaritaville Resort Lake Tahoe!",
+      "voText": "Good work! You've won a trip to Margaritaville Resort Lake Tahoe!"
+    },
+    {
+      "id": "to_marival_grand_club_suites_in_nuevo_vallarta",
+      "wording": "Trip to Marival Grand & Club Suites in NUEVO VALLARTA",
+      "value_usd": 6200,
+      "congratsText": "Good work — you've won a trip to Marival Grand & Club Suites in Nuevo Vallarta!",
+      "voText": "You've won! A trip to Marival Grand & Club Suites in Nuevo Vallarta!"
+    },
+    {
+      "id": "to_marriott_kauai_resort_beach_club",
+      "wording": "Trip to Marriott KAUAI Resort & Beach Club",
+      "value_usd": 5530,
+      "congratsText": "You've won a trip to Marriott Kauai Resort & Beach Club!",
+      "voText": "Great news! You've won a trip to Marriott Kauai Resort & Beach Club!"
+    },
+    {
+      "id": "to_marriott_tampa_water_street",
+      "wording": "Trip to Marriott Tampa Water Street",
+      "value_usd": 10080,
+      "congratsText": "Congratulations, you've won a trip to Marriott Tampa Water Street!",
+      "voText": "Congratulations! You've won a trip to Marriott Tampa Water Street!"
+    },
+    {
+      "id": "to_marriott_waikiki_beach_resort_spa",
+      "wording": "Trip to Marriott Waikiki Beach Resort & Spa",
+      "value_usd": 5420,
+      "congratsText": "Congrats, you've won a trip to Marriott Waikiki Beach Resort & Spa!",
+      "voText": "Congrats! You've won a trip to Marriott Waikiki Beach Resort & Spa!"
+    },
+    {
+      "id": "to_marriott_waikoloa_beach_resort_spa_in_hawaii",
+      "wording": "Trip to Marriott Waikoloa Beach Resort & Spa in HAWAII",
+      "value_usd": 5808,
+      "congratsText": "Good work — you've won a trip to Marriott Waikoloa Beach Resort & Spa in Hawaii!",
+      "voText": "Good work! You've won a trip to Marriott Waikoloa Beach Resort & Spa in Hawaii!"
+    },
+    {
+      "id": "to_melia_braco_village_in_jamaica",
+      "wording": "Trip to Melia Braco Village in JAMAICA",
+      "value_usd": 6300,
+      "congratsText": "You've won a trip to Melia Braco Village in Jamaica!",
+      "voText": "You've won! A trip to Melia Braco Village in Jamaica!"
+    },
+    {
+      "id": "to_merv_griffins_the_beverly_hilton",
+      "wording": "Trip to Merv Griffin’s The Beverly Hilton",
+      "value_usd": 5600,
+      "congratsText": "Congratulations, you've won a trip to Merv Griffin’s The Beverly Hilton!",
+      "voText": "Great news! You've won a trip to Merv Griffin’s The Beverly Hilton!"
+    },
+    {
+      "id": "to_mesm_tokyo_autograph_collection",
+      "wording": "Trip to mesm TOKYO Autograph Collection",
+      "value_usd": 13372,
+      "congratsText": "Congrats, you've won a trip to mesm Tokyo Autograph Collection!",
+      "voText": "Congratulations! You've won a trip to mesm Tokyo Autograph Collection!"
+    },
+    {
+      "id": "to_millennium_alaska",
+      "wording": "Trip to Millennium ALASKA",
+      "value_usd": 6200,
+      "congratsText": "Good work — you've won a trip to Millennium Alaska!",
+      "voText": "Congrats! You've won a trip to Millennium Alaska!"
+    },
+    {
+      "id": "to_minnesota",
+      "wording": "Trip to Minnesota",
+      "value_usd": 6327,
+      "congratsText": "You've won a trip to Minnesota!",
+      "voText": "Good work! You've won a trip to Minnesota!"
+    },
+    {
+      "id": "to_mount_cinnamon_resort_in_grenada",
+      "wording": "Trip to Mount Cinnamon Resort in GRENADA",
+      "value_usd": 6540,
+      "congratsText": "Congratulations, you've won a trip to Mount Cinnamon Resort in Grenada!",
+      "voText": "You've won! A trip to Mount Cinnamon Resort in Grenada!"
+    },
+    {
+      "id": "to_new_york_at_the_holiday_valley_resort",
+      "wording": "Trip to NEW YORK at the Holiday Valley Resort",
+      "value_usd": 5736,
+      "congratsText": "Congrats, you've won a trip to New York at the Holiday Valley Resort!",
+      "voText": "Great news! You've won a trip to New York at the Holiday Valley Resort!"
+    },
+    {
+      "id": "to_nobu_hotel_caesars_atlantic_city",
+      "wording": "Trip to Nobu Hotel Caesars ATLANTIC CITY",
+      "value_usd": 8000,
+      "congratsText": "Good work — you've won a trip to Nobu Hotel Caesars Atlantic City!",
+      "voText": "Congratulations! You've won a trip to Nobu Hotel Caesars Atlantic City!"
+    },
+    {
+      "id": "to_outrigger_kauai_beach_resort_spa",
+      "wording": "Trip to Outrigger KAUAI Beach Resort & Spa",
+      "value_usd": 8500,
+      "congratsText": "You've won a trip to Outrigger Kauai Beach Resort & Spa!",
+      "voText": "Congrats! You've won a trip to Outrigger Kauai Beach Resort & Spa!"
+    },
+    {
+      "id": "to_outrigger_kaanapali_beach_resort_in_hawaii",
+      "wording": "Trip to Outrigger Ka’anapali Beach Resort in HAWAII",
+      "value_usd": 8500,
+      "congratsText": "Congratulations, you've won a trip to Outrigger Ka’anapali Beach Resort in Hawaii!",
+      "voText": "Good work! You've won a trip to Outrigger Ka’anapali Beach Resort in Hawaii!"
+    },
+    {
+      "id": "to_outrigger_reef_on_the_beach",
+      "wording": "Trip to Outrigger Reef on the Beach",
+      "value_usd": 7233,
+      "congratsText": "Congrats, you've won a trip to Outrigger Reef on the Beach!",
+      "voText": "You've won! A trip to Outrigger Reef on the Beach!"
+    },
+    {
+      "id": "to_outrigger_waikiki_in_hawaii",
+      "wording": "Trip to Outrigger Waikiki in HAWAII",
+      "value_usd": 12200,
+      "congratsText": "Good work — you've won a trip to Outrigger Waikiki in Hawaii!",
+      "voText": "Great news! You've won a trip to Outrigger Waikiki in Hawaii!"
+    },
+    {
+      "id": "to_outrigger_waikiki_on_the_beach_in_hawaii",
+      "wording": "Trip to Outrigger Waikiki on the Beach in HAWAII",
+      "value_usd": 6345,
+      "congratsText": "You've won a trip to Outrigger Waikiki on the Beach in Hawaii!",
+      "voText": "Congratulations! You've won a trip to Outrigger Waikiki on the Beach in Hawaii!"
+    },
+    {
+      "id": "to_peace_lodge_in_costa_rica",
+      "wording": "Trip to Peace Lodge in COSTA RICA",
+      "value_usd": 8400,
+      "congratsText": "Congratulations, you've won a trip to Peace Lodge in Costa Rica!",
+      "voText": "Congrats! You've won a trip to Peace Lodge in Costa Rica!"
+    },
+    {
+      "id": "to_peace_lodge_la_paz_waterfall_gardens_in_costa_rica",
+      "wording": "Trip to Peace Lodge/Lapaz Waterfall Gardens in COSTA RICA",
+      "value_usd": 10000,
+      "congratsText": "Congrats, you've won a trip to Peace Lodge/La Paz Waterfall Gardens in Costa Rica!",
+      "voText": "Good work! You've won a trip to Peace Lodge/La Paz Waterfall Gardens in Costa Rica!"
+    },
+    {
+      "id": "to_pensacola",
+      "wording": "Trip to Pensacola",
+      "value_usd": 10495,
+      "congratsText": "Good work — you've won a trip to Pensacola!",
+      "voText": "You've won! A trip to Pensacola!"
+    },
+    {
+      "id": "to_presidente_intercontinental_in_puerto_vallarta",
+      "wording": "Trip to Presidente Intercontinental in PUERTO VALLARTA",
+      "value_usd": 5600,
+      "congratsText": "You've won a trip to Presidente Intercontinental in Puerto Vallarta!",
+      "voText": "Great news! You've won a trip to Presidente Intercontinental in Puerto Vallarta!"
+    },
+    {
+      "id": "to_punta_cana_in_the_dominican_republic",
+      "wording": "Trip to Punta Cana in the DOMINICAN REPUBLIC",
+      "value_usd": 6300,
+      "congratsText": "Congratulations, you've won a trip to Punta Cana in the Dominican Republic!",
+      "voText": "Congratulations! You've won a trip to Punta Cana in the Dominican Republic!"
+    },
+    {
+      "id": "to_queensland_and_a_stay_at_the_matson_hotel_resort",
+      "wording": "Trip to Queensland and a stay at the Matson Hotel & Resort",
+      "value_usd": 7575,
+      "congratsText": "Congrats, you've won a trip to Queensland and a stay at the Matson Hotel & Resort!",
+      "voText": "Congrats! You've won a trip to Queensland and a stay at the Matson Hotel & Resort!"
+    },
+    {
+      "id": "to_romania",
+      "wording": "Trip to ROMANIA",
+      "value_usd": 10000,
+      "congratsText": "Good work — you've won a trip to Romania!",
+      "voText": "Good work! You've won a trip to Romania!"
+    },
+    {
+      "id": "to_rose_hotel_in_ireland",
+      "wording": "Trip to Rose Hotel in IRELAND",
+      "value_usd": 8256,
+      "congratsText": "You've won a trip to Rose Hotel in Ireland!",
+      "voText": "You've won! A trip to Rose Hotel in Ireland!"
+    },
+    {
+      "id": "to_royal_blue_hotels_resort_dubrovnik_in_croatia",
+      "wording": "Trip to Royal Blue Hotels & Resort Dubrovnik in CROATIA",
+      "value_usd": 7905,
+      "congratsText": "Congratulations, you've won a trip to Royal Blue Hotels & Resort Dubrovnik in Croatia!",
+      "voText": "Great news! You've won a trip to Royal Blue Hotels & Resort Dubrovnik in Croatia!"
+    },
+    {
+      "id": "to_rumours_luxury_villas_spa_2",
+      "wording": "Trip to Rumours Luxury Villas & Spa",
+      "value_usd": 10740,
+      "congratsText": "Congrats, you've won a trip to Rumours Luxury Villas & Spa!",
+      "voText": "Congratulations! You've won a trip to Rumours Luxury Villas & Spa!"
+    },
+    {
+      "id": "to_salterra_luxury_collection_resort_spa_in_turks_and_caicos",
+      "wording": "Trip to Salterra Luxury Collection Resort & Spa in TURKS & CAICOS",
+      "value_usd": 10670,
+      "congratsText": "Good work — you've won a trip to Salterra Luxury Collection Resort & Spa in Turks and Caicos!",
+      "voText": "Congrats! You've won a trip to Salterra Luxury Collection Resort & Spa in Turks and Caicos!"
+    },
+    {
+      "id": "to_san_diego",
+      "wording": "Trip to San Diego",
+      "value_usd": 3500,
+      "congratsText": "You've won a trip to San Diego!",
+      "voText": "Good work! You've won a trip to San Diego!"
+    },
+    {
+      "id": "to_sandals_royal_curacao_2",
+      "wording": "Trip to Sandals Royal CURAÇAO",
+      "value_usd": 11540,
+      "congratsText": "Congratulations, you've won a trip to Sandals Royal Curaçao!",
+      "voText": "You've won! A trip to Sandals Royal Curaçao!"
+    },
+    {
+      "id": "to_sands_at_grace_bay_in_turks_and_caicos",
+      "wording": "Trip to Sands At Grace Bay in TURKS & CAICOS",
+      "value_usd": 12338,
+      "congratsText": "Congrats, you've won a trip to Sands At Grace Bay in Turks and Caicos!",
+      "voText": "Great news! You've won a trip to Sands At Grace Bay in Turks and Caicos!"
+    },
+    {
+      "id": "to_scrub_island_resort",
+      "wording": "Trip to Scrub Island Resort",
+      "value_usd": 11500,
+      "congratsText": "Good work — you've won a trip to Scrub Island Resort!",
+      "voText": "Congratulations! You've won a trip to Scrub Island Resort!"
+    },
+    {
+      "id": "to_seadust_cancun_family_resort",
+      "wording": "Trip to Seadust CANCUN Family Resort",
+      "value_usd": 8200,
+      "congratsText": "You've won a trip to Seadust Cancun Family Resort!",
+      "voText": "Congrats! You've won a trip to Seadust Cancun Family Resort!"
+    },
+    {
+      "id": "to_sheraton_kauai_resort_in_hawaii",
+      "wording": "Trip to Sheraton Kauai Resort in HAWAII",
+      "value_usd": 5108,
+      "congratsText": "Congratulations, you've won a trip to Sheraton Kauai Resort in Hawaii!",
+      "voText": "Good work! You've won a trip to Sheraton Kauai Resort in Hawaii!"
+    },
+    {
+      "id": "to_silverado_resort_spa_in_napa_valley",
+      "wording": "Trip to Silverado Resort & Spa in NAPA VALLEY",
+      "value_usd": 9250,
+      "congratsText": "Congrats, you've won a trip to Silverado Resort & Spa in Napa Valley!",
+      "voText": "You've won! A trip to Silverado Resort & Spa in Napa Valley!"
+    },
+    {
+      "id": "to_springs_resort_spa_in_costa_rica",
+      "wording": "Trip to Springs Resort & Spa in COSTA RICA",
+      "value_usd": 6800,
+      "congratsText": "Good work — you've won a trip to Springs Resort & Spa in Costa Rica!",
+      "voText": "Great news! You've won a trip to Springs Resort & Spa in Costa Rica!"
+    },
+    {
+      "id": "to_sunseeker_resort_charlotte_harbor_in_florida",
+      "wording": "Trip to Sunseeker Resort Charlotte Harbor in FLORIDA",
+      "value_usd": 10000,
+      "congratsText": "You've won a trip to Sunseeker Resort Charlotte Harbor in Florida!",
+      "voText": "Congratulations! You've won a trip to Sunseeker Resort Charlotte Harbor in Florida!"
+    },
+    {
+      "id": "to_sunset_at_the_palms_in_jamaica_2",
+      "wording": "Trip to Sunset At The Palms in JAMAICA",
+      "value_usd": 10704,
+      "congratsText": "Congratulations, you've won a trip to Sunset At The Palms in Jamaica!",
+      "voText": "Congrats! You've won a trip to Sunset At The Palms in Jamaica!"
+    },
+    {
+      "id": "to_superclubs_breezes_runaway_bay_resort_golf_club_in_jamaica",
+      "wording": "Trip to SuperClubs Breezes Runaway Bay Resort & Golf Club in JAMAICA",
+      "value_usd": 6540,
+      "congratsText": "Congrats, you've won a trip to SuperClubs Breezes Runaway Bay Resort & Golf Club in Jamaica!",
+      "voText": "Good work! You've won a trip to SuperClubs Breezes Runaway Bay Resort & Golf Club in Jamaica!"
+    },
+    {
+      "id": "to_sydney_marriott",
+      "wording": "Trip to Sydney Marriott",
+      "value_usd": 1855,
+      "congratsText": "Good work — you've won a trip to Sydney Marriott!",
+      "voText": "You've won! A trip to Sydney Marriott!"
+    },
+    {
+      "id": "to_tamarijn_aruba",
+      "wording": "Trip to Tamarijn ARUBA",
+      "value_usd": 5800,
+      "congratsText": "You've won a trip to Tamarijn Aruba!",
+      "voText": "Great news! You've won a trip to Tamarijn Aruba!"
+    },
+    {
+      "id": "to_tia_wellness_resort_in_vietnam",
+      "wording": "Trip to TIA Wellness Resort in VIETNAM",
+      "value_usd": 8082,
+      "congratsText": "Congratulations, you've won a trip to Tia Wellness Resort in Vietnam!",
+      "voText": "Congratulations! You've won a trip to Tia Wellness Resort in Vietnam!"
+    },
+    {
+      "id": "to_trs_yucatan_hotel",
+      "wording": "Trip to TRS Yucatan Hotel",
+      "value_usd": 12800,
+      "congratsText": "Congrats, you've won a trip to Trs Yucatan Hotel!",
+      "voText": "Congrats! You've won a trip to Trs Yucatan Hotel!"
+    },
+    {
+      "id": "to_verandah_resort_spa",
+      "wording": "Trip to Verandah Resort & Spa",
+      "value_usd": 7520,
+      "congratsText": "Good work — you've won a trip to Verandah Resort & Spa!",
+      "voText": "Good work! You've won a trip to Verandah Resort & Spa!"
+    },
+    {
+      "id": "to_villa_del_arco_beach_resort_in_cabo_san_lucas",
+      "wording": "Trip to Villa del Arco Beach Resort in CABO SAN LUCAS",
+      "value_usd": 6050,
+      "congratsText": "You've won a trip to Villa del Arco Beach Resort in Cabo San Lucas!",
+      "voText": "You've won! A trip to Villa del Arco Beach Resort in Cabo San Lucas!"
+    },
+    {
+      "id": "to_villa_del_palmar_beach_resort_spa_in_puerto_vallarta",
+      "wording": "Trip to Villa del Palmar Beach Resort & Spa in PUERTO VALLARTA",
+      "value_usd": 5620,
+      "congratsText": "Congratulations, you've won a trip to Villa del Palmar Beach Resort & Spa in Puerto Vallarta!",
+      "voText": "Great news! You've won a trip to Villa del Palmar Beach Resort & Spa in Puerto Vallarta!"
+    },
+    {
+      "id": "to_viva_wyndham_v_samana_in_the_dominican_republic",
+      "wording": "Trip to Viva Wyndham V Samana in the DOMINICAN REPUBLIC",
+      "value_usd": 7560,
+      "congratsText": "Congrats, you've won a trip to Viva Wyndham V Samana in the Dominican Republic!",
+      "voText": "Congratulations! You've won a trip to Viva Wyndham V Samana in the Dominican Republic!"
+    },
+    {
+      "id": "to_waikiki_beach_in_hawaii",
+      "wording": "Trip to Waikiki Beach in Hawaii",
+      "value_usd": 4572,
+      "congratsText": "Good work — you've won a trip to Waikiki Beach in Hawaii!",
+      "voText": "Congrats! You've won a trip to Waikiki Beach in Hawaii!"
+    },
+    {
+      "id": "to_walt_disney_world",
+      "wording": "Trip to Walt Disney World",
+      "value_usd": 9478,
+      "congratsText": "You've won a trip to Walt Disney World!",
+      "voText": "Good work! You've won a trip to Walt Disney World!"
+    },
+    {
+      "id": "to_walt_disney_world_disney_springs",
+      "wording": "Trip to Walt Disney World & Disney Springs",
+      "value_usd": 10442,
+      "congratsText": "Congratulations, you've won a trip to Walt Disney World & Disney Springs!",
+      "voText": "You've won! A trip to Walt Disney World & Disney Springs!"
+    },
+    {
+      "id": "to_west_indies_and_stay_at_holiday_inn_trinidad",
+      "wording": "Trip to West Indies and stay at Holiday Inn Trinidad",
+      "value_usd": 3092,
+      "congratsText": "Congrats, you've won a trip to West Indies and stay at Holiday Inn Trinidad!",
+      "voText": "Great news! You've won a trip to West Indies and stay at Holiday Inn Trinidad!"
+    },
+    {
+      "id": "to_westin_aruba_resort",
+      "wording": "Trip to Westin ARUBA Resort",
+      "value_usd": 5900,
+      "congratsText": "Good work — you've won a trip to Westin Aruba Resort!",
+      "voText": "Congratulations! You've won a trip to Westin Aruba Resort!"
+    },
+    {
+      "id": "to_westin_kaanapali_ocean_resort_villas_in_maui",
+      "wording": "Trip to Westin Ka’anapali Ocean Resort Villas in MAUI",
+      "value_usd": 6034,
+      "congratsText": "You've won a trip to Westin Ka’anapali Ocean Resort Villas in Maui!",
+      "voText": "Congrats! You've won a trip to Westin Ka’anapali Ocean Resort Villas in Maui!"
+    },
+    {
+      "id": "to_whalers_cove_oceanfront_luxury_at_poipu_in_kauai",
+      "wording": "Trip to Whalers Cove Oceanfront Luxury at Poipu in KAUAI",
+      "value_usd": 10719,
+      "congratsText": "Congratulations, you've won a trip to Whalers Cove Oceanfront Luxury at Poipu in Kauai!",
+      "voText": "Good work! You've won a trip to Whalers Cove Oceanfront Luxury at Poipu in Kauai!"
+    },
+    {
+      "id": "to_yacht_club_in_belize",
+      "wording": "Trip to Yacht Club in BELIZE",
+      "value_usd": 6200,
+      "congratsText": "Congrats, you've won a trip to Yacht Club in Belize!",
+      "voText": "You've won! A trip to Yacht Club in Belize!"
+    },
+    {
+      "id": "to_ylang_ylang_beach_resort_in_costa_rica",
+      "wording": "Trip to Ylang Ylang Beach Resort in COSTA RICA",
+      "value_usd": 7749,
+      "congratsText": "Good work — you've won a trip to Ylang Ylang Beach Resort in Costa Rica!",
+      "voText": "Great news! You've won a trip to Ylang Ylang Beach Resort in Costa Rica!"
+    }
+  ]
+}

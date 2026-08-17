@@ -1,0 +1,14 @@
+{
+  "tag_prefix": "[Congratulatory] [Good mood]",
+  "lines": [
+    { "id": "won_round", "text": "Correct, puzzle solved! You've won the round!" },
+    { "id": "got_it", "text": "Correct, puzzle solved! You got it!" },
+    { "id": "great_job", "text": "Correct, puzzle solved! That's it, great job!" },
+    { "id": "you_did_it", "text": "Correct, puzzle solved! You did it!" },
+    { "id": "amazing", "text": "Correct, puzzle solved! That was amazing!" },
+    { "id": "great_work", "text": "Correct, puzzle solved! Great, great work!" },
+    { "id": "nice_solve", "text": "Correct, puzzle solved! That was a nice solve!" },
+    { "id": "there_you_go", "text": "Correct, puzzle solved! There you go!" },
+    { "id": "yes_correct", "text": "Correct, puzzle solved! Yes, that's it!" }
+  ]
+}

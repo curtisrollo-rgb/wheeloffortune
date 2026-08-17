@@ -1,0 +1,545 @@
+{
+  "voice_id": "3XOBzXhnDY98yeWQ3GdM",
+  "model_id": "eleven_v3",
+  "tag_prefix": "[sympathetically]",
+  "generic": [
+    {
+      "id": "none",
+      "text": "Sorry, there are none.",
+      "spoken": "[sympathetically] Sorry, there are none.",
+      "file": "assets/audio/vo/miss/none.mp3"
+    },
+    {
+      "id": "bad_luck",
+      "text": "Bad luck.",
+      "spoken": "[sympathetically] Bad luck.",
+      "file": "assets/audio/vo/miss/bad_luck.mp3"
+    },
+    {
+      "id": "sorry_no",
+      "text": "Sorry, no.",
+      "spoken": "[sympathetically] Sorry, no.",
+      "file": "assets/audio/vo/miss/sorry_no.mp3"
+    },
+    {
+      "id": "not_in_puzzle",
+      "text": "Not in the puzzle.",
+      "spoken": "[sympathetically] Not in the puzzle.",
+      "file": "assets/audio/vo/miss/not_in_puzzle.mp3"
+    },
+    {
+      "id": "afraid_not",
+      "text": "No, I'm afraid not.",
+      "spoken": "[sympathetically] No, I'm afraid not.",
+      "file": "assets/audio/vo/miss/afraid_not.mp3"
+    },
+    {
+      "id": "not_up_there",
+      "text": "Sorry, that letter's not up there.",
+      "spoken": "[sympathetically] Sorry, that letter's not up there.",
+      "file": "assets/audio/vo/miss/not_up_there.mp3"
+    },
+    {
+      "id": "nothing_showing",
+      "text": "Nothing showing for that one.",
+      "spoken": "[sympathetically] Nothing showing for that one.",
+      "file": "assets/audio/vo/miss/nothing_showing.mp3"
+    },
+    {
+      "id": "no_hits",
+      "text": "No hits on that letter.",
+      "spoken": "[sympathetically] No hits on that letter.",
+      "file": "assets/audio/vo/miss/no_hits.mp3"
+    },
+    {
+      "id": "try_next_spin",
+      "text": "Sorry, try again on your next spin.",
+      "spoken": "[sympathetically] Sorry, try again on your next spin.",
+      "file": "assets/audio/vo/miss/try_next_spin.mp3"
+    },
+    {
+      "id": "thats_miss",
+      "text": "That's a miss.",
+      "spoken": "[sympathetically] That's a miss.",
+      "file": "assets/audio/vo/miss/thats_miss.mp3"
+    },
+    {
+      "id": "no_luck",
+      "text": "No luck this time.",
+      "spoken": "[sympathetically] No luck this time.",
+      "file": "assets/audio/vo/miss/no_luck.mp3"
+    },
+    {
+      "id": "zero",
+      "text": "Sorry, zero of those.",
+      "spoken": "[sympathetically] Sorry, zero of those.",
+      "file": "assets/audio/vo/miss/zero.mp3"
+    },
+    {
+      "id": "not_this_time",
+      "text": "Not this time.",
+      "spoken": "[sympathetically] Not this time.",
+      "file": "assets/audio/vo/miss/not_this_time.mp3"
+    },
+    {
+      "id": "doesnt_have",
+      "text": "The puzzle doesn't have that one.",
+      "spoken": "[sympathetically] The puzzle doesn't have that one.",
+      "file": "assets/audio/vo/miss/doesnt_have.mp3"
+    },
+    {
+      "id": "no_matches",
+      "text": "Sorry, no matches.",
+      "spoken": "[sympathetically] Sorry, no matches.",
+      "file": "assets/audio/vo/miss/no_matches.mp3"
+    },
+    {
+      "id": "unlucky",
+      "text": "Unlucky pick.",
+      "spoken": "[sympathetically] Unlucky pick.",
+      "file": "assets/audio/vo/miss/unlucky.mp3"
+    },
+    {
+      "id": "not_in_there",
+      "text": "That one's not in there.",
+      "spoken": "[sympathetically] That one's not in there.",
+      "file": "assets/audio/vo/miss/not_in_there.mp3"
+    },
+    {
+      "id": "blank",
+      "text": "Sorry, blank on that letter.",
+      "spoken": "[sympathetically] Sorry, blank on that letter.",
+      "file": "assets/audio/vo/miss/blank.mp3"
+    },
+    {
+      "id": "nothing_for",
+      "text": "No, nothing for that letter.",
+      "spoken": "[sympathetically] No, nothing for that letter.",
+      "file": "assets/audio/vo/miss/nothing_for.mp3"
+    },
+    {
+      "id": "tough_break",
+      "text": "Tough break — not in the puzzle.",
+      "spoken": "[sympathetically] Tough break — not in the puzzle.",
+      "file": "assets/audio/vo/miss/tough_break.mp3"
+    }
+  ],
+  "byLetter": {
+    "A": [
+      {
+        "id": "letter_a_1",
+        "letter": "A",
+        "text": "Sorry, no A's.",
+        "spoken": "[sympathetically] Sorry, no A's.",
+        "file": "assets/audio/vo/miss/letter_a_1.mp3"
+      },
+      {
+        "id": "letter_a_2",
+        "letter": "A",
+        "text": "Sorry, no A's in this puzzle.",
+        "spoken": "[sympathetically] Sorry, no A's in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_a_2.mp3"
+      }
+    ],
+    "B": [
+      {
+        "id": "letter_b_1",
+        "letter": "B",
+        "text": "No B's up there.",
+        "spoken": "[sympathetically] No B's up there.",
+        "file": "assets/audio/vo/miss/letter_b_1.mp3"
+      },
+      {
+        "id": "letter_b_2",
+        "letter": "B",
+        "text": "Sorry, zero B's.",
+        "spoken": "[sympathetically] Sorry, zero B's.",
+        "file": "assets/audio/vo/miss/letter_b_2.mp3"
+      }
+    ],
+    "C": [
+      {
+        "id": "letter_c_1",
+        "letter": "C",
+        "text": "Not a single C in this puzzle.",
+        "spoken": "[sympathetically] Not a single C in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_c_1.mp3"
+      },
+      {
+        "id": "letter_c_2",
+        "letter": "C",
+        "text": "Sorry, there's no C.",
+        "spoken": "[sympathetically] Sorry, there's no C.",
+        "file": "assets/audio/vo/miss/letter_c_2.mp3"
+      }
+    ],
+    "D": [
+      {
+        "id": "letter_d_1",
+        "letter": "D",
+        "text": "Bad luck — no D's.",
+        "spoken": "[sympathetically] Bad luck — no D's.",
+        "file": "assets/audio/vo/miss/letter_d_1.mp3"
+      },
+      {
+        "id": "letter_d_2",
+        "letter": "D",
+        "text": "Nothing for D.",
+        "spoken": "[sympathetically] Nothing for D.",
+        "file": "assets/audio/vo/miss/letter_d_2.mp3"
+      }
+    ],
+    "E": [
+      {
+        "id": "letter_e_1",
+        "letter": "E",
+        "text": "Sorry, no E's.",
+        "spoken": "[sympathetically] Sorry, no E's.",
+        "file": "assets/audio/vo/miss/letter_e_1.mp3"
+      },
+      {
+        "id": "letter_e_2",
+        "letter": "E",
+        "text": "Sorry, no E's in this puzzle.",
+        "spoken": "[sympathetically] Sorry, no E's in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_e_2.mp3"
+      }
+    ],
+    "F": [
+      {
+        "id": "letter_f_1",
+        "letter": "F",
+        "text": "No F's up there.",
+        "spoken": "[sympathetically] No F's up there.",
+        "file": "assets/audio/vo/miss/letter_f_1.mp3"
+      },
+      {
+        "id": "letter_f_2",
+        "letter": "F",
+        "text": "Sorry, zero F's.",
+        "spoken": "[sympathetically] Sorry, zero F's.",
+        "file": "assets/audio/vo/miss/letter_f_2.mp3"
+      }
+    ],
+    "G": [
+      {
+        "id": "letter_g_1",
+        "letter": "G",
+        "text": "Not a single G in this puzzle.",
+        "spoken": "[sympathetically] Not a single G in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_g_1.mp3"
+      },
+      {
+        "id": "letter_g_2",
+        "letter": "G",
+        "text": "Sorry, there's no G.",
+        "spoken": "[sympathetically] Sorry, there's no G.",
+        "file": "assets/audio/vo/miss/letter_g_2.mp3"
+      }
+    ],
+    "H": [
+      {
+        "id": "letter_h_1",
+        "letter": "H",
+        "text": "Bad luck — no H's.",
+        "spoken": "[sympathetically] Bad luck — no H's.",
+        "file": "assets/audio/vo/miss/letter_h_1.mp3"
+      },
+      {
+        "id": "letter_h_2",
+        "letter": "H",
+        "text": "Nothing for H.",
+        "spoken": "[sympathetically] Nothing for H.",
+        "file": "assets/audio/vo/miss/letter_h_2.mp3"
+      }
+    ],
+    "I": [
+      {
+        "id": "letter_i_1",
+        "letter": "I",
+        "text": "Sorry, no I's.",
+        "spoken": "[sympathetically] Sorry, no I's.",
+        "file": "assets/audio/vo/miss/letter_i_1.mp3"
+      },
+      {
+        "id": "letter_i_2",
+        "letter": "I",
+        "text": "Sorry, no I's in this puzzle.",
+        "spoken": "[sympathetically] Sorry, no I's in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_i_2.mp3"
+      }
+    ],
+    "J": [
+      {
+        "id": "letter_j_1",
+        "letter": "J",
+        "text": "No J's up there.",
+        "spoken": "[sympathetically] No J's up there.",
+        "file": "assets/audio/vo/miss/letter_j_1.mp3"
+      },
+      {
+        "id": "letter_j_2",
+        "letter": "J",
+        "text": "Sorry, zero J's.",
+        "spoken": "[sympathetically] Sorry, zero J's.",
+        "file": "assets/audio/vo/miss/letter_j_2.mp3"
+      }
+    ],
+    "K": [
+      {
+        "id": "letter_k_1",
+        "letter": "K",
+        "text": "Not a single K in this puzzle.",
+        "spoken": "[sympathetically] Not a single K in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_k_1.mp3"
+      },
+      {
+        "id": "letter_k_2",
+        "letter": "K",
+        "text": "Sorry, there's no K.",
+        "spoken": "[sympathetically] Sorry, there's no K.",
+        "file": "assets/audio/vo/miss/letter_k_2.mp3"
+      }
+    ],
+    "L": [
+      {
+        "id": "letter_l_1",
+        "letter": "L",
+        "text": "Bad luck — no L's.",
+        "spoken": "[sympathetically] Bad luck — no L's.",
+        "file": "assets/audio/vo/miss/letter_l_1.mp3"
+      },
+      {
+        "id": "letter_l_2",
+        "letter": "L",
+        "text": "Nothing for L.",
+        "spoken": "[sympathetically] Nothing for L.",
+        "file": "assets/audio/vo/miss/letter_l_2.mp3"
+      }
+    ],
+    "M": [
+      {
+        "id": "letter_m_1",
+        "letter": "M",
+        "text": "Sorry, no M's.",
+        "spoken": "[sympathetically] Sorry, no M's.",
+        "file": "assets/audio/vo/miss/letter_m_1.mp3"
+      },
+      {
+        "id": "letter_m_2",
+        "letter": "M",
+        "text": "Sorry, no M's in this puzzle.",
+        "spoken": "[sympathetically] Sorry, no M's in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_m_2.mp3"
+      }
+    ],
+    "N": [
+      {
+        "id": "letter_n_1",
+        "letter": "N",
+        "text": "No N's up there.",
+        "spoken": "[sympathetically] No N's up there.",
+        "file": "assets/audio/vo/miss/letter_n_1.mp3"
+      },
+      {
+        "id": "letter_n_2",
+        "letter": "N",
+        "text": "Sorry, zero N's.",
+        "spoken": "[sympathetically] Sorry, zero N's.",
+        "file": "assets/audio/vo/miss/letter_n_2.mp3"
+      }
+    ],
+    "O": [
+      {
+        "id": "letter_o_1",
+        "letter": "O",
+        "text": "Not a single O in this puzzle.",
+        "spoken": "[sympathetically] Not a single O in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_o_1.mp3"
+      },
+      {
+        "id": "letter_o_2",
+        "letter": "O",
+        "text": "Sorry, there's no O.",
+        "spoken": "[sympathetically] Sorry, there's no O.",
+        "file": "assets/audio/vo/miss/letter_o_2.mp3"
+      }
+    ],
+    "P": [
+      {
+        "id": "letter_p_1",
+        "letter": "P",
+        "text": "Bad luck — no P's.",
+        "spoken": "[sympathetically] Bad luck — no P's.",
+        "file": "assets/audio/vo/miss/letter_p_1.mp3"
+      },
+      {
+        "id": "letter_p_2",
+        "letter": "P",
+        "text": "Nothing for P.",
+        "spoken": "[sympathetically] Nothing for P.",
+        "file": "assets/audio/vo/miss/letter_p_2.mp3"
+      }
+    ],
+    "Q": [
+      {
+        "id": "letter_q_1",
+        "letter": "Q",
+        "text": "Sorry, no Q's.",
+        "spoken": "[sympathetically] Sorry, no Q's.",
+        "file": "assets/audio/vo/miss/letter_q_1.mp3"
+      },
+      {
+        "id": "letter_q_2",
+        "letter": "Q",
+        "text": "Sorry, no Q's in this puzzle.",
+        "spoken": "[sympathetically] Sorry, no Q's in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_q_2.mp3"
+      }
+    ],
+    "R": [
+      {
+        "id": "letter_r_1",
+        "letter": "R",
+        "text": "No R's up there.",
+        "spoken": "[sympathetically] No R's up there.",
+        "file": "assets/audio/vo/miss/letter_r_1.mp3"
+      },
+      {
+        "id": "letter_r_2",
+        "letter": "R",
+        "text": "Sorry, zero R's.",
+        "spoken": "[sympathetically] Sorry, zero R's.",
+        "file": "assets/audio/vo/miss/letter_r_2.mp3"
+      }
+    ],
+    "S": [
+      {
+        "id": "letter_s_1",
+        "letter": "S",
+        "text": "Not a single S in this puzzle.",
+        "spoken": "[sympathetically] Not a single S in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_s_1.mp3"
+      },
+      {
+        "id": "letter_s_2",
+        "letter": "S",
+        "text": "Sorry, there's no S.",
+        "spoken": "[sympathetically] Sorry, there's no S.",
+        "file": "assets/audio/vo/miss/letter_s_2.mp3"
+      }
+    ],
+    "T": [
+      {
+        "id": "letter_t_1",
+        "letter": "T",
+        "text": "Bad luck — no T's.",
+        "spoken": "[sympathetically] Bad luck — no T's.",
+        "file": "assets/audio/vo/miss/letter_t_1.mp3"
+      },
+      {
+        "id": "letter_t_2",
+        "letter": "T",
+        "text": "Nothing for T.",
+        "spoken": "[sympathetically] Nothing for T.",
+        "file": "assets/audio/vo/miss/letter_t_2.mp3"
+      }
+    ],
+    "U": [
+      {
+        "id": "letter_u_1",
+        "letter": "U",
+        "text": "Sorry, no U's.",
+        "spoken": "[sympathetically] Sorry, no U's.",
+        "file": "assets/audio/vo/miss/letter_u_1.mp3"
+      },
+      {
+        "id": "letter_u_2",
+        "letter": "U",
+        "text": "Sorry, no U's in this puzzle.",
+        "spoken": "[sympathetically] Sorry, no U's in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_u_2.mp3"
+      }
+    ],
+    "V": [
+      {
+        "id": "letter_v_1",
+        "letter": "V",
+        "text": "No V's up there.",
+        "spoken": "[sympathetically] No V's up there.",
+        "file": "assets/audio/vo/miss/letter_v_1.mp3"
+      },
+      {
+        "id": "letter_v_2",
+        "letter": "V",
+        "text": "Sorry, zero V's.",
+        "spoken": "[sympathetically] Sorry, zero V's.",
+        "file": "assets/audio/vo/miss/letter_v_2.mp3"
+      }
+    ],
+    "W": [
+      {
+        "id": "letter_w_1",
+        "letter": "W",
+        "text": "Not a single W in this puzzle.",
+        "spoken": "[sympathetically] Not a single W in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_w_1.mp3"
+      },
+      {
+        "id": "letter_w_2",
+        "letter": "W",
+        "text": "Sorry, there's no W.",
+        "spoken": "[sympathetically] Sorry, there's no W.",
+        "file": "assets/audio/vo/miss/letter_w_2.mp3"
+      }
+    ],
+    "X": [
+      {
+        "id": "letter_x_1",
+        "letter": "X",
+        "text": "Bad luck — no X's.",
+        "spoken": "[sympathetically] Bad luck — no X's.",
+        "file": "assets/audio/vo/miss/letter_x_1.mp3"
+      },
+      {
+        "id": "letter_x_2",
+        "letter": "X",
+        "text": "Nothing for X.",
+        "spoken": "[sympathetically] Nothing for X.",
+        "file": "assets/audio/vo/miss/letter_x_2.mp3"
+      }
+    ],
+    "Y": [
+      {
+        "id": "letter_y_1",
+        "letter": "Y",
+        "text": "Sorry, no Y's.",
+        "spoken": "[sympathetically] Sorry, no Y's.",
+        "file": "assets/audio/vo/miss/letter_y_1.mp3"
+      },
+      {
+        "id": "letter_y_2",
+        "letter": "Y",
+        "text": "Sorry, no Y's in this puzzle.",
+        "spoken": "[sympathetically] Sorry, no Y's in this puzzle.",
+        "file": "assets/audio/vo/miss/letter_y_2.mp3"
+      }
+    ],
+    "Z": [
+      {
+        "id": "letter_z_1",
+        "letter": "Z",
+        "text": "No Z's up there.",
+        "spoken": "[sympathetically] No Z's up there.",
+        "file": "assets/audio/vo/miss/letter_z_1.mp3"
+      },
+      {
+        "id": "letter_z_2",
+        "letter": "Z",
+        "text": "Sorry, zero Z's.",
+        "spoken": "[sympathetically] Sorry, zero Z's.",
+        "file": "assets/audio/vo/miss/letter_z_2.mp3"
+      }
+    ]
+  }
+}

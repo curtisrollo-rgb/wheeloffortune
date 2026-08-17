@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <title>Controller — Wheel of Fortune</title>
+  <link rel="stylesheet" href="css/multiplayer.css?v=1" />
+</head>
+<body class="controller-page">
+  <header class="controller-header">
+    <h1 id="player-title">Player</h1>
+    <p id="controller-meta" class="controller-meta">Not connected</p>
+  </header>
+
+  <div id="turn-banner" class="turn-banner">Waiting for your turn…</div>
+
+  <main class="controller-main">
+    <section class="spin-panel" id="spin-panel">
+      <h2>Spin</h2>
+      <div class="spin-gauge" aria-hidden="true">
+        <div id="spin-gauge-fill" class="spin-gauge-fill"></div>
+      </div>
+      <button id="btn-spin-hold" type="button" class="btn btn-primary spin-hold-btn" disabled>
+        Hold to Spin
+      </button>
+      <p id="spin-hint" class="controller-status">Release to set your spin strength.</p>
+    </section>
+
+    <section class="letter-panel" id="letter-panel">
+      <h2 style="margin:0 0 0.65rem;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Guess a letter</h2>
+      <div id="letter-grid" class="controller-letter-grid" aria-label="Letter keyboard"></div>
+    </section>
+
+    <section class="action-panel">
+      <button id="btn-vowel" type="button" class="btn btn-secondary" disabled>Buy Vowel ($250)</button>
+      <button id="btn-solve" type="button" class="btn btn-secondary" disabled>Solve</button>
+      <button id="btn-buzz" type="button" class="btn buzz-btn is-hidden" disabled>Buzz In!</button>
+    </section>
+
+    <p id="controller-status" class="controller-status" aria-live="polite"></p>
+  </main>
+
+  <div id="solve-modal" class="modal-backdrop is-hidden" role="dialog" aria-modal="true" aria-labelledby="solve-title">
+    <div class="panel">
+      <h2 id="solve-title">Solve the Puzzle</h2>
+      <input id="solve-input" type="text" autocomplete="off" placeholder="Type the full phrase…" />
+      <div class="row">
+        <button id="btn-solve-cancel" type="button" class="btn btn-secondary">Cancel</button>
+        <button id="btn-solve-submit" type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../js/controller-app.js?v=1"></script>
+</body>
+</html>
