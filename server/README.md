@@ -27,11 +27,11 @@ Then open http://localhost:8900/multiplayer/ (static site served separately).
 
 | Client → Server | Who | Purpose |
 |-----------------|-----|---------|
-| `createRoom` | Lobby | Create game, get 6-letter code |
+| `createRoom` | Lobby | Create game, get 4-letter word code |
 | `joinRoom` | Phone | Join as p1/p2/p3 with name |
 | `attachHost` | TV | Connect display to room |
 | `rejoinRoom` | Phone | Reconnect after refresh |
-| `startGame` | Lobby/TV | Start when 2+ players joined |
+| `startGame` | Lobby/TV | Start when 1+ players joined |
 | `spin` | Player | Send spin gauge power (0–1) |
 | `guessLetter` | Player | Consonant guess |
 | `buyVowel` | Player | Buy a vowel |

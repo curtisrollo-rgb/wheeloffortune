@@ -20,6 +20,7 @@ import {
   handleGuessLetter,
   handleSolve,
   handleSpin,
+  newPuzzle,
   publicGameState,
   startGame,
   turnChangedPayload,
@@ -332,8 +333,10 @@ wss.on("connection", (ws) => {
       if (!info || info.role !== "host") return error(ws, "Host only.");
       const room = getRoom(info.code);
       if (!room) return error(ws, "Room not found");
-      appendLog(room, "Host requested new puzzle");
-      broadcastLobby(room, "New puzzle requested (game logic coming soon).");
+      const result = newPuzzle(room);
+      if (result.error) return error(ws, result.error);
+      appendLog(room, "Host loaded new puzzle");
+      broadcastGameState(room);
       return;
     }
 

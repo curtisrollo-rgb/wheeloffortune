@@ -1,6 +1,8 @@
-/** Authoritative Wheel of Fortune game state (v0.1 — lobby + turn shell). */
+/** Authoritative Wheel of Fortune game state (v0.2 — puzzles + 1-player start). */
 
+import { layoutPuzzle, buildLetterMap } from "../js/puzzle-layout.js";
 import { getPlayerBySeat, playerSummaries } from "./rooms.js";
+import { pickRandomPuzzle } from "./puzzles.js";
 
 /** @param {import('./rooms.js').Room} room */
 export function createInitialGame() {
@@ -14,13 +16,34 @@ export function createInitialGame() {
     wedgeLabel: "—",
     rows: [],
     roundMoney: 0,
+    puzzle: null,
+    letterMap: [],
+    called: new Set(),
+    usedPuzzleIds: new Set(),
   };
 }
 
 /** @param {import('./rooms.js').Room} room */
+function loadRandomPuzzle(room) {
+  const entry = pickRandomPuzzle(room.game.usedPuzzleIds);
+  const layout = layoutPuzzle(entry.category, entry.answer);
+  const id = entry.id || entry.answer;
+  room.game.usedPuzzleIds.add(id);
+  room.game.puzzle = { id, category: entry.category, answer: layout.answer };
+  room.game.category = entry.category;
+  room.game.rows = layout.rows;
+  room.game.letterMap = buildLetterMap(layout.rows, layout.answer);
+  room.game.called = new Set();
+  room.game.roundMoney = 0;
+  room.game.wedgeLabel = "—";
+  room.game.phase = "idle";
+  return entry;
+}
+
+/** @param {import('./rooms.js').Room} room */
 export function startGame(room) {
-  if (room.players.length < 2) {
-    return { error: "Need at least 2 players to start." };
+  if (room.players.length < 1) {
+    return { error: "Need at least 1 player to start." };
   }
   if (room.game?.started) {
     return { error: "Game already started." };
@@ -28,7 +51,7 @@ export function startGame(room) {
 
   room.game = createInitialGame();
   room.game.started = true;
-  room.game.phase = "idle";
+  loadRandomPuzzle(room);
   room.game.activeSeat = room.players[0].seat;
   room.game.message = `${room.players[0].name}'s turn — spin the wheel!`;
 
@@ -36,6 +59,19 @@ export function startGame(room) {
     player.score = player.score || 0;
   }
 
+  return { ok: true };
+}
+
+/** @param {import('./rooms.js').Room} room */
+export function newPuzzle(room) {
+  if (!room.game?.started) {
+    return { error: "Start the game first." };
+  }
+  loadRandomPuzzle(room);
+  const player = getPlayerBySeat(room, room.game.activeSeat);
+  room.game.message = player
+    ? `${player.name}'s turn — spin the wheel!`
+    : "New puzzle loaded — spin the wheel!";
   return { ok: true };
 }
 
@@ -64,8 +100,6 @@ export function turnChangedPayload(room, seat) {
     message: player ? `${player.name}'s turn` : "Waiting…",
   };
 }
-
-/** Placeholder handlers — wired in Step 2+ game logic. */
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {number} power */
 export function handleSpin(room, seat, power) {

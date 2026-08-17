@@ -75,7 +75,7 @@ function onMessage(msg) {
     case "lobbyUpdate":
       renderScoreboard(msg.players || [], msg.activeSeat);
       setMessage(msg.message || "Waiting for players…");
-      els.btnStartGame.disabled = (msg.players || []).length < 2;
+      els.btnStartGame.disabled = (msg.players || []).length < 1;
       break;
     case "turnChanged":
       renderScoreboard(msg.players || [], msg.seat);

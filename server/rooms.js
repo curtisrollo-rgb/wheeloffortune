@@ -1,4 +1,5 @@
 import { randomBytes } from "crypto";
+import { ROOM_CODES } from "./room-words.js";
 
 /** @typedef {'p1'|'p2'|'p3'} PlayerSeat */
 
@@ -26,15 +27,13 @@ import { randomBytes } from "crypto";
 /** @type {Map<string, Room>} */
 const rooms = new Map();
 
-const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 export const PLAYER_SEATS = /** @type {const} */ (["p1", "p2", "p3"]);
 
 export function generateRoomCode() {
-  let code = "";
-  const bytes = randomBytes(6);
-  for (let i = 0; i < 6; i++) {
-    code += CODE_CHARS[bytes[i] % CODE_CHARS.length];
-  }
+  const open = ROOM_CODES.filter((word) => !rooms.has(word));
+  const pool = open.length ? open : ROOM_CODES;
+  const idx = randomBytes(1)[0] % pool.length;
+  const code = pool[idx];
   if (rooms.has(code)) return generateRoomCode();
   return code;
 }

@@ -40,7 +40,7 @@ function renderPlayers(players = []) {
     }
     els.playerList.appendChild(li);
   }
-  els.btnStart.disabled = players.length < 2;
+  els.btnStart.disabled = players.length < 1;
 }
 
 function onMessage(msg) {
