@@ -64,6 +64,8 @@ function emitNextTossUpTile(room, emit) {
     stopTossUpTimer(room.code);
     room.game.message = "Toss-Up complete — no one solved it.";
     room.game.phase = "ended";
+    room.game.roundWinnerSeat = null;
+    room.game.roundWinAmount = 0;
     emit(room, {
       op: "tossUpComplete",
       allRevealed: true,
@@ -137,6 +139,8 @@ export function createInitialGame() {
     tossUpLockedOut: false,
     tossUpLockedSeats: new Set(),
     tossUpRevealPaused: false,
+    roundWinnerSeat: null,
+    roundWinAmount: 0,
   };
 }
 
@@ -398,19 +402,54 @@ export function publicGameState(room) {
     finalEnvelopeIndex: room.game.finalEnvelopeIndex,
     finalEnvelopeRevealed: room.game.finalEnvelopeRevealed,
     finalWon: room.game.finalWon,
+    roundWinnerSeat: room.game.roundWinnerSeat,
+    roundWinAmount: room.game.roundWinAmount,
     ...playerActionFlags(room),
   };
 }
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat|null} seat */
-export function turnChangedPayload(room, seat) {
+export function turnChangedPayload(room, seat, { cue } = {}) {
   const player = seat ? getPlayerBySeat(room, seat) : null;
+  const g = room.game;
+  let message = "Waiting…";
+  let turnCue = cue ?? "spin";
+
+  if (player && g) {
+    if (g.roundType === "tossup") {
+      turnCue = "none";
+      if (g.phase === "tossUpReveal" && g.activeSeat === seat) {
+        message = `${player.name} is attempting to solve!`;
+      } else {
+        message = "Toss-Up in progress…";
+      }
+    } else if (g.roundType === "final") {
+      if (g.phase === "finalEnvelope") {
+        message = `${player.name} — spin for your envelope!`;
+        turnCue = "spin";
+      } else if (g.phase === "finalPick") {
+        message = `${player.name} — pick your letters!`;
+        turnCue = "none";
+      } else if (g.phase === "finalSolve") {
+        message = `${player.name} — solve the puzzle!`;
+        turnCue = "none";
+      } else {
+        message = `${player.name}'s turn — spin the wheel!`;
+        turnCue = "spin";
+      }
+    } else {
+      message = `${player.name}'s turn — spin the wheel!`;
+      turnCue = "spin";
+    }
+  }
+
   return {
     op: "turnChanged",
     seat,
     name: player?.name ?? seat,
     players: playerSummaries(room),
-    message: player ? `${player.name}'s turn — spin the wheel!` : "Waiting…",
+    message,
+    cue: turnCue,
   };
 }
 
@@ -610,6 +649,8 @@ function finishSolveByLetters(room, seat) {
   }
   room.game.message = message;
   room.game.phase = "ended";
+  room.game.roundWinnerSeat = seat;
+  room.game.roundWinAmount = roundWin;
   return roundWin;
 }
 
@@ -817,6 +858,8 @@ export function handleSolve(room, seat, text) {
       room.game.rows = revealAllRows(room.game.rows, room.game.puzzle.answer);
       if (player) player.score = (player.score || 0) + TOSS_UP_WIN;
       room.game.phase = "ended";
+      room.game.roundWinnerSeat = seat;
+      room.game.roundWinAmount = TOSS_UP_WIN;
       room.game.message = `Correct! ${name} wins the Toss-Up: $${TOSS_UP_WIN.toLocaleString()}!`;
       return {
         ok: true,
@@ -868,6 +911,8 @@ export function handleSolve(room, seat, text) {
     room.game.finalWon = false;
     room.game.rows = revealAllRows(room.game.rows, answer);
     room.game.phase = "ended";
+    room.game.roundWinnerSeat = seat;
+    room.game.roundWinAmount = 0;
     room.game.message = `Sorry ${name} — the answer was: ${answer}`;
     return {
       ok: true,

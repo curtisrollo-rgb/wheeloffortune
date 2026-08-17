@@ -205,6 +205,8 @@ export function resetRoundFields(game) {
   game.tossUpLockedOut = false;
   game.tossUpLockedSeats = new Set();
   game.tossUpRevealPaused = false;
+  game.roundWinnerSeat = null;
+  game.roundWinAmount = 0;
 }
 
 /** @param {object} game @param {import('./rooms.js').Room} room */
@@ -255,6 +257,8 @@ export function bankFinalWin(game, seat, player, amount) {
   }
   game.phase = "ended";
   game.finalWon = true;
+  game.roundWinnerSeat = seat;
+  game.roundWinAmount = amount ?? 0;
 }
 
 /** @param {object} game */

@@ -267,6 +267,86 @@ body.is-loading .top-bar {
   max-width: 95%;
 }
 
+.round-summary {
+  position: absolute;
+  inset: 0;
+  z-index: 19;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1.25rem;
+  background: linear-gradient(135deg, rgba(10, 22, 40, 0.95), rgba(0, 0, 0, 0.9));
+  border: 3px solid var(--accent);
+  border-radius: 8px;
+  box-shadow: 0 0 36px rgba(255, 215, 0, 0.28);
+  opacity: 0;
+  transform: scale(0.94);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  text-align: center;
+}
+
+.round-summary.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.round-summary.is-hidden {
+  display: none;
+}
+
+.round-summary.is-hidden.is-visible {
+  display: flex;
+}
+
+.round-summary-round {
+  margin: 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.round-summary-title {
+  margin: 0;
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+
+.round-summary-winner {
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+  font-weight: 900;
+  color: #fff;
+}
+
+.round-summary-amount {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  font-weight: 900;
+  color: #5ce05c;
+}
+
+.round-summary-amount.is-hidden {
+  display: none;
+}
+
+.round-summary-detail {
+  margin: 0.35rem 0 0;
+  font-size: 0.88rem;
+  color: #c8d8ef;
+  max-width: 28ch;
+}
+
+.round-summary-detail.is-hidden {
+  display: none;
+}
+
 .board-row {
   display: flex;
   justify-content: center;

@@ -41,7 +41,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.19";
+const VERSION = "0.2.20";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -388,8 +388,22 @@ wss.on("connection", (ws) => {
           message: result.message,
         });
       } else if (result.resumeTossUp) {
+        broadcast(room, {
+          op: "solveWrong",
+          seat: info.seat,
+          name: result.name,
+          lockedOut: !!result.lockedOut,
+          message: room.game.message,
+        });
         resumeTossUpReveal(room, (r, payload) => broadcast(r, payload));
       } else if (result.broadcastTurn) {
+        broadcast(room, {
+          op: "solveWrong",
+          seat: info.seat,
+          name: result.name,
+          lockedOut: false,
+          message: room.game.message,
+        });
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       }
       broadcastGameState(room);
@@ -411,13 +425,7 @@ wss.on("connection", (ws) => {
         seat: info.seat,
         name: result.name,
       });
-      broadcast(room, {
-        op: "turnChanged",
-        seat: info.seat,
-        name: result.name,
-        players: playerSummaries(room),
-        message: `${result.name} is attempting to solve!`,
-      });
+      broadcast(room, turnChangedPayload(room, info.seat));
       broadcastGameState(room);
       return;
     }

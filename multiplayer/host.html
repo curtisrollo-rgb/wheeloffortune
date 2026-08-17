@@ -12,7 +12,7 @@
       document.head.appendChild(base);
     })();
   </script>
-  <link rel="stylesheet" href="css/game.css?v=41" />
+  <link rel="stylesheet" href="css/game.css?v=42" />
   <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=4" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
@@ -52,6 +52,13 @@
         <p class="prize-banner-subtitle">New Car</p>
         <p class="prize-banner-title">You Won!</p>
         <p class="prize-banner-name"></p>
+      </div>
+      <div id="round-summary" class="round-summary is-hidden" aria-live="polite">
+        <p class="round-summary-round">Round 1</p>
+        <p class="round-summary-title">Round Winner!</p>
+        <p class="round-summary-winner">Player</p>
+        <p class="round-summary-amount">$0</p>
+        <p class="round-summary-detail"></p>
       </div>
       <div id="puzzle-board" class="puzzle-board" aria-label="Puzzle board"></div>
     </section>
@@ -104,6 +111,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=13"></script>
+  <script type="module" src="js/host-app.js?v=14"></script>
 </body>
 </html>

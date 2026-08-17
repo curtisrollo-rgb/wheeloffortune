@@ -14,6 +14,7 @@ import { loadCarPrizeVo, playCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { buildEnvelopeWedges, getFinalEnvelopePrizes, loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
 import { showEnvelopeReveal } from "./final-envelope-ui.js?v=1";
 import { showPrizeBanner } from "./prize-banner.js?v=1";
+import { showRoundSummary } from "./round-summary.js?v=1";
 import { loadMilestoneVo, playOnlyVowelsRemainVo, playNoMoreVowelsVo } from "./milestone-vo.js?v=1";
 import { loadFinalGoodLuckVo, playRandomFinalGoodLuckVo } from "./final-good-luck-vo.js?v=1";
 import { loadFinalWinVo } from "./final-win-vo.js?v=1";
@@ -26,6 +27,7 @@ import {
   loadHostVo,
   playWelcomeVo,
   playTurnCueVo,
+  playSolveAttemptVo,
   playPlayerActionVo,
 } from "./host-vo.js?v=2";
 import { ROW_WIDTHS } from "./puzzle-layout.js?v=3";
@@ -110,6 +112,61 @@ async function maybeRevealFinalEnvelope(state) {
   const prize = state.finalEnvelopePrize;
   const won = state.finalWon === true;
   await showEnvelopeReveal(els.envelopeRevealModal, { amount, won, prize });
+}
+
+function buildRoundSummary(state, players = []) {
+  const roundLabel = ROUND_LABELS[state?.roundType] || state?.roundType || "Round";
+  const winner = players.find((p) => p.seat === state?.roundWinnerSeat);
+  const winnerName = winner?.name || state?.roundWinnerSeat || "";
+
+  if (state?.roundType === "final") {
+    return {
+      roundLabel,
+      title: state.finalWon ? "Final Round Won!" : "Final Round Over",
+      winnerName: winnerName || winner?.name || "Finalist",
+      amount: state.finalWon ? (state.finalEnvelopeAmount ?? 0) : 0,
+      detail: state.finalWon ? "" : "The envelope is revealed below.",
+    };
+  }
+
+  if (state?.roundType === "tossup") {
+    if (state.roundWinnerSeat) {
+      return {
+        roundLabel,
+        title: "Toss-Up Winner!",
+        winnerName,
+        amount: state.roundWinAmount || 1000,
+        detail: "",
+      };
+    }
+    return {
+      roundLabel,
+      title: "Toss-Up Complete",
+      winnerName: "No winner",
+      amount: 0,
+      detail: "Nobody rang in with the right answer.",
+    };
+  }
+
+  let detail = "";
+  if (state?.carPrize?.name) detail = `Plus: ${state.carPrize.name}`;
+  else if (state?.roundPrize) detail = `Prize: ${state.roundPrize}`;
+
+  return {
+    roundLabel,
+    title: "Round Winner!",
+    winnerName: winnerName || "Winner",
+    amount: state?.roundWinAmount || 0,
+    detail,
+  };
+}
+
+async function handleRoundEnd(state, players = []) {
+  await maybeRevealSolvedBoard(state.rows, state.message);
+  if (state.roundType === "final") {
+    await maybeRevealFinalEnvelope(state);
+  }
+  await showRoundSummary(els.roundSummary, buildRoundSummary(state, players));
   scheduleAutoAdvance(state);
 }
 
@@ -449,8 +506,6 @@ async function handleFinalFreeReveal(msg) {
       await board.revealAll(msg.rows);
       playSound("solve", { volume: 0.55 });
       await playRandomSolveCongrats();
-      const state = { ...latestGameState, phase: "ended", finalWon: true };
-      await maybeRevealFinalEnvelope(state);
     }
   } finally {
     boardRevealBusy = false;
@@ -481,6 +536,7 @@ const els = {
   btnNextRound: $("btn-next-round"),
   tossupCountdown: $("tossup-countdown"),
   prizeBanner: $("prize-banner"),
+  roundSummary: $("round-summary"),
   envelopeRevealModal: $("envelope-reveal-modal"),
 };
 
@@ -578,6 +634,12 @@ function onMessage(msg) {
       renderScoreboard(msg.players || [], msg.seat);
       setMessage(msg.message || `It's ${msg.name || msg.seat}'s turn.`);
       queueHostVo(async () => {
+        if (msg.cue === "none") return;
+        if (msg.cue === "solve") {
+          await playSolveAttemptVo(msg.name || msg.seat);
+          return;
+        }
+        if (latestGameState?.roundType === "tossup") return;
         await playTurnCueVo(msg.name || msg.seat);
       });
       break;
@@ -593,12 +655,9 @@ function onMessage(msg) {
       }
       applyGameState(msg.state, msg.players);
       if (msg.state?.phase === "ended") {
-        maybeRevealSolvedBoard(msg.state.rows, msg.state.message);
-        if (msg.state.roundType === "final" && msg.state.finalWon === false) {
-          queueHostVo(async () => {
-            await maybeRevealFinalEnvelope(msg.state);
-          });
-        }
+        queueHostVo(async () => {
+          await handleRoundEnd(msg.state, msg.players);
+        });
       }
       break;
     case "spinResult":
@@ -659,7 +718,6 @@ function onMessage(msg) {
           }
         }
         if (msg.message) setMessage(msg.message);
-        scheduleAutoAdvance(latestGameState);
       });
       break;
     case "tossUpCountdown":

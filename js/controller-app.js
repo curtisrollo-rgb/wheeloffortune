@@ -384,6 +384,15 @@ function ringIn() {
   if (navigator.vibrate) navigator.vibrate(120);
 }
 
+function showWrongSolveFeedback(text, { mine = false } = {}) {
+  els.turnBanner.textContent = text;
+  els.turnBanner.classList.toggle("is-wrong", mine);
+  setStatus(text);
+  if (mine) {
+    window.setTimeout(() => els.turnBanner.classList.remove("is-wrong"), 4500);
+  }
+}
+
 function onMessage(msg) {
   switch (msg.op) {
     case "hello":
@@ -404,10 +413,6 @@ function onMessage(msg) {
       break;
     case "turnChanged":
       if (msg.seat) mySeat = mySeat || msg.seat;
-      if (awaitingSolveResult && msg.seat !== mySeat) {
-        awaitingSolveResult = false;
-        sfx("miss", { volume: 0.5 });
-      }
       setTurnActive(msg.seat === mySeat);
       if (msg.seat === mySeat) setStatus(msg.message || "Your turn!");
       break;
@@ -421,9 +426,25 @@ function onMessage(msg) {
     case "gameUpdate":
       if (awaitingSolveResult && msg.state?.tossUpLockedSeats?.includes(mySeat)) {
         awaitingSolveResult = false;
-        sfx("miss", { volume: 0.5 });
+        sfx("miss", { volume: 0.55 });
+        showWrongSolveFeedback("Wrong! Locked out of this Toss-Up.", { mine: true });
+        setTurnActive(false);
       }
       applyGameState(msg.state);
+      break;
+    case "solveWrong":
+      awaitingSolveResult = false;
+      if (msg.seat === mySeat) {
+        sfx("miss", { volume: 0.55 });
+        if (msg.lockedOut) {
+          showWrongSolveFeedback("Wrong answer — locked out of this Toss-Up.", { mine: true });
+          setTurnActive(false);
+        } else {
+          showWrongSolveFeedback("Wrong answer — you lose your turn.", { mine: true });
+        }
+      } else {
+        setStatus(msg.message || `${msg.name || msg.seat}'s solve was wrong.`);
+      }
       break;
     case "buzzWinner":
       if (msg.seat === mySeat) {
