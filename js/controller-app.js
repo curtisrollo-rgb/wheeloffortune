@@ -96,8 +96,8 @@ function setTurnActive(active) {
   if (active && navigator.vibrate) navigator.vibrate([80, 40, 80]);
 }
 
-function syncCalledLetters(called = []) {
-  const used = new Set(called);
+function syncCalledLetters(called = [], pending = []) {
+  const used = new Set([...called, ...pending]);
   for (const btn of els.letterGrid.querySelectorAll(".letter-btn")) {
     btn.dataset.used = used.has(btn.dataset.letter) ? "1" : "";
   }
@@ -196,16 +196,24 @@ function updateControls() {
   applyFinalLayout();
 
   if (tossup) return;
-  if (gameState?.roundType === "final" && gameState?.phase !== "idle") return;
 
-  const finalEnvelopeSpin = gameState?.phase === "finalEnvelope" && gameState?.canSpin;
+  const isFinal = gameState?.roundType === "final";
+  const finalEnvelopeSpin = isFinal && gameState?.phase === "finalEnvelope" && gameState?.canSpin;
+
   if (els.btnSpinHold) {
     els.btnSpinHold.textContent = finalEnvelopeSpin ? "Hold to Spin Envelope" : "Hold to Spin";
+    els.btnSpinHold.disabled = !canSpin;
   }
   if (els.spinHint) {
-    els.spinHint.textContent = finalEnvelopeSpin
-      ? "Seal your bonus envelope, then the puzzle is revealed."
-      : "Release to set your spin strength.";
+    if (finalEnvelopeSpin) {
+      els.spinHint.textContent = "Seal your bonus envelope — category comes next.";
+    } else if (isFinal && gameState?.phase === "finalPuzzleReveal") {
+      els.spinHint.textContent = "Watch the board — category coming up…";
+    } else if (isFinal && gameState?.phase === "finalRevealFree") {
+      els.spinHint.textContent = "Free letters R, S, T, L, N, E revealing…";
+    } else if (!isFinal) {
+      els.spinHint.textContent = "Release to set your spin strength.";
+    }
   }
 
   const inFinalPick = !!gameState?.canPickFinal;
@@ -222,10 +230,11 @@ function updateControls() {
 
   for (const btn of els.letterGrid.querySelectorAll(".letter-btn")) {
     const letter = btn.dataset.letter;
-    const used = called.has(letter) || btn.dataset.used === "1";
+    const pending = new Set(gameState?.finalPendingPicks || []);
+    const used = called.has(letter) || pending.has(letter) || btn.dataset.used === "1";
     const vowel = isVowel(letter);
 
-    btn.classList.remove("vowel-pick", "vowel-hidden");
+    btn.classList.remove("vowel-pick", "vowel-hidden", "final-pick", "final-unpicked", "final-used");
 
     if (!mine && !gameState?.canPickFinal) {
       btn.disabled = true;
@@ -333,7 +342,7 @@ function actionFlags(state) {
 
 function applyGameState(state) {
   gameState = state ? { ...state, ...actionFlags(state) } : null;
-  syncCalledLetters(state?.called || []);
+  syncCalledLetters(state?.called || [], state?.finalPendingPicks || []);
   syncTurnFromState(state);
   if (vowelMode && !gameState?.canBuyVowel) setVowelMode(false);
   updateControls();
@@ -350,10 +359,20 @@ function applyGameState(state) {
   if (state?.roundType === "final") {
     if (state.phase === "finalEnvelope" && isMyTurn) {
       setStatus("Spin to seal your bonus envelope!");
-    } else if (state.phase === "finalPuzzleReveal" || state.phase === "finalRevealFree") {
-      setStatus("Watch the board — R, S, T, L, N, and E are being revealed…");
+    } else if (state.phase === "finalPuzzleReveal") {
+      setStatus("Watch the board — category coming up…");
+    } else if (state.phase === "finalRevealFree") {
+      setStatus("R, S, T, L, N, and E are being revealed…");
     } else if (state.phase === "finalPick" && isMyTurn) {
-      setStatus("Pick 3 consonants and 1 vowel.");
+      const cLeft = state.finalConsonantsLeft ?? 0;
+      const vLeft = state.finalVowelsLeft ?? 0;
+      if (cLeft > 0) {
+        setStatus(`Pick ${cLeft} consonant${cLeft === 1 ? "" : "s"}…`);
+      } else if (vLeft > 0) {
+        setStatus("Pick 1 vowel…");
+      } else {
+        setStatus("Pick 3 consonants and 1 vowel.");
+      }
     }
     return;
   }
@@ -558,6 +577,9 @@ function onMessage(msg) {
         setStatus(msg.message || "Time's up!");
         setTurnActive(false);
       }
+      break;
+    case "finalEnvelopeSealed":
+      if (msg.seat === mySeat) setStatus("Envelope sealed — watch the board for the category.");
       break;
     case "finalRstlneStart":
       setStatus("R, S, T, L, N, and E coming up on the board…");

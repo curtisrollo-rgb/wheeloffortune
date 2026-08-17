@@ -169,7 +169,9 @@ export function advanceFinalRstlne(room) {
 }
 
 const FINAL_RSTLNE_STEP_MS = 900;
-const FINAL_RSTLNE_START_DELAY_MS = 4200;
+const FINAL_RSTLNE_LEAD_MS = 900;
+/** Time after envelope seal for spin animation + category VO before RSTLNE. */
+const FINAL_INTRO_DELAY_MS = 10000;
 
 /** @type {Map<string, NodeJS.Timeout>} */
 const finalRstlneTimers = new Map();
@@ -182,8 +184,64 @@ function stopFinalRstlneSequence(code) {
   }
 }
 
-/** Auto-reveal RSTLNE after the bonus envelope is sealed (server-driven). */
-export function startFinalRstlneSequence(room, emit) {
+function emitFinalFreeLetter(room, emit, result) {
+  emit(room, {
+    op: "finalFreeLetter",
+    letter: result.letter,
+    indices: result.indices,
+    count: result.count,
+    rows: result.rows,
+    step: result.step,
+    done: result.done,
+    autoSolved: !!result.autoSolved,
+  });
+
+  if (result.autoSolved) {
+    stopFinalRstlneSequence(room.code);
+    const seat = room.game.activeSeat;
+    const player = getPlayerBySeat(room, seat);
+    emit(room, {
+      op: "solveResult",
+      seat,
+      name: player?.name ?? seat,
+      rows: result.rows,
+      answer: room.game.puzzle?.answer,
+      roundWin: room.game.roundWinAmount,
+      message: room.game.message,
+    });
+    emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+    return;
+  }
+
+  if (result.done) {
+    stopFinalRstlneSequence(room.code);
+    emit(room, { op: "finalPickStart" });
+    emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+    return;
+  }
+
+  finalRstlneTimers.set(
+    room.code,
+    setTimeout(() => revealNextFinalLetter(room, emit), FINAL_RSTLNE_STEP_MS),
+  );
+}
+
+function revealNextFinalLetter(room, emit) {
+  if (!room.game || room.game.phase !== "finalRevealFree") {
+    stopFinalRstlneSequence(room.code);
+    return;
+  }
+
+  const result = advanceFinalRstlne(room);
+  if (result.error) {
+    stopFinalRstlneSequence(room.code);
+    return;
+  }
+
+  emitFinalFreeLetter(room, emit, result);
+}
+
+function startFinalRstlneLetters(room, emit) {
   stopFinalRstlneSequence(room.code);
   const begin = beginFinalRstlne(room);
   if (begin.error) return begin;
@@ -194,64 +252,31 @@ export function startFinalRstlneSequence(room, emit) {
   });
   emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
 
-  const revealNext = () => {
-    if (!room.game || room.game.phase !== "finalRevealFree") {
-      stopFinalRstlneSequence(room.code);
-      return;
-    }
+  finalRstlneTimers.set(
+    room.code,
+    setTimeout(() => revealNextFinalLetter(room, emit), FINAL_RSTLNE_LEAD_MS),
+  );
+  return { ok: true };
+}
 
-    const result = advanceFinalRstlne(room);
-    if (result.error) {
-      stopFinalRstlneSequence(room.code);
-      return;
-    }
+/** After envelope spin: pause for category intro, then auto-reveal RSTLNE. */
+export function scheduleFinalRoundIntro(room, emit) {
+  stopFinalRstlneSequence(room.code);
+  room.game.message = "Bonus sealed! Here's your puzzle!";
 
-    emit(room, {
-      op: "finalFreeLetter",
-      letter: result.letter,
-      indices: result.indices,
-      count: result.count,
-      rows: result.rows,
-      step: result.step,
-      done: result.done,
-      autoSolved: !!result.autoSolved,
-    });
-
-    if (result.autoSolved) {
-      stopFinalRstlneSequence(room.code);
-      const seat = room.game.activeSeat;
-      const player = getPlayerBySeat(room, seat);
-      emit(room, {
-        op: "solveResult",
-        seat,
-        name: player?.name ?? seat,
-        rows: result.rows,
-        answer: room.game.puzzle?.answer,
-        roundWin: room.game.roundWinAmount,
-        message: room.game.message,
-      });
-      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
-      return;
-    }
-
-    if (result.done) {
-      stopFinalRstlneSequence(room.code);
-      emit(room, { op: "finalPickStart" });
-      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
-      return;
-    }
-
-    finalRstlneTimers.set(
-      room.code,
-      setTimeout(revealNext, FINAL_RSTLNE_STEP_MS),
-    );
-  };
+  emit(room, { op: "finalEnvelopeSealed" });
+  emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
 
   finalRstlneTimers.set(
     `${room.code}:start`,
-    setTimeout(revealNext, FINAL_RSTLNE_START_DELAY_MS),
+    setTimeout(() => startFinalRstlneLetters(room, emit), FINAL_INTRO_DELAY_MS),
   );
   return { ok: true };
+}
+
+/** @deprecated Use scheduleFinalRoundIntro */
+export function startFinalRstlneSequence(room, emit) {
+  return scheduleFinalRoundIntro(room, emit);
 }
 
 /** @param {string} [wedgeLabel] @param {"car"|"trip"|"prize"} [kind] */
@@ -645,6 +670,7 @@ export function publicGameState(room) {
     tripPrizeClaimed: !!room.game.tripPrizeClaimed,
     puzzleId: room.game.puzzle?.id ?? null,
     called: [...room.game.called],
+    finalPendingPicks: [...(room.game.finalPendingPicks || [])],
     finalConsonantsLeft: room.game.finalConsonantsLeft,
     finalVowelsLeft: room.game.finalVowelsLeft,
     finalEnvelopeAmount: room.game.finalEnvelopeAmount,

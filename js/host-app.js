@@ -6,7 +6,7 @@ import { createWheel } from "./wheel.js?v=19";
 import { runInBackground } from "./progressive-load.js?v=1";
 import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
 import { preloadBgm, fadeInBgm, fadeOutBgm, stopBgm } from "./bgm.js?v=1";
-import { loadCategoryVo, warmCategoryVo } from "./category-vo.js?v=7";
+import { loadCategoryVo, warmCategoryVo } from "./category-vo.js?v=8";
 import { loadMissVo } from "./miss-vo.js?v=4";
 import { loadHitVo } from "./hit-vo.js?v=1";
 import { loadPenaltyVo, playPenaltyVo } from "./penalty-vo.js?v=2";
@@ -18,22 +18,22 @@ import { buildEnvelopeWedges, getFinalEnvelopePrizes, loadFinalEnvelopeAmounts }
 import { showEnvelopeReveal } from "./final-envelope-ui.js?v=1";
 import { showPrizeBanner, prizeSubtitleForWedge } from "./prize-banner.js?v=2";
 import { showRoundSummary } from "./round-summary.js?v=2";
-import { playRoundSummaryVo } from "./round-summary-vo.js?v=1";
-import { loadMilestoneVo, playOnlyVowelsRemainVo, playNoMoreVowelsVo } from "./milestone-vo.js?v=1";
+import { playRoundSummaryVo } from "./round-summary-vo.js?v=2";
+import { loadMilestoneVo, playOnlyVowelsRemainVo, playNoMoreVowelsVo } from "./milestone-vo.js?v=2";
 import { loadFinalGoodLuckVo, playRandomFinalGoodLuckVo } from "./final-good-luck-vo.js?v=1";
 import { loadFinalWinVo } from "./final-win-vo.js?v=1";
 import { loadFinalLossVo } from "./final-loss-vo.js?v=1";
 import { stopAllVo } from "./vo-bus.js?v=1";
 import { playHitVo } from "./hit-vo.js?v=1";
 import { playMissVo } from "./miss-vo.js?v=4";
-import { playCategoryVo, canonicalCategory } from "./category-vo.js?v=7";
+import { playCategoryVo, canonicalCategory } from "./category-vo.js?v=8";
 import {
   loadHostVo,
   playWelcomeVo,
   playTurnCueVo,
   playSolveAttemptVo,
   playPlayerActionVo,
-} from "./host-vo.js?v=3";
+} from "./host-vo.js?v=4";
 import { ROW_WIDTHS } from "./puzzle-layout.js?v=3";
 import { stampVersion } from "./version.js?v=1";
 
@@ -431,20 +431,23 @@ function maybeAnnounceCategory(state) {
   if (withWelcome) welcomePlayed = true;
 
   const isTossUpAnnounce = state.roundType === "tossup" && state.phase === "tossUpAnnounce";
+  const isFinalReveal = state.roundType === "final" && state.phase === "finalPuzzleReveal";
   const label = canonicalCategory(state.category);
 
   queueHostVo(async () => {
-    if (withWelcome) {
+    if (withWelcome && !isFinalReveal) {
       setMessage("Welcome to Wheel of Fortune!");
       await playWelcomeVo();
     }
     await warmCategoryVo(state.category);
     setMessage(
-      withWelcome
-        ? `Welcome to Wheel of Fortune! The category is ${label}.`
-        : `The category is ${label}.`,
+      isFinalReveal
+        ? `The category is ${label}.`
+        : withWelcome
+          ? `Welcome to Wheel of Fortune! The category is ${label}.`
+          : `The category is ${label}.`,
     );
-    await playCategoryVo(state.category, { intro: withWelcome ? "first" : "next" });
+    await playCategoryVo(state.category, { intro: withWelcome && !isFinalReveal ? "first" : "next" });
     if (isTossUpAnnounce) client?.beginTossUp();
   });
 }
@@ -1018,6 +1021,15 @@ function onMessage(msg) {
       queueHostVo(async () => {
         await handleTossUpTile(msg);
       });
+      break;
+    case "finalEnvelopeSealed":
+      if (spinAnimating) {
+        spinAnimating = false;
+        pendingSpinWedge = null;
+        flushPendingGameState();
+        hideWheelDock(0);
+      }
+      setMessage("Bonus envelope sealed!");
       break;
     case "finalRstlneStart":
       if (spinAnimating) {
