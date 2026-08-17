@@ -1,4 +1,4 @@
-import { playSound } from "./audio.js?v=7";
+import { playSound } from "./audio.js?v=9";
 import { ROW_WIDTHS } from "./puzzle-layout.js?v=3";
 
 const ROWS = 4;

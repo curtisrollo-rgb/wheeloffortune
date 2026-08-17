@@ -31,7 +31,10 @@ import {
   turnChangedPayload,
   setRound,
   beginTossUp,
-  revealFinalFreeLetters,
+  beginFinalRstlne,
+  advanceFinalRstlne,
+  startFinalSolveTimer,
+  resumeFinalTimer,
   startTossUpRevealLoop,
   resumeTossUpReveal,
   startTossUpCountdown,
@@ -41,7 +44,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.25";
+const VERSION = "0.2.26";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -295,16 +298,6 @@ wss.on("connection", (ws) => {
         roundType: room.game.roundType,
         wedgeManifest: getWedgeManifestForRound(room.game.roundType),
       });
-      if (result.revealFinalFree) {
-        const free = revealFinalFreeLetters(room);
-        broadcast(room, {
-          op: "finalFreeReveal",
-          steps: free.steps,
-          indices: free.indices,
-          rows: free.rows,
-          autoSolved: !!free.autoSolved,
-        });
-      }
       if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       }
@@ -323,6 +316,21 @@ wss.on("connection", (ws) => {
 
       broadcast(room, playerActionPayload(room, info.seat, "pick", { letter: msg.letter }));
       broadcast(room, letterResultPayload(room, info.seat, result));
+      if (result.finalReveal && !result.solved) {
+        startFinalSolveTimer(room, (r, payload) => broadcast(r, payload));
+      }
+      if (result.solved && result.finalReveal) {
+        const player = getPlayerBySeat(room, info.seat);
+        broadcast(room, {
+          op: "solveResult",
+          seat: info.seat,
+          name: player?.name ?? info.seat,
+          rows: result.rows,
+          answer: room.game.puzzle?.answer,
+          roundWin: room.game.roundWinAmount,
+          message: room.game.message,
+        });
+      }
       if (result.broadcastTurn) {
         broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       }
@@ -398,6 +406,16 @@ wss.on("connection", (ws) => {
           message: room.game.message,
         });
         resumeTossUpReveal(room, (r, payload) => broadcast(r, payload));
+      } else if (result.resumeFinalTimer) {
+        broadcast(room, {
+          op: "solveWrong",
+          seat: info.seat,
+          name: result.name,
+          lockedOut: false,
+          resumeFinalTimer: true,
+          message: room.game.message,
+        });
+        resumeFinalTimer(room, (r, payload) => broadcast(r, payload));
       } else if (result.broadcastTurn) {
         broadcast(room, {
           op: "solveWrong",
@@ -469,6 +487,54 @@ wss.on("connection", (ws) => {
       } else {
         broadcastGameState(room);
       }
+      return;
+    }
+
+    if (op === "beginFinalRstlne") {
+      const info = connections.get(ws);
+      if (!info || info.role !== "host") return error(ws, "Host only.");
+      const room = getRoom(info.code);
+      if (!room) return error(ws, "Room not found.");
+      const result = beginFinalRstlne(room);
+      if (result.error) return error(ws, result.error);
+      broadcastGameState(room);
+      return;
+    }
+
+    if (op === "advanceFinalRstlne") {
+      const info = connections.get(ws);
+      if (!info || info.role !== "host") return error(ws, "Host only.");
+      const room = getRoom(info.code);
+      if (!room) return error(ws, "Room not found.");
+      const result = advanceFinalRstlne(room);
+      if (result.error) return error(ws, result.error);
+      broadcast(room, {
+        op: "finalFreeLetter",
+        letter: result.letter,
+        indices: result.indices,
+        count: result.count,
+        rows: result.rows,
+        step: result.step,
+        done: result.done,
+        autoSolved: !!result.autoSolved,
+      });
+      if (result.done && !result.autoSolved) {
+        broadcast(room, { op: "finalPickStart" });
+      }
+      if (result.autoSolved) {
+        const seat = room.game.activeSeat;
+        const player = getPlayerBySeat(room, seat);
+        broadcast(room, {
+          op: "solveResult",
+          seat,
+          name: player?.name ?? seat,
+          rows: result.rows,
+          answer: room.game.puzzle?.answer,
+          roundWin: room.game.roundWinAmount,
+          message: room.game.message,
+        });
+      }
+      broadcastGameState(room);
       return;
     }
 

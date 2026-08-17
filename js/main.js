@@ -738,6 +738,7 @@ async function handleLetter(letter) {
     if (!canGuessLetter(state)) return;
     result = guessConsonant(state, letter);
     if (result.ok && !result.hit && !result.turnLost) {
+      playSound("miss", { volume: 0.55 });
       await playMissVo(letter);
     } else if (result.ok && !result.hit) {
       playSound("miss", { volume: 0.6 });

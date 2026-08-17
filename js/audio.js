@@ -1,27 +1,29 @@
-/** Sound effects — curated from gaming pack, card pack, and sparkling effect */
+/** Sound effects — game-show spin, buzzer (wrong), coin win (right). */
 
-const SOUND_VERSION = "8";
+const SOUND_VERSION = "9";
 
 const SOUNDS = {
-  /** Wheel peg tick — PlayingCards_DealFlip_03 */
+  /** Wheel peg tick while spinning */
   tick: `assets/audio/tick.mp3?v=${SOUND_VERSION}`,
-  /** Wedge landed / toss-up ring-in — Jumps Up 01 */
+  /** Wedge landed / toss-up ring-in */
   land: `assets/audio/land.mp3?v=${SOUND_VERSION}`,
   /** Toss-up buzz-in (same clip as land) */
   buzz: `assets/audio/land.mp3?v=${SOUND_VERSION}`,
-  /** Letter revealed — Arcade Pickup Item (light cha-ching) */
-  reveal: `assets/audio/reveal.mp3?v=${SOUND_VERSION}`,
-  /** Wrong guess sting — Arcade Ominous Hit */
+  /** Letter revealed / correct guess — Game Coin Win */
+  reveal: `assets/audio/win.mp3?v=${SOUND_VERSION}`,
+  /** Puzzle solved / correct solve — Game Coin Win */
+  solve: `assets/audio/win.mp3?v=${SOUND_VERSION}`,
+  /** Correct answer sting (alias) */
+  win: `assets/audio/win.mp3?v=${SOUND_VERSION}`,
+  /** Wrong letter, wrong solve, penalties — game-show buzzer */
   miss: `assets/audio/miss.mp3?v=${SOUND_VERSION}`,
-  /** Puzzle solved fanfare — Shine 01 */
-  solve: `assets/audio/solve.mp3?v=${SOUND_VERSION}`,
-  /** Bankrupt wedge fallback — Arcade Drop Item */
-  bankrupt: `assets/audio/bankrupt.mp3?v=${SOUND_VERSION}`,
-  /** Penalty wedge sting — sad trombone-style hit */
-  sad: `assets/audio/sad.mp3?v=${SOUND_VERSION}`,
-  /** Wheel spin — PlayingCards_Shuffle_01 */
+  /** Bankrupt wedge fallback — buzzer */
+  bankrupt: `assets/audio/miss.mp3?v=${SOUND_VERSION}`,
+  /** Lose-turn / final-loss fallback — buzzer */
+  sad: `assets/audio/miss.mp3?v=${SOUND_VERSION}`,
+  /** Wheel spin start — Game Show Spin (~8s) */
   spin: `assets/audio/spin.mp3?v=${SOUND_VERSION}`,
-  /** Vowel purchase — Arcade Classic Pickup */
+  /** Vowel purchase */
   vowel: `assets/audio/vowel.mp3?v=${SOUND_VERSION}`,
 };
 
@@ -82,14 +84,13 @@ export function preloadAll() {
 
 /** Toss-Up + first spins — keep the boot path small. */
 export function preloadEssential() {
-  return preloadSounds(["tick", "land", "buzz", "solve", "miss", "spin"]);
+  return preloadSounds(["tick", "land", "buzz", "win", "solve", "miss", "spin"]);
 }
 
 /** Everything else — safe to load after the lobby is visible. */
 export function preloadRemaining() {
-  const rest = Object.keys(SOUNDS).filter(
-    (name) => !["tick", "land", "buzz", "solve", "miss", "spin"].includes(name),
-  );
+  const essential = new Set(["tick", "land", "buzz", "win", "solve", "miss", "spin"]);
+  const rest = Object.keys(SOUNDS).filter((name) => !essential.has(name));
   return preloadSounds(rest);
 }
 
@@ -106,7 +107,7 @@ function preloadSounds(names) {
             settled = true;
             resolve();
           };
-          const timer = setTimeout(finish, 2500);
+          const timer = setTimeout(finish, 4000);
           const done = () => {
             clearTimeout(timer);
             finish();

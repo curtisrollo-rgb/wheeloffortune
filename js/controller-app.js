@@ -27,6 +27,9 @@ const els = {
   tossupSolvePanel: $("tossup-solve-panel"),
   tossupSolveInput: $("tossup-solve-input"),
   btnTossupSolveSubmit: $("btn-tossup-solve-submit"),
+  finalSolvePanel: $("final-solve-panel"),
+  finalTimerDisplay: $("final-timer-display"),
+  btnFinalSolve: $("btn-final-solve"),
   controllerStatus: $("controller-status"),
   solveModal: $("solve-modal"),
   solveInput: $("solve-input"),
@@ -104,6 +107,49 @@ function isTossUpMode(state = gameState) {
   return state?.roundType === "tossup";
 }
 
+function formatFinalTimer(ms) {
+  const sec = Math.max(0, Math.ceil((ms || 0) / 1000));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function applyFinalLayout() {
+  const isFinal = gameState?.roundType === "final";
+  if (!isFinal) {
+    document.body.classList.remove("is-final-mode", "is-final-solve-mode");
+    els.finalSolvePanel?.classList.add("is-hidden");
+    return;
+  }
+
+  const envelope = gameState?.phase === "finalEnvelope";
+  const pick = gameState?.phase === "finalPick";
+  const solve = gameState?.phase === "finalSolve";
+  const mine = isMyTurn && client?.connected;
+
+  document.body.classList.toggle("is-final-mode", isFinal);
+  document.body.classList.toggle("is-final-solve-mode", solve && mine);
+
+  els.spinPanel?.classList.toggle("is-hidden", !envelope);
+  els.letterPanel?.classList.toggle("is-hidden", !pick);
+  els.actionPanel?.classList.toggle("is-hidden", !isFinal ? false : pick || solve);
+  els.finalSolvePanel?.classList.toggle("is-hidden", !solve || !mine);
+
+  if (solve && mine && gameState?.finalTimerRemainingMs != null) {
+    const label = formatFinalTimer(gameState.finalTimerRemainingMs);
+    if (els.finalTimerDisplay) els.finalTimerDisplay.textContent = label;
+    if (gameState.finalTimerPaused) {
+      setStatus("Enter your solve!");
+    } else {
+      setStatus(`${label} — tap SOLVE when ready!`);
+    }
+  }
+
+  if (els.btnFinalSolve) {
+    els.btnFinalSolve.disabled = !mine || !gameState?.canSolve;
+  }
+}
+
 function applyTossUpLayout() {
   const tossup = isTossUpMode();
   const countdown = gameState?.phase === "tossUpCountdown";
@@ -147,8 +193,10 @@ function updateControls() {
   const canSolve = mine && !!gameState?.canSolve;
 
   applyTossUpLayout();
+  applyFinalLayout();
 
   if (tossup) return;
+  if (gameState?.roundType === "final" && gameState?.phase !== "idle") return;
 
   const finalEnvelopeSpin = gameState?.phase === "finalEnvelope" && gameState?.canSpin;
   if (els.btnSpinHold) {
@@ -156,7 +204,7 @@ function updateControls() {
   }
   if (els.spinHint) {
     els.spinHint.textContent = finalEnvelopeSpin
-      ? "Seal your bonus envelope, then free letters reveal."
+      ? "Seal your bonus envelope, then the puzzle is revealed."
       : "Release to set your spin strength.";
   }
 
@@ -233,9 +281,8 @@ function handleLetter(letter) {
   if (!client?.connected) return;
 
   if (gameState?.canPickFinal && isMyTurn) {
-    sfx("tick", { volume: 0.45 });
     client.guessLetter(letter);
-    setStatus(`Picked ${letter} for Final Round.`);
+    setStatus(`Picked ${letter}.`);
     return;
   }
 
@@ -438,7 +485,12 @@ function onMessage(msg) {
       awaitingSolveResult = false;
       if (msg.seat === mySeat) {
         sfx("miss", { volume: 0.55 });
-        if (msg.lockedOut) {
+        if (msg.resumeFinalTimer) {
+          showWrongSolveFeedback("Wrong answer — time still running!", { mine: true });
+          if (gameState?.finalTimerRemainingMs != null) {
+            setStatus(`${formatFinalTimer(gameState.finalTimerRemainingMs)} left — tap SOLVE to try again!`);
+          }
+        } else if (msg.lockedOut) {
           showWrongSolveFeedback("Wrong answer — locked out of this Toss-Up.", { mine: true });
           setTurnActive(false);
         } else {
@@ -458,6 +510,10 @@ function onMessage(msg) {
       }
       break;
     case "letterResult":
+      if (msg.finalPick) {
+        if (msg.seat === mySeat) setStatus(`You picked ${msg.letter}.`);
+        break;
+      }
       if (msg.seat === mySeat) {
         if (msg.hit) sfx("reveal", { volume: 0.5 });
         else sfx("miss", { volume: 0.45 });
@@ -478,6 +534,22 @@ function onMessage(msg) {
     case "solveResult":
       awaitingSolveResult = false;
       if (msg.seat === mySeat) sfx("solve", { volume: 0.55 });
+      break;
+    case "finalTimerStart":
+    case "finalTimerTick":
+      if (gameState) {
+        gameState.finalTimerRemainingMs = msg.remainingMs;
+        applyFinalLayout();
+      }
+      break;
+    case "finalTimerExpired":
+      if (msg.seat === mySeat) {
+        setStatus(msg.message || "Time's up!");
+        setTurnActive(false);
+      }
+      break;
+    case "finalPickStart":
+      if (isMyTurn) setStatus("Pick 3 consonants and 1 vowel.");
       break;
     case "error":
       setStatus(msg.message || msg.error || "Error.");
@@ -540,6 +612,7 @@ els.btnVowel.addEventListener("click", () => {
 });
 
 els.btnSolve.addEventListener("click", openSolveModal);
+els.btnFinalSolve?.addEventListener("click", openSolveModal);
 els.btnSolveCancel.addEventListener("click", closeSolveModal);
 els.btnSolveSubmit.addEventListener("click", submitSolve);
 els.btnBuzzLarge?.addEventListener("click", ringIn);

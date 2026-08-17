@@ -5,6 +5,7 @@ import { PuzzleBoard } from "./board.js?v=3";
 import { createWheel } from "./wheel.js?v=19";
 import { runInBackground } from "./progressive-load.js?v=1";
 import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
+import { preloadBgm, fadeInBgm, fadeOutBgm, stopBgm } from "./bgm.js?v=1";
 import { loadCategoryVo, warmCategoryVo } from "./category-vo.js?v=7";
 import { loadMissVo } from "./miss-vo.js?v=4";
 import { loadHitVo } from "./hit-vo.js?v=1";
@@ -86,11 +87,80 @@ let round2AssetsLoaded = false;
 let finalAssetsLoaded = false;
 let messageClearTimer = null;
 let wheelHideTimer = null;
+let finalLetterWaiter = null;
+let finalIntroRunning = false;
 
 const AUTO_ADVANCE_MS = 5500;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function formatFinalTimer(ms) {
+  const sec = Math.max(0, Math.ceil((ms || 0) / 1000));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function showFinalTimer(ms) {
+  if (!els.finalTimer) return;
+  els.finalTimer.textContent = formatFinalTimer(ms);
+  els.finalTimer.classList.remove("is-hidden");
+  els.finalTimer.classList.toggle("is-low", ms <= 10000);
+}
+
+function hideFinalTimer() {
+  els.finalTimer?.classList.add("is-hidden");
+}
+
+function waitForFinalLetterAdvance() {
+  return new Promise((resolve) => {
+    finalLetterWaiter = resolve;
+    client?.advanceFinalRstlne();
+  });
+}
+
+async function runFinalRoundIntro() {
+  if (finalIntroRunning) return;
+  finalIntroRunning = true;
+  try {
+    flushPendingGameState();
+    await hostVoChain;
+    await sleep(400);
+    setMessage("Let's get you R, S, T, L, N, and E!");
+    client?.beginFinalRstlne();
+    await sleep(700);
+
+    for (let i = 0; i < 6; i++) {
+      const msg = await waitForFinalLetterAdvance();
+      boardRevealBusy = true;
+      try {
+        setMessage(`Revealing ${msg.letter}…`);
+        if (msg.indices?.length) {
+          await board.revealTiles(msg.indices, msg.rows);
+        } else {
+          playSound("miss", { volume: 0.22 });
+        }
+        if (msg.rows?.length) {
+          board.rows = msg.rows;
+          lastPuzzleLayout = puzzleLayoutKey(msg.rows);
+        }
+        await sleep(360);
+        if (msg.autoSolved) {
+          await board.revealAll(msg.rows);
+          playSound("solve", { volume: 0.55 });
+          await playRandomSolveCongrats();
+          stopBgm();
+          return;
+        }
+      } finally {
+        boardRevealBusy = false;
+      }
+    }
+  } finally {
+    finalIntroRunning = false;
+  }
 }
 
 function clearAutoAdvance() {
@@ -380,6 +450,7 @@ function syncRoundTabs(roundType) {
 
 function maybeAnnounceCategory(state) {
   if (!state?.started || !state?.category || !state?.puzzleId) return;
+  if (state.puzzleHidden) return;
   if (state.puzzleId === lastAnnouncedPuzzleId) return;
 
   lastAnnouncedPuzzleId = state.puzzleId;
@@ -431,6 +502,7 @@ function applyGameState(state, players = []) {
 
   if (state.puzzleId && state.puzzleId !== lastPuzzleId) {
     lastPuzzleId = state.puzzleId;
+    lastAnnouncedPuzzleId = null;
     lastPuzzleLayout = "";
     envelopeRevealShown = false;
     clearAutoAdvance();
@@ -446,12 +518,21 @@ function applyGameState(state, players = []) {
 
   if (state.rows?.length && !boardRevealBusy) {
     const layoutKey = puzzleLayoutKey(state.rows);
-    if (!lastPuzzleLayout || layoutKey !== lastPuzzleLayout) {
+    if (state.puzzleHidden) {
+      board.render(emptyBoardRows());
+      lastPuzzleLayout = puzzleLayoutKey(emptyBoardRows());
+    } else if (!lastPuzzleLayout || layoutKey !== lastPuzzleLayout) {
       board.render(state.rows);
       lastPuzzleLayout = layoutKey;
     } else {
       board.rows = state.rows;
     }
+  }
+
+  if (state.roundType === "final" && state.phase === "finalSolve" && state.finalTimerRemainingMs > 0) {
+    showFinalTimer(state.finalTimerRemainingMs);
+  } else if (state.phase !== "finalSolve") {
+    hideFinalTimer();
   }
 
   renderScoreboard(players, state.activeSeat);
@@ -466,6 +547,36 @@ function flushPendingGameState() {
 }
 
 async function handleLetterResult(msg) {
+  if (msg.finalPick) return;
+
+  if (msg.finalReveal && msg.steps?.length) {
+    boardRevealBusy = true;
+    try {
+      for (const step of msg.steps) {
+        setMessage(`Revealing ${step.letter}…`);
+        if (step.indices?.length) {
+          await board.revealTiles(step.indices, step.rows);
+        } else {
+          playSound("miss", { volume: 0.25 });
+        }
+        await sleep(420);
+        if (step.rows?.length) {
+          board.rows = step.rows;
+          lastPuzzleLayout = puzzleLayoutKey(step.rows);
+        }
+      }
+      if (msg.solved && msg.rows?.length) {
+        await board.revealAll(msg.rows);
+        playSound("solve", { volume: 0.55 });
+        await playRandomSolveCongrats();
+        stopBgm();
+      }
+    } finally {
+      boardRevealBusy = false;
+    }
+    return;
+  }
+
   if (msg.hit && msg.letter) {
     const called = new Set(latestGameState?.called || []);
     called.add(String(msg.letter).toUpperCase());
@@ -506,6 +617,7 @@ async function handleLetterResult(msg) {
   }
 
   await playMissVo(msg.letter);
+  playSound("miss", { volume: 0.55 });
   if (msg.noMoreVowels) {
     await playNoMoreVowelsVo();
   }
@@ -536,6 +648,8 @@ async function maybeRevealSolvedBoard(rows, message, { skipCongrats = false } = 
 }
 
 async function handleSolveResult(msg) {
+  stopBgm();
+  hideFinalTimer();
   if (!msg.rows?.length) return;
   boardRevealBusy = true;
   try {
@@ -621,6 +735,7 @@ const els = {
   btnFinal: $("btn-final"),
   btnNextRound: $("btn-next-round"),
   tossupCountdown: $("tossup-countdown"),
+  finalTimer: $("final-timer"),
   prizeBanner: $("prize-banner"),
   roundSummary: $("round-summary"),
   envelopeRevealModal: $("envelope-reveal-modal"),
@@ -786,6 +901,8 @@ function onMessage(msg) {
       envelopeRevealShown = false;
       clearAutoAdvance();
       stopAllVo();
+      stopBgm();
+      hideFinalTimer();
       hideWheelDock(0);
       syncRoundTabs(msg.roundType);
       if (msg.wedgeManifest?.length) {
@@ -874,6 +991,7 @@ function onMessage(msg) {
           playWedgeAmountVo(wedge.value);
         } else if (wedge?.type === "bonusEnvelope") {
           playSound("land", { volume: 0.55 });
+          await runFinalRoundIntro();
         }
       })().catch((err) => {
         console.warn("Spin animation:", err);
@@ -883,6 +1001,7 @@ function onMessage(msg) {
       });
       break;
     case "buzzWinner":
+      stopBgm();
       setMessage(`${msg.name || msg.seat} rang in to solve!`);
       playSound("buzz", { volume: 0.55 });
       break;
@@ -890,6 +1009,9 @@ function onMessage(msg) {
       queueHostVo(async () => {
         if (msg.message) setMessage(msg.message);
         await playMissVo();
+        if (msg.resumeFinalTimer) {
+          setMessage(`${msg.name || msg.seat}'s solve was wrong — time still running!`);
+        }
       });
       break;
     case "tossUpComplete":
@@ -917,6 +1039,7 @@ function onMessage(msg) {
         els.tossupCountdown.classList.add("is-hidden");
         setMessage("Toss-Up! Ring in when you know it!");
         playSound("land", { volume: 0.5 });
+        fadeInBgm({ volume: 0.18 });
       }
       break;
     case "tossUpTile":
@@ -924,10 +1047,41 @@ function onMessage(msg) {
         await handleTossUpTile(msg);
       });
       break;
-    case "finalFreeReveal":
+    case "finalFreeLetter":
+      if (finalLetterWaiter) {
+        finalLetterWaiter(msg);
+        finalLetterWaiter = null;
+      }
+      break;
+    case "finalPickStart":
+      fadeInBgm({ volume: 0.2 });
+      setMessage("Pick 3 consonants and 1 vowel!");
+      break;
+    case "finalTimerStart":
+      showFinalTimer(msg.remainingMs);
+      break;
+    case "finalTimerTick":
+      showFinalTimer(msg.remainingMs);
+      break;
+    case "finalTimerExpired":
+      stopBgm();
+      hideFinalTimer();
       queueHostVo(async () => {
-        await handleFinalFreeReveal(msg);
+        if (msg.rows?.length) {
+          boardRevealBusy = true;
+          try {
+            await board.revealAll(msg.rows);
+            board.rows = msg.rows;
+            lastPuzzleLayout = puzzleLayoutKey(msg.rows);
+          } finally {
+            boardRevealBusy = false;
+          }
+        }
+        if (msg.message) setMessage(msg.message);
+        await playMissVo();
       });
+      break;
+    case "finalFreeReveal":
       break;
     case "letterResult":
       queueHostVo(async () => {
@@ -1035,6 +1189,7 @@ async function init() {
   await runLoadingTasks(loading, [
     ["Loading essentials…", Promise.all([
       preloadEssential(),
+      preloadBgm(),
       loadCategoryVo(),
       loadHostVo(),
       loadMissVo(),

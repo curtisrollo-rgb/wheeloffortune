@@ -129,6 +129,14 @@ export class WofClient {
     this.send({ op: "buzz" });
   }
 
+  beginFinalRstlne() {
+    this.send({ op: "beginFinalRstlne" });
+  }
+
+  advanceFinalRstlne() {
+    this.send({ op: "advanceFinalRstlne" });
+  }
+
   chat(text) {
     this.send({ op: "chat", text });
   }

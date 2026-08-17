@@ -12,8 +12,8 @@
     })();
   </script>
   <link rel="stylesheet" href="css/game.css?v=45" />
-  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=7" />
-  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=4" />
+  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=8" />
+  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=5" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page big-board-page is-loading">
@@ -38,6 +38,7 @@
   </header>
 
   <div id="tossup-countdown" class="tossup-countdown is-hidden" aria-live="assertive">3</div>
+  <div id="final-timer" class="final-timer is-hidden" aria-live="polite">0:30</div>
 
   <main class="big-board-main">
     <div class="layout">
@@ -114,6 +115,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=22"></script>
+  <script type="module" src="js/host-app.js?v=23"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
 import { Wheel } from "https://cdn.jsdelivr.net/npm/spin-wheel@5.0.2/dist/spin-wheel-esm.js";
-import { playSound } from "./audio.js?v=8";
+import { playSound } from "./audio.js?v=9";
 
 /** Touch / iOS devices struggle with full-retina canvas redraws every frame. */
 const MOBILE_WHEEL =

@@ -402,6 +402,60 @@ body.controller-page.is-tossup-mode .controller-main {
   background: rgba(0, 0, 0, 0.35);
 }
 
+.final-timer {
+  position: fixed;
+  top: clamp(4.5rem, 12vh, 7rem);
+  right: clamp(0.75rem, 3vw, 1.5rem);
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.72);
+  border: 2px solid rgba(255, 215, 0, 0.55);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+  z-index: 55;
+  pointer-events: none;
+}
+
+.final-timer.is-low {
+  color: #ffb4b4;
+  border-color: rgba(255, 80, 80, 0.75);
+  animation: final-timer-pulse 0.85s ease-in-out infinite;
+}
+
+@keyframes final-timer-pulse {
+  50% { transform: scale(1.04); opacity: 0.88; }
+}
+
+.final-solve-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.final-timer-display {
+  margin: 0;
+  font-size: clamp(2rem, 10vw, 3rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+}
+
+.final-solve-btn {
+  width: min(100%, 280px);
+  min-height: 3.5rem;
+  font-size: 1.25rem;
+  letter-spacing: 0.12em;
+}
+
+body.is-final-solve-mode .controller-main {
+  justify-content: center;
+}
+
 .host-room-code {
   font-size: 0.85rem;
   color: var(--muted);

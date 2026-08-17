@@ -86,8 +86,9 @@ export function sealFinalEnvelope(game, index, wedge) {
     game.wedgeLabel = "✉ SEALED";
   }
 
-  game.phase = "finalRevealFree";
-  game.message = "Bonus sealed! Revealing R, S, T, L, N, E…";
+  game.phase = "finalPuzzleReveal";
+  game.puzzleHidden = false;
+  game.message = "Bonus sealed! Here's your puzzle!";
   return { ok: true };
 }
 
@@ -163,23 +164,30 @@ export function revealFinalPendingLetters(game) {
   const picks = [...game.finalPendingPicks];
   game.finalPendingPicks = [];
   const allIndices = [];
+  const steps = [];
 
   for (const letter of picks) {
     game.called.add(letter);
     const { rows, indices } = revealWithMap(game.rows, game.letterMap, letter);
     game.rows = rows;
     allIndices.push(...indices);
+    steps.push({
+      letter,
+      indices: [...indices],
+      rows: game.rows.map((row) => row),
+    });
   }
 
   game.phase = "finalSolve";
   game.message = allIndices.length
-    ? "Letters revealed. Solve the puzzle!"
-    : "None of your letters were in the puzzle. Solve anyway!";
+    ? "Letters revealed. You have 30 seconds to solve!"
+    : "None of your letters were in the puzzle. You have 30 seconds to solve!";
 
   return {
     ok: true,
     indices: allIndices,
     picks,
+    steps,
     rows: game.rows,
     solved: isSolved(game.rows),
   };
@@ -205,6 +213,10 @@ export function resetRoundFields(game) {
   game.finalEnvelopeIndex = null;
   game.finalEnvelopeRevealed = false;
   game.finalWon = null;
+  game.puzzleHidden = false;
+  game.finalRstlneIndex = 0;
+  game.finalTimerRemainingMs = 0;
+  game.finalTimerPaused = false;
   game.tossUpLockedOut = false;
   game.tossUpLockedSeats = new Set();
   game.tossUpRevealPaused = false;
@@ -222,6 +234,7 @@ export function setupRoundPhase(game, roundType, room) {
   }
   if (roundType === "final") {
     game.phase = "finalEnvelope";
+    game.puzzleHidden = true;
     game.activeSeat = pickFinalist(room);
     game.message = "Spin the wheel to seal your bonus envelope!";
     return;

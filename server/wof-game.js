@@ -37,6 +37,136 @@ import {
 
 export const VOWEL_COST = 250;
 export const MIN_ROUND_WIN = 1000;
+export const FINAL_SOLVE_MS = 30000;
+
+/** @type {Map<string, NodeJS.Timeout>} */
+const finalTimers = new Map();
+
+function stopFinalTimer(code) {
+  const timer = finalTimers.get(code);
+  if (timer) clearInterval(timer);
+  finalTimers.delete(code);
+}
+
+/** @param {import('./rooms.js').Room} room */
+export function pauseFinalTimer(room) {
+  if (!room.game || room.game.finalTimerPaused) return;
+  room.game.finalTimerPaused = true;
+  stopFinalTimer(room.code);
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
+export function resumeFinalTimer(room, emit) {
+  if (!room.game || !room.game.finalTimerPaused) return;
+  room.game.finalTimerPaused = false;
+  startFinalSolveTimer(room, emit, room.game.finalTimerRemainingMs);
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit @param {number} [remainingMs] */
+export function startFinalSolveTimer(room, emit, remainingMs = FINAL_SOLVE_MS) {
+  stopFinalTimer(room.code);
+  room.game.finalTimerRemainingMs = remainingMs;
+  room.game.finalTimerPaused = false;
+  emit(room, { op: "finalTimerStart", remainingMs: room.game.finalTimerRemainingMs });
+
+  const timer = setInterval(() => {
+    if (!room.game || room.game.phase !== "finalSolve" || room.game.finalTimerPaused) return;
+    room.game.finalTimerRemainingMs = Math.max(0, room.game.finalTimerRemainingMs - 1000);
+    emit(room, {
+      op: "finalTimerTick",
+      remainingMs: room.game.finalTimerRemainingMs,
+    });
+    if (room.game.finalTimerRemainingMs <= 0) {
+      stopFinalTimer(room.code);
+      handleFinalTimerExpired(room, emit);
+    }
+  }, 1000);
+  finalTimers.set(room.code, timer);
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
+function handleFinalTimerExpired(room, emit) {
+  const answer = room.game.puzzle?.answer;
+  const seat = room.game.activeSeat;
+  const player = seat ? getPlayerBySeat(room, seat) : null;
+  const name = player?.name ?? seat ?? "Finalist";
+  room.game.finalWon = false;
+  room.game.rows = revealAllForAnswer(room.game);
+  room.game.phase = "ended";
+  room.game.roundWinnerSeat = seat;
+  room.game.roundWinAmount = 0;
+  room.game.message = `Time's up! Sorry ${name} — the answer was: ${answer}`;
+  emit(room, {
+    op: "finalTimerExpired",
+    seat,
+    name,
+    answer,
+    rows: room.game.rows,
+    message: room.game.message,
+  });
+  emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+}
+
+/** @param {import('./rooms.js').Room} room */
+export function beginFinalRstlne(room) {
+  if (!room.game?.started || room.game.roundType !== "final") {
+    return { error: "Not Final Round." };
+  }
+  if (room.game.phase !== "finalPuzzleReveal" && room.game.phase !== "finalRevealFree") {
+    return { error: "Envelope not sealed yet." };
+  }
+  room.game.phase = "finalRevealFree";
+  room.game.finalRstlneIndex = 0;
+  room.game.message = "Let's get you R, S, T, L, N, and E!";
+  return { ok: true };
+}
+
+/** @param {import('./rooms.js').Room} room */
+export function advanceFinalRstlne(room) {
+  if (!room.game?.started || room.game.roundType !== "final") {
+    return { error: "Not Final Round." };
+  }
+  if (room.game.phase !== "finalRevealFree" && room.game.phase !== "finalPuzzleReveal") {
+    return { error: "RSTLNE not ready." };
+  }
+  if (room.game.phase === "finalPuzzleReveal") {
+    room.game.phase = "finalRevealFree";
+    room.game.finalRstlneIndex = 0;
+  }
+
+  const letters = FINAL_FREE_LETTERS.split("");
+  const idx = room.game.finalRstlneIndex ?? 0;
+  if (idx >= letters.length) return { error: "RSTLNE already complete." };
+
+  const letter = letters[idx];
+  const result = revealFinalFreeLetter(room.game, letter);
+  room.game.finalRstlneIndex = idx + 1;
+  const done = room.game.finalRstlneIndex >= letters.length;
+  let autoSolved = false;
+
+  if (done) {
+    const pick = beginFinalPickPhase(room.game);
+    autoSolved = !!pick.autoSolved;
+    if (autoSolved) {
+      const seat = room.game.activeSeat;
+      const player = getPlayerBySeat(room, seat);
+      const amount = room.game.finalEnvelopeAmount ?? 0;
+      bankFinalWin(room.game, seat, player, amount);
+      revealAllForAnswer(room.game);
+    }
+  }
+
+  return {
+    ok: true,
+    letter,
+    indices: result.ok && result.indices?.length ? result.indices : [],
+    count: result.count ?? 0,
+    rows: room.game.rows.map((row) => row),
+    step: room.game.finalRstlneIndex,
+    done,
+    autoSolved,
+  };
+}
 
 /** @param {string} [wedgeLabel] @param {"car"|"trip"|"prize"} [kind] */
 function prizeSubtitleForWedge(wedgeLabel, kind) {
@@ -153,6 +283,10 @@ export function createInitialGame() {
     finalEnvelopeIndex: null,
     finalEnvelopeRevealed: false,
     finalWon: null,
+    puzzleHidden: false,
+    finalRstlneIndex: 0,
+    finalTimerRemainingMs: 0,
+    finalTimerPaused: false,
     tossUpLockedOut: false,
     tossUpLockedSeats: new Set(),
     tossUpRevealPaused: false,
@@ -366,15 +500,18 @@ export function playerActionFlags(room) {
   if (g.roundType === "final") {
     const canSpin = g.phase === "finalEnvelope";
     const canPickFinal = g.phase === "finalPick";
+    const timerLeft = g.finalTimerRemainingMs ?? 0;
     return {
       canSpin,
       canGuess: false,
       canBuyVowel: false,
-      canSolve: g.phase === "finalSolve",
+      canSolve: g.phase === "finalSolve" && timerLeft > 0,
       canRingIn: false,
       canPickFinal,
       finalConsonantsLeft: g.finalConsonantsLeft,
       finalVowelsLeft: g.finalVowelsLeft,
+      finalTimerRemainingMs: timerLeft,
+      finalTimerPaused: !!g.finalTimerPaused,
     };
   }
 
@@ -407,9 +544,10 @@ export function publicGameState(room) {
     roundType: room.game.roundType,
     activeSeat: room.game.activeSeat,
     message: room.game.message,
-    category: room.game.category,
+    category: room.game.puzzleHidden ? "Final Round" : room.game.category,
     wedgeLabel: room.game.wedgeLabel,
-    rows: room.game.rows,
+    rows: room.game.puzzleHidden ? emptyBoardRows() : room.game.rows,
+    puzzleHidden: !!room.game.puzzleHidden,
     roundMoney: room.game.roundMoney,
     roundBank: room.game.roundBank,
     roundPrize: room.game.roundPrize,
@@ -426,6 +564,8 @@ export function publicGameState(room) {
     finalEnvelopeIndex: room.game.finalEnvelopeIndex,
     finalEnvelopeRevealed: room.game.finalEnvelopeRevealed,
     finalWon: room.game.finalWon,
+    finalTimerRemainingMs: room.game.finalTimerRemainingMs ?? 0,
+    finalTimerPaused: !!room.game.finalTimerPaused,
     roundWinnerSeat: room.game.roundWinnerSeat,
     roundWinAmount: room.game.roundWinAmount,
     ...playerActionFlags(room),
@@ -455,7 +595,11 @@ export function turnChangedPayload(room, seat, { cue } = {}) {
         message = `${player.name} — pick your letters!`;
         turnCue = "none";
       } else if (g.phase === "finalSolve") {
-        message = `${player.name} — solve the puzzle!`;
+        const sec = Math.ceil((g.finalTimerRemainingMs ?? 0) / 1000);
+        message = `${player.name} — ${sec}s to solve!`;
+        turnCue = "none";
+      } else if (g.phase === "finalPuzzleReveal" || g.phase === "finalRevealFree") {
+        message = `${player.name} — Final Round in progress…`;
         turnCue = "none";
       } else {
         message = `${player.name}'s turn — spin the wheel!`;
@@ -508,6 +652,10 @@ export function letterResultPayload(room, seat, result) {
       ? { id: result.prizeReveal.id, name: result.prizeReveal.name }
       : result.carPrize ?? null,
     prizeReveal: result.prizeReveal ?? null,
+    finalPick: !!result.finalPick,
+    finalReveal: !!result.finalReveal,
+    steps: result.steps ?? null,
+    picks: result.picks ?? null,
   };
 }
 
@@ -526,7 +674,6 @@ export function handleSpin(room, seat, _power) {
       index,
       wedge: { label: wedge.label, value: wedge.value ?? 0, type: "bonusEnvelope", prizeType: wedge.prizeType },
       state: publicGameState(room),
-      revealFinalFree: true,
     };
   }
 
@@ -708,15 +855,33 @@ export function handleGuessLetter(room, seat, letter) {
     if (!pick.ok) return { error: "Invalid letter pick." };
     if (pick.readyToReveal) {
       const reveal = revealFinalPendingLetters(room.game);
+      if (reveal.solved) {
+        stopFinalTimer(room.code);
+        const amount = finishSolveByLetters(room, seat);
+        return {
+          ok: true,
+          hit: true,
+          count: reveal.indices.length,
+          letter,
+          indices: reveal.indices,
+          solved: true,
+          rows: room.game.rows,
+          finalReveal: true,
+          steps: reveal.steps,
+          picks: reveal.picks,
+        };
+      }
       return {
         ok: true,
         hit: reveal.indices.length > 0,
         count: reveal.indices.length,
         letter,
         indices: reveal.indices,
-        solved: reveal.solved,
+        solved: false,
         rows: room.game.rows,
         finalReveal: true,
+        steps: reveal.steps,
+        picks: reveal.picks,
       };
     }
     return {
@@ -969,6 +1134,7 @@ export function handleSolve(room, seat, text) {
   const name = player?.name ?? seat;
 
   if (guessesMatch(text, answer)) {
+    if (room.game.roundType === "final") stopFinalTimer(room.code);
     room.game.rows = revealAllRows(room.game.rows, answer);
     const roundWin = finishSolveByLetters(room, seat);
     return {
@@ -984,19 +1150,12 @@ export function handleSolve(room, seat, text) {
   }
 
   if (room.game.roundType === "final") {
-    room.game.finalWon = false;
-    room.game.rows = revealAllRows(room.game.rows, answer);
-    room.game.phase = "ended";
-    room.game.roundWinnerSeat = seat;
-    room.game.roundWinAmount = 0;
-    room.game.message = `Sorry ${name} — the answer was: ${answer}`;
+    room.game.message = `${name}'s solve was wrong — keep trying!`;
     return {
       ok: true,
       correct: false,
-      revealAnswer: true,
-      rows: room.game.rows,
-      answer,
-      message: room.game.message,
+      resumeFinalTimer: true,
+      name,
     };
   }
 
@@ -1018,6 +1177,9 @@ export function handleSolveIntent(room, seat) {
   if (!player) return { error: "Player not found." };
 
   room.game.message = `${player.name} is attempting to solve!`;
+  if (room.game.roundType === "final" && room.game.phase === "finalSolve") {
+    pauseFinalTimer(room);
+  }
   return { ok: true, seat, name: player.name };
 }
 

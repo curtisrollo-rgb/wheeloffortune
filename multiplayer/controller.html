@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <title>Controller — Wheel of Fortune</title>
-  <link rel="stylesheet" href="css/multiplayer.css?v=5" />
+  <link rel="stylesheet" href="css/multiplayer.css?v=8" />
 </head>
 <body class="controller-page">
   <header class="controller-header">
@@ -44,6 +44,11 @@
       <button id="btn-tossup-solve-submit" type="button" class="btn btn-primary tossup-submit-btn">Submit Answer</button>
     </section>
 
+    <section id="final-solve-panel" class="final-solve-panel is-hidden">
+      <p id="final-timer-display" class="final-timer-display">0:30</p>
+      <button id="btn-final-solve" type="button" class="btn btn-primary final-solve-btn" disabled>SOLVE</button>
+    </section>
+
     <section class="action-panel" id="action-panel">
       <button id="btn-vowel" type="button" class="btn btn-secondary" disabled>Buy Vowel ($250)</button>
       <button id="btn-solve" type="button" class="btn btn-secondary" disabled>Solve</button>
@@ -64,6 +69,6 @@
     </div>
   </div>
 
-  <script type="module" src="../js/controller-app.js?v=10"></script>
+  <script type="module" src="../js/controller-app.js?v=11"></script>
 </body>
 </html>

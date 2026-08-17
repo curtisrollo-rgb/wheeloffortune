@@ -1,6 +1,6 @@
 /** Envelope reveal modal after Final Round ends. */
 
-import { playSound } from "./audio.js?v=8";
+import { playSound } from "./audio.js?v=9";
 import { playFinalWinVo } from "./final-win-vo.js?v=1";
 import { playFinalLossVo } from "./final-loss-vo.js?v=1";
 import { playCarPrizeVo } from "./car-prize-vo.js?v=1";

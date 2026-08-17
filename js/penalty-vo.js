@@ -1,6 +1,6 @@
 /** Bankrupt / Lose a Turn announcer voiceovers — [sad voice] line. */
 
-import { playSound } from "./audio.js?v=8";
+import { playSound } from "./audio.js?v=9";
 import { registerVoStop, stopAllVo } from "./vo-bus.js?v=1";
 
 const MANIFEST_URL = "assets/audio/vo/penalty/manifest.json?v=1";
