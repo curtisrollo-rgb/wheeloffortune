@@ -4,7 +4,7 @@ import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=
 import { PuzzleBoard } from "./board.js?v=3";
 import { createWheel } from "./wheel.js?v=16";
 import { preloadAll, playSound } from "./audio.js?v=8";
-import { loadCategoryVo } from "./category-vo.js?v=5";
+import { loadCategoryVo } from "./category-vo.js?v=6";
 import { loadMissVo } from "./miss-vo.js?v=4";
 import { loadHitVo } from "./hit-vo.js?v=1";
 import { loadPenaltyVo, playPenaltyVo } from "./penalty-vo.js?v=2";
@@ -14,7 +14,7 @@ import { loadCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { buildEnvelopeWedges, getFinalEnvelopePrizes, loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
 import { playHitVo } from "./hit-vo.js?v=1";
 import { playMissVo } from "./miss-vo.js?v=4";
-import { playCategoryVo } from "./category-vo.js?v=5";
+import { playCategoryVo, canonicalCategory } from "./category-vo.js?v=6";
 import {
   loadHostVo,
   playWelcomeVo,
@@ -51,6 +51,7 @@ function puzzleLayoutKey(rows) {
 let boardRevealBusy = false;
 let lastPuzzleLayout = "";
 let lastPuzzleId = null;
+let lastAnnouncedPuzzleId = null;
 let welcomePlayed = false;
 let hostVoChain = Promise.resolve();
 let spinAnimating = false;
@@ -176,6 +177,32 @@ function syncRoundTabs(roundType) {
   }
 }
 
+function maybeAnnounceCategory(state) {
+  if (!state?.started || !state?.category || !state?.puzzleId) return;
+  if (state.puzzleId === lastAnnouncedPuzzleId) return;
+
+  lastAnnouncedPuzzleId = state.puzzleId;
+  const withWelcome = !welcomePlayed;
+  if (withWelcome) welcomePlayed = true;
+
+  const isTossUpAnnounce = state.roundType === "tossup" && state.phase === "tossUpAnnounce";
+  const label = canonicalCategory(state.category);
+
+  queueHostVo(async () => {
+    if (withWelcome) {
+      setMessage("Welcome to Wheel of Fortune!");
+      await playWelcomeVo();
+    }
+    setMessage(
+      withWelcome
+        ? `Welcome to Wheel of Fortune! The category is ${label}.`
+        : `The category is ${label}.`,
+    );
+    await playCategoryVo(state.category, { intro: withWelcome ? "first" : "next" });
+    if (isTossUpAnnounce) client?.beginTossUp();
+  });
+}
+
 function applyGameState(state, players = []) {
   if (!state) return;
   latestGameState = state;
@@ -195,14 +222,8 @@ function applyGameState(state, players = []) {
   if (state.puzzleId && state.puzzleId !== lastPuzzleId) {
     lastPuzzleId = state.puzzleId;
     lastPuzzleLayout = "";
-    if (state.category) playCategoryVo(state.category);
-    if (state.roundType === "tossup" && state.phase === "tossUpAnnounce") {
-      queueHostVo(async () => {
-        await playCategoryVo(state.category);
-        client?.beginTossUp();
-      });
-    }
   }
+  maybeAnnounceCategory(state);
   if (state.message) setMessage(state.message);
 
   if (!spinAnimating) {
@@ -531,13 +552,6 @@ function onMessage(msg) {
       setRoundTabsEnabled(true);
       if (els.btnNextRound) els.btnNextRound.disabled = true;
       if (msg.state) applyGameState(msg.state, msg.players);
-      if (!welcomePlayed) {
-        welcomePlayed = true;
-        queueHostVo(async () => {
-          setMessage("Welcome to Wheel of Fortune!");
-          await playWelcomeVo();
-        });
-      }
       break;
     case "error":
       setMessage(msg.message || msg.error || "Connection error.");

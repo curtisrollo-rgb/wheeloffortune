@@ -6,6 +6,8 @@ const MANIFEST_URL = "assets/audio/vo/categories/manifest.json?v=4";
 const ALIAS_URL = "data/category_map.json?v=3";
 
 const clipsByCategory = new Map();
+/** @type {Map<string, string>} */
+const spokenByCategory = new Map();
 let aliases = {};
 let ready = false;
 let currentVo = null;
@@ -80,6 +82,9 @@ export async function loadCategoryVo() {
     const url = `${clip.file}?v=4`;
     if (!clipsByCategory.has(key)) clipsByCategory.set(key, []);
     clipsByCategory.get(key).push(url);
+    if (!spokenByCategory.has(key)) {
+      spokenByCategory.set(key, clip.spoken || clip.category);
+    }
     urls.push(url);
   }
 
@@ -97,18 +102,50 @@ function haltCurrentAudio() {
 export function stopCategoryVo() {
   playGeneration += 1;
   haltCurrentAudio();
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
 }
 
 registerVoStop(stopCategoryVo);
 
-/** @returns {Promise<void>} */
-export function playCategoryVo(category, { volume = 0.88 } = {}) {
-  if (!ready || !category) return Promise.resolve();
+function categorySpokenLabel(category) {
+  const canonical = canonicalCategory(category);
+  return spokenByCategory.get(canonical.toLowerCase()) || canonical;
+}
 
-  const { canonical, url } = resolveClip(category);
-  if (!url) {
-    console.warn(`No category VO clip for "${category}" (canonical: "${canonical}")`);
-    return Promise.resolve();
+function categoryFallbackText(category, intro) {
+  const spoken = categorySpokenLabel(category);
+  if (intro === "first") return `The category is ${spoken}.`;
+  return `And the next category is ${spoken}.`;
+}
+
+function speakFallback(text, { volume = 0.88 } = {}) {
+  if (!text || !window.speechSynthesis) return Promise.resolve();
+  stopAllVo();
+  const gen = ++playGeneration;
+
+  return new Promise((resolve) => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.volume = volume;
+    utter.rate = 0.95;
+    const finish = () => {
+      if (gen !== playGeneration) return resolve();
+      resolve();
+    };
+    utter.addEventListener("end", finish, { once: true });
+    utter.addEventListener("error", finish, { once: true });
+    window.speechSynthesis.speak(utter);
+  });
+}
+
+/** @returns {Promise<void>} */
+export function playCategoryVo(category, { volume = 0.88, intro = "next" } = {}) {
+  if (!category) return Promise.resolve();
+
+  const { url } = resolveClip(category);
+  const useClip = intro !== "first" && url && ready;
+
+  if (!useClip) {
+    return speakFallback(categoryFallbackText(category, intro), { volume });
   }
 
   stopAllVo();
@@ -126,7 +163,13 @@ export function playCategoryVo(category, { volume = 0.88 } = {}) {
     };
 
     audio.addEventListener("ended", finish, { once: true });
-    audio.addEventListener("error", finish, { once: true });
-    audio.play().catch(finish);
+    audio.addEventListener(
+      "error",
+      () => speakFallback(categoryFallbackText(category, intro), { volume }).then(finish),
+      { once: true },
+    );
+    audio.play().catch(() =>
+      speakFallback(categoryFallbackText(category, intro), { volume }).then(finish),
+    );
   });
 }

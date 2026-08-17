@@ -1,7 +1,7 @@
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
 import { preloadAll, playSound } from "./audio.js?v=8";
 import { stopAllVo } from "./vo-bus.js?v=1";
-import { loadCategoryVo, playCategoryVo, canonicalCategory } from "./category-vo.js?v=5";
+import { loadCategoryVo, playCategoryVo, canonicalCategory } from "./category-vo.js?v=6";
 import {
   loadSolveCongratsVo,
   playRandomSolveCongrats,
