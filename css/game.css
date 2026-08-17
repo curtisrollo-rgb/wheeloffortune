@@ -429,6 +429,19 @@ body.is-loading .top-bar {
     0 0 0 3px rgba(255, 215, 0, 0.9);
 }
 
+/* Lighter compositing while the canvas redraws every frame during a spin. */
+#wheel-host.is-spinning {
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+.wheel-inner.is-wheel-spinning {
+  contain: layout style paint;
+}
+
+#wheel-host canvas {
+  touch-action: none;
+}
+
 .wedge-result {
   position: relative;
   z-index: 2;
@@ -850,7 +863,7 @@ body.is-loading .top-bar {
 
   .wheel-wrap {
     --wheel-size: min(92vw, 440px);
-    --wheel-zoom: 1.75;
+    --wheel-zoom: 1.58;
     --wheel-reveal-frac: 0.18;
     --wheel-pull-frac: 0.56;
     --visible-ratio: 0.39;

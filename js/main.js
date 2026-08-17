@@ -16,7 +16,7 @@ import {
 import { loadPenaltyVo, playPenaltyVo } from "./penalty-vo.js?v=2";
 import { loadWedgeAmountVo, playWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
 import { PuzzleBoard } from "./board.js?v=2";
-import { createWheel } from "./wheel.js?v=17";
+import { createWheel } from "./wheel.js?v=18";
 import {
   createGameState,
   loadPuzzle,
