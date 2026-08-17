@@ -41,7 +41,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.18";
+const VERSION = "0.2.19";
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -298,6 +298,7 @@ wss.on("connection", (ws) => {
         const free = revealFinalFreeLetters(room);
         broadcast(room, {
           op: "finalFreeReveal",
+          steps: free.steps,
           indices: free.indices,
           rows: free.rows,
           autoSolved: !!free.autoSolved,

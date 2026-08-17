@@ -64,7 +64,12 @@ function emitNextTossUpTile(room, emit) {
     stopTossUpTimer(room.code);
     room.game.message = "Toss-Up complete — no one solved it.";
     room.game.phase = "ended";
-    emit(room, { op: "tossUpComplete", allRevealed: true });
+    emit(room, {
+      op: "tossUpComplete",
+      allRevealed: true,
+      rows: room.game.rows,
+      message: room.game.message,
+    });
     emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
     return false;
   }
@@ -388,7 +393,10 @@ export function publicGameState(room) {
     called: [...room.game.called],
     finalConsonantsLeft: room.game.finalConsonantsLeft,
     finalVowelsLeft: room.game.finalVowelsLeft,
-    finalEnvelopeAmount: room.game.finalEnvelopeRevealed ? room.game.finalEnvelopeAmount : null,
+    finalEnvelopeAmount: room.game.finalEnvelopeAmount,
+    finalEnvelopePrize: room.game.finalEnvelopePrize,
+    finalEnvelopeIndex: room.game.finalEnvelopeIndex,
+    finalEnvelopeRevealed: room.game.finalEnvelopeRevealed,
     finalWon: room.game.finalWon,
     ...playerActionFlags(room),
   };
@@ -429,6 +437,11 @@ export function letterResultPayload(room, seat, result) {
     rows: room.game.rows,
     turnLost: !!result.turnLost,
     solved: !!result.solved,
+    roundType: room.game.roundType,
+    onlyVowelsRemain: !!result.onlyVowelsRemain,
+    noMoreVowels: !!result.noMoreVowels,
+    carWon: !!result.carWon,
+    carPrize: result.carPrize ?? null,
   };
 }
 
@@ -537,12 +550,17 @@ export function handleSpin(room, seat, _power) {
 
 /** @param {import('./rooms.js').Room} room */
 export function revealFinalFreeLetters(room) {
+  const steps = [];
   const allIndices = [];
   for (const letter of FINAL_FREE_LETTERS) {
     const result = revealFinalFreeLetter(room.game, letter);
-    if (result.ok && result.indices?.length) {
-      allIndices.push(...result.indices);
-    }
+    const indices = result.ok && result.indices?.length ? result.indices : [];
+    steps.push({
+      letter,
+      indices,
+      rows: room.game.rows.map((row) => row),
+    });
+    if (indices.length) allIndices.push(...indices);
   }
   const pickPhase = beginFinalPickPhase(room.game);
   if (pickPhase.autoSolved) {
@@ -551,9 +569,9 @@ export function revealFinalFreeLetters(room) {
     const amount = room.game.finalEnvelopeAmount ?? 0;
     bankFinalWin(room.game, seat, player, amount);
     revealAllForAnswer(room.game);
-    return { ok: true, indices: allIndices, autoSolved: true, rows: room.game.rows };
+    return { ok: true, steps, indices: allIndices, autoSolved: true, rows: room.game.rows };
   }
-  return { ok: true, indices: allIndices, autoSolved: false, rows: room.game.rows };
+  return { ok: true, steps, indices: allIndices, autoSolved: false, rows: room.game.rows };
 }
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
@@ -658,11 +676,15 @@ export function handleGuessLetter(room, seat, letter) {
       if (player) player.score += earned;
     }
 
+    let carWon = false;
     if (room.game.pendingPrizeKind === "car") {
       room.game.pendingPrizeKind = null;
       room.game.carPrize = { id: "car-round2", name: "Bonus Car" };
       room.game.roundPrize = room.game.carPrize.name;
+      carWon = true;
     }
+
+    const onlyVowels = onlyVowelsRemain(room.game);
 
     room.game.message =
       earned > 0
@@ -675,11 +697,21 @@ export function handleGuessLetter(room, seat, letter) {
       return { ok: true, hit: true, count, letter: upper, indices, solved: true, rows: room.game.rows };
     }
 
-    if (onlyVowelsRemain(room.game)) {
+    if (onlyVowels) {
       room.game.message = `${count} ${upper}'s. Only vowels left — buy a vowel or solve.`;
     }
 
-    return { ok: true, hit: true, count, letter: upper, indices, rows: room.game.rows };
+    return {
+      ok: true,
+      hit: true,
+      count,
+      letter: upper,
+      indices,
+      rows: room.game.rows,
+      onlyVowelsRemain: onlyVowels,
+      carWon,
+      carPrize: carWon ? room.game.carPrize : null,
+    };
   }
 
   room.game.message = `Sorry, no ${upper}.`;

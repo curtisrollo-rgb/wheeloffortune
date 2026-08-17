@@ -612,3 +612,18 @@ body.controller-page {
   width: 100%;
   margin-bottom: 0.75rem;
 }
+
+.controller-letter-grid.final-round-mode .letter-btn.final-pick {
+  background: rgba(255, 215, 0, 0.22);
+  border-color: var(--accent);
+  color: #fff;
+  opacity: 1;
+}
+
+.controller-letter-grid.final-round-mode .letter-btn.final-used {
+  opacity: 0.35;
+}
+
+.controller-letter-grid.final-round-mode .letter-btn.final-unpicked:not(.final-pick) {
+  opacity: 0.5;
+}

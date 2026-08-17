@@ -10,8 +10,15 @@ import { loadHitVo } from "./hit-vo.js?v=1";
 import { loadPenaltyVo, playPenaltyVo } from "./penalty-vo.js?v=2";
 import { loadWedgeAmountVo, playWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
 import { loadSolveCongratsVo, playRandomSolveCongrats } from "./solve-congrats-vo.js?v=2";
-import { loadCarPrizeVo } from "./car-prize-vo.js?v=1";
+import { loadCarPrizeVo, playCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { buildEnvelopeWedges, getFinalEnvelopePrizes, loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
+import { showEnvelopeReveal } from "./final-envelope-ui.js?v=1";
+import { showPrizeBanner } from "./prize-banner.js?v=1";
+import { loadMilestoneVo, playOnlyVowelsRemainVo, playNoMoreVowelsVo } from "./milestone-vo.js?v=1";
+import { loadFinalGoodLuckVo, playRandomFinalGoodLuckVo } from "./final-good-luck-vo.js?v=1";
+import { loadFinalWinVo } from "./final-win-vo.js?v=1";
+import { loadFinalLossVo } from "./final-loss-vo.js?v=1";
+import { stopAllVo } from "./vo-bus.js?v=1";
 import { playHitVo } from "./hit-vo.js?v=1";
 import { playMissVo } from "./miss-vo.js?v=4";
 import { playCategoryVo, canonicalCategory } from "./category-vo.js?v=6";
@@ -61,6 +68,62 @@ let currentRoundType = "round1";
 let latestGameState = null;
 let wheelApi = null;
 let wheelLoading = null;
+let envelopeRevealShown = false;
+let autoAdvanceTimer = null;
+
+const AUTO_ADVANCE_MS = 5500;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function clearAutoAdvance() {
+  if (autoAdvanceTimer) {
+    clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = null;
+  }
+}
+
+function scheduleAutoAdvance(state) {
+  clearAutoAdvance();
+  if (state?.phase !== "ended") return;
+  const next = nextRoundType(state.roundType);
+  if (!next || !client?.connected) return;
+  autoAdvanceTimer = setTimeout(() => {
+    switchRound(next);
+  }, AUTO_ADVANCE_MS);
+}
+
+function needsFinalEnvelopeReveal(state) {
+  return (
+    state?.roundType === "final" &&
+    state?.phase === "ended" &&
+    state.finalEnvelopeIndex != null &&
+    !envelopeRevealShown
+  );
+}
+
+async function maybeRevealFinalEnvelope(state) {
+  if (!needsFinalEnvelopeReveal(state)) return;
+  envelopeRevealShown = true;
+  const amount = state.finalEnvelopeAmount ?? 0;
+  const prize = state.finalEnvelopePrize;
+  const won = state.finalWon === true;
+  await showEnvelopeReveal(els.envelopeRevealModal, { amount, won, prize });
+  scheduleAutoAdvance(state);
+}
+
+async function revealCarPrize(car) {
+  if (!car?.name) return;
+  playSound("solve", { volume: 0.45 });
+  const bannerPromise = showPrizeBanner(els.prizeBanner, {
+    title: "You Won!",
+    subtitle: "New Car",
+    name: car.name,
+  });
+  await playCarPrizeVo(car.id || "car-round2");
+  await bannerPromise;
+}
 
 function nextRoundType(roundType) {
   const idx = GAME_ORDER.indexOf(roundType);
@@ -129,6 +192,14 @@ function updateRoundMoneyPill(state) {
       els.roundMoney.textContent = "Spin for envelope";
     } else if (state.phase === "finalRevealFree") {
       els.roundMoney.textContent = "Free letters…";
+    } else if (state.finalEnvelopeAmount != null || state.finalEnvelopePrize) {
+      if (state.finalEnvelopePrize?.kind === "car") {
+        els.roundMoney.textContent = "Bonus sealed ✉ CAR";
+      } else if (state.finalEnvelopePrize?.kind === "trip") {
+        els.roundMoney.textContent = "Bonus sealed ✉ TRIP";
+      } else {
+        els.roundMoney.textContent = "Bonus sealed ✉";
+      }
     } else if (state.phase === "finalPick") {
       els.roundMoney.textContent =
         state.finalConsonantsLeft > 0
@@ -148,20 +219,25 @@ function updateRoundMoneyPill(state) {
       els.roundMoney.textContent = "Get ready…";
     } else if (state.phase === "tossUpReveal") {
       els.roundMoney.textContent = "$1,000 Toss-Up";
+    } else if (state.phase === "ended") {
+      els.roundMoney.textContent = "Toss-Up complete";
     } else {
       els.roundMoney.textContent = "Toss-Up";
     }
     return;
   }
-  if (typeof state.roundMoney === "number" && state.roundMoney > 0) {
-    els.roundMoney.textContent = `$${state.roundMoney.toLocaleString()}/letter`;
-  } else if (state.roundBank > 0) {
-    els.roundMoney.textContent = `$${state.roundBank.toLocaleString()}`;
-  } else if (state.roundPrize) {
-    els.roundMoney.textContent = `Prize: ${state.roundPrize}`;
-  } else {
-    els.roundMoney.textContent = "—";
-  }
+  const roundLabel = state.roundMoney
+    ? `$${state.roundBank.toLocaleString()} (@ $${state.roundMoney}/letter)`
+    : state.roundBank
+      ? `$${state.roundBank.toLocaleString()}`
+      : state.pendingPrizeKind === "car"
+        ? "CAR — call a consonant"
+        : state.carPrize
+          ? `Car: ${state.carPrize.name}`
+          : state.roundPrize
+            ? `Prize: ${state.roundPrize}`
+            : "—";
+  els.roundMoney.textContent = roundLabel;
 }
 
 function setRoundTabsEnabled(enabled) {
@@ -222,6 +298,9 @@ function applyGameState(state, players = []) {
   if (state.puzzleId && state.puzzleId !== lastPuzzleId) {
     lastPuzzleId = state.puzzleId;
     lastPuzzleLayout = "";
+    envelopeRevealShown = false;
+    clearAutoAdvance();
+    stopAllVo();
   }
   maybeAnnounceCategory(state);
   if (state.message) setMessage(state.message);
@@ -253,6 +332,10 @@ function flushPendingGameState() {
 }
 
 async function handleLetterResult(msg) {
+  if (msg.carWon && msg.carPrize) {
+    await revealCarPrize(msg.carPrize);
+  }
+
   if (msg.hit && msg.indices?.length) {
     boardRevealBusy = true;
     try {
@@ -261,8 +344,15 @@ async function handleLetterResult(msg) {
         await board.revealAll(msg.rows);
         playSound("solve", { volume: 0.55 });
         await playRandomSolveCongrats();
+        if (msg.rows?.length) {
+          board.rows = msg.rows;
+          lastPuzzleLayout = puzzleLayoutKey(msg.rows);
+        }
       } else if (msg.count >= 1 && msg.count <= 3) {
         await playHitVo(msg.letter, msg.count);
+      }
+      if (msg.onlyVowelsRemain) {
+        await playOnlyVowelsRemainVo();
       }
       if (msg.rows?.length) {
         board.rows = msg.rows;
@@ -274,7 +364,10 @@ async function handleLetterResult(msg) {
     return;
   }
 
-  playMissVo(msg.letter);
+  await playMissVo(msg.letter);
+  if (msg.noMoreVowels) {
+    await playNoMoreVowelsVo();
+  }
 }
 
 function boardHasHiddenTiles() {
@@ -329,17 +422,35 @@ async function handleTossUpTile(msg) {
 }
 
 async function handleFinalFreeReveal(msg) {
-  if (!msg.indices?.length) return;
   boardRevealBusy = true;
   try {
-    await board.revealTiles(msg.indices, msg.rows);
+    await playRandomFinalGoodLuckVo();
+
+    if (msg.steps?.length) {
+      for (const step of msg.steps) {
+        setMessage(`Revealing ${step.letter}…`);
+        if (step.indices?.length) {
+          await board.revealTiles(step.indices, step.rows);
+        } else {
+          playSound("miss", { volume: 0.25 });
+        }
+        await sleep(320);
+      }
+    } else if (msg.indices?.length) {
+      await board.revealTiles(msg.indices, msg.rows);
+    }
+
     if (msg.rows?.length) {
       board.rows = msg.rows;
       lastPuzzleLayout = puzzleLayoutKey(msg.rows);
     }
+
     if (msg.autoSolved) {
       await board.revealAll(msg.rows);
       playSound("solve", { volume: 0.55 });
+      await playRandomSolveCongrats();
+      const state = { ...latestGameState, phase: "ended", finalWon: true };
+      await maybeRevealFinalEnvelope(state);
     }
   } finally {
     boardRevealBusy = false;
@@ -369,6 +480,8 @@ const els = {
   btnFinal: $("btn-final"),
   btnNextRound: $("btn-next-round"),
   tossupCountdown: $("tossup-countdown"),
+  prizeBanner: $("prize-banner"),
+  envelopeRevealModal: $("envelope-reveal-modal"),
 };
 
 let client = null;
@@ -449,6 +562,9 @@ function onMessage(msg) {
       break;
     case "roundChanged":
       lastPuzzleLayout = "";
+      envelopeRevealShown = false;
+      clearAutoAdvance();
+      stopAllVo();
       if (msg.wedgeManifest?.length) {
         loadWheelFromManifest(msg.wedgeManifest);
       } else {
@@ -478,6 +594,11 @@ function onMessage(msg) {
       applyGameState(msg.state, msg.players);
       if (msg.state?.phase === "ended") {
         maybeRevealSolvedBoard(msg.state.rows, msg.state.message);
+        if (msg.state.roundType === "final" && msg.state.finalWon === false) {
+          queueHostVo(async () => {
+            await maybeRevealFinalEnvelope(msg.state);
+          });
+        }
       }
       break;
     case "spinResult":
@@ -504,6 +625,12 @@ function onMessage(msg) {
         flushPendingGameState();
         if (wedge?.type === "bankrupt" || wedge?.type === "loseTurn") {
           playPenaltyVo(wedge.type);
+        } else if (wedge?.type === "prize") {
+          if (wedge.prizeKind === "car") {
+            playSound("land", { volume: 0.45 });
+          } else {
+            playSound("solve", { volume: 0.35 });
+          }
         } else if (wedge?.value > 0) {
           playWedgeAmountVo(wedge.value);
         } else if (wedge?.type === "bonusEnvelope") {
@@ -513,6 +640,26 @@ function onMessage(msg) {
         console.warn("Spin animation:", err);
         spinAnimating = false;
         flushPendingGameState();
+      });
+      break;
+    case "buzzWinner":
+      setMessage(`${msg.name || msg.seat} rang in to solve!`);
+      playSound("land", { volume: 0.5 });
+      break;
+    case "tossUpComplete":
+      queueHostVo(async () => {
+        if (msg.rows?.length) {
+          boardRevealBusy = true;
+          try {
+            await board.revealAll(msg.rows);
+            board.rows = msg.rows;
+            lastPuzzleLayout = puzzleLayoutKey(msg.rows);
+          } finally {
+            boardRevealBusy = false;
+          }
+        }
+        if (msg.message) setMessage(msg.message);
+        scheduleAutoAdvance(latestGameState);
       });
       break;
     case "tossUpCountdown":
@@ -596,6 +743,9 @@ function switchRound(roundType) {
     setMessage("Not connected to server.");
     return;
   }
+  clearAutoAdvance();
+  envelopeRevealShown = false;
+  stopAllVo();
   setMessage(`Switching to ${ROUND_LABELS[roundType] || roundType}…`);
   try {
     client.setRound(roundType);
@@ -631,7 +781,20 @@ async function init() {
   const loading = createLoadingProgress(els.loadingScreen);
   await runLoadingTasks(loading, [
     ["Loading sounds…", preloadAll()],
-    ["Loading voice…", Promise.all([loadCategoryVo(), loadMissVo(), loadHitVo(), loadPenaltyVo(), loadWedgeAmountVo(), loadSolveCongratsVo(), loadCarPrizeVo(), loadHostVo()])],
+    ["Loading voice…", Promise.all([
+      loadCategoryVo(),
+      loadMissVo(),
+      loadHitVo(),
+      loadPenaltyVo(),
+      loadWedgeAmountVo(),
+      loadSolveCongratsVo(),
+      loadCarPrizeVo(),
+      loadHostVo(),
+      loadMilestoneVo(),
+      loadFinalGoodLuckVo(),
+      loadFinalWinVo(),
+      loadFinalLossVo(),
+    ])],
     ["Loading bonus wheel…", loadFinalEnvelopeAmounts()],
     ["Building wheel…", loadWheelForRound("round1")],
     ["Connecting…", connectToRoom()],

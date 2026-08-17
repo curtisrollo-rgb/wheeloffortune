@@ -148,6 +148,19 @@ function updateControls() {
 
   if (tossup) return;
 
+  const finalEnvelopeSpin = gameState?.phase === "finalEnvelope" && gameState?.canSpin;
+  if (els.btnSpinHold) {
+    els.btnSpinHold.textContent = finalEnvelopeSpin ? "Hold to Spin Envelope" : "Hold to Spin";
+  }
+  if (els.spinHint) {
+    els.spinHint.textContent = finalEnvelopeSpin
+      ? "Seal your bonus envelope, then free letters reveal."
+      : "Release to set your spin strength.";
+  }
+
+  const inFinalPick = !!gameState?.canPickFinal;
+  els.letterGrid?.classList.toggle("final-round-mode", inFinalPick);
+
   if (vowelMode && !canBuy) setVowelMode(false);
 
   els.btnSpinHold.disabled = !canSpin;
@@ -184,6 +197,9 @@ function updateControls() {
       const isFinalVowel = vowel && gameState.finalConsonantsLeft === 0;
       const isFinalConsonant = !vowel && (gameState.finalConsonantsLeft ?? 0) > 0;
       btn.disabled = used || (!isFinalVowel && !isFinalConsonant);
+      if (!btn.disabled) btn.classList.add("final-pick", "final-unpicked");
+      else if (used) btn.classList.add("final-used");
+      else btn.classList.add("final-unpicked");
       continue;
     }
 
