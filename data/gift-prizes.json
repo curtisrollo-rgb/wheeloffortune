@@ -1,0 +1,175 @@
+{
+  "comment": "Gift wedge prizes from Andy Nguyen archive. Not all are cash — see kind (cash_card, shopping_spree, gift_certificate, merchandise_bundle).",
+  "gifts": [
+    {
+      "id": "1_000_gift_card",
+      "wording": "$1,000 Gift Card",
+      "display": "$1,000 Gift Card",
+      "kind": "cash_card",
+      "value_usd": 1000,
+      "source": "Generic spend-anywhere gift card (modern wedge style)",
+      "congratsText": "Congratulations, you've won a $1,000 gift card!",
+      "voText": "Great news! Congratulations, you've won a $1,000 gift card!"
+    },
+    {
+      "id": "shopping_spree_at_the_sharper_image",
+      "wording": "FEATURED PRIZE: shopping spree at The Sharper Image",
+      "display": "shopping spree at The Sharper Image",
+      "kind": "shopping_spree",
+      "value_usd": 1000,
+      "source": "archive",
+      "congratsText": "Congrats, you've won a shopping spree at The Sharper Image!",
+      "voText": "Congratulations! Congrats, you've won a shopping spree at The Sharper Image!"
+    },
+    {
+      "id": "1_800_gift_certificate",
+      "wording": "FEATURED PRIZE: 1-800-Gift Certificate",
+      "display": "1-800-Gift Certificate",
+      "kind": "gift_certificate",
+      "value_usd": 2500,
+      "source": "archive",
+      "congratsText": "Good work — you've won a 1-800-Gift Certificate!",
+      "voText": "Congrats! Good work — you've won a 1-800-Gift Certificate!"
+    },
+    {
+      "id": "giorgio_armani_shopping_spree",
+      "wording": "FEATURED PRIZE: Giorgio Armani shopping spree",
+      "display": "Giorgio Armani shopping spree",
+      "kind": "shopping_spree",
+      "value_usd": 2500,
+      "source": "archive",
+      "congratsText": "You've won a shopping spree — Giorgio Armani shopping spree!",
+      "voText": "Good work! You've won a shopping spree — Giorgio Armani shopping spree!"
+    },
+    {
+      "id": "novica_gift_certificate",
+      "wording": "FEATURED PRIZE: NOVICA gift certificate",
+      "display": "NOVICA gift certificate",
+      "kind": "gift_certificate",
+      "value_usd": 2500,
+      "source": "archive",
+      "congratsText": "Congratulations, you've won a NOVICA gift certificate!",
+      "voText": "You've won! Congratulations, you've won a NOVICA gift certificate!"
+    },
+    {
+      "id": "ghurka_leather_gift_certificate",
+      "wording": "FEATURED PRIZE #1: Ghurka leather gift certificate",
+      "display": "Ghurka leather gift certificate",
+      "kind": "gift_certificate",
+      "value_usd": 2500,
+      "source": "archive",
+      "congratsText": "Congrats, you've won a Ghurka leather gift certificate!",
+      "voText": "Great news! Congrats, you've won a Ghurka leather gift certificate!"
+    },
+    {
+      "id": "co_pilot_navigation_software_plus_comp_usa_shopping_spree",
+      "wording": "FEATURED PRIZE: Co-Pilot navigation software plus Comp USA shopping spree",
+      "display": "Co-Pilot navigation software plus Comp USA shopping spree",
+      "kind": "merchandise_bundle",
+      "value_usd": 2500,
+      "source": "archive",
+      "congratsText": "Good work — you've won Co-Pilot navigation software plus Comp USA shopping spree!",
+      "voText": "Congratulations! Good work — you've won Co-Pilot navigation software plus Comp USA shopping spree!"
+    },
+    {
+      "id": "maui_jim_sunglasses_some_cash_for_a_beach_party",
+      "wording": "FEATURED PRIZE: Maui Jim sunglasses + some cash for a beach party",
+      "display": "Maui Jim sunglasses + some cash for a beach party",
+      "kind": "merchandise_bundle",
+      "value_usd": 2500,
+      "source": "archive",
+      "congratsText": "You've won Maui Jim sunglasses + some cash for a beach party!",
+      "voText": "Congrats! You've won Maui Jim sunglasses + some cash for a beach party!"
+    },
+    {
+      "id": "service_merchandise_gc_used_to_buy_a_diamond_and_ruby_heart_pendant",
+      "wording": "FEATURED PRIZE #3: Service Merchandise GC used to buy a diamond and ruby heart pendant",
+      "display": "Service Merchandise GC used to buy a diamond and ruby heart pendant",
+      "kind": "gift_certificate",
+      "value_usd": 3000,
+      "source": "archive",
+      "congratsText": "Congratulations, you've won a $3,000 gift certificate — Service Merchandise GC used to buy a diamond and ruby heart pendant!",
+      "voText": "Good work! Congratulations, you've won a $3,000 gift certificate — Service Merchandise GC used to buy a diamond and ruby heart pendant!"
+    },
+    {
+      "id": "fred_joaillier_gc_used_to_buy_a_ring",
+      "wording": "FEATURED PRIZE: Fred Joaillier GC used to buy a ring",
+      "display": "Fred Joaillier GC used to buy a ring",
+      "kind": "gift_certificate",
+      "value_usd": 4700,
+      "source": "archive",
+      "congratsText": "Congrats, you've won a $4,700 gift certificate — Fred Joaillier GC used to buy a ring!",
+      "voText": "You've won! Congrats, you've won a $4,700 gift certificate — Fred Joaillier GC used to buy a ring!"
+    },
+    {
+      "id": "american_airlines_vacations_travel_gift_certificate",
+      "wording": "WEEKLONG PRIZE: American Airlines Vacations Travel gift certificate",
+      "display": "American Airlines Vacations Travel gift certificate",
+      "kind": "gift_certificate",
+      "value_usd": 7000,
+      "source": "archive",
+      "congratsText": "Good work — you've won a American Airlines Vacations Travel gift certificate!",
+      "voText": "Great news! Good work — you've won a American Airlines Vacations Travel gift certificate!"
+    },
+    {
+      "id": "disney_shopping_spree_marvel_bundle",
+      "wording": "FEATURED MARVEL PRIZE: Disney shopping spree + Marvel bundle",
+      "display": "Disney shopping spree + Marvel bundle",
+      "kind": "merchandise_bundle",
+      "value_usd": 7000,
+      "source": "archive",
+      "congratsText": "You've won Disney shopping spree + Marvel bundle!",
+      "voText": "Congratulations! You've won Disney shopping spree + Marvel bundle!"
+    },
+    {
+      "id": "caesars_palace_and_shopping_spree_at_the_forum_shops",
+      "wording": "FEATURED VEGAS TRIP: Caesars Palace and shopping spree at the Forum Shops",
+      "display": "Caesars Palace and shopping spree at the Forum Shops",
+      "kind": "shopping_spree",
+      "value_usd": 6100,
+      "source": "archive",
+      "congratsText": "Congratulations, you've won a shopping spree — Caesars Palace and shopping spree at the Forum Shops!",
+      "voText": "Congrats! Congratulations, you've won a shopping spree — Caesars Palace and shopping spree at the Forum Shops!"
+    },
+    {
+      "id": "cartier_gc_used_to_buy_opera_length_pearls_with_rose_luster",
+      "wording": "FEATURED PRIZE: Cartier GC used to buy opera-length pearls with rose luster",
+      "display": "Cartier GC used to buy opera-length pearls with rose luster",
+      "kind": "gift_certificate",
+      "value_usd": 8250,
+      "source": "archive",
+      "congratsText": "Congrats, you've won a $8,250 gift certificate — Cartier GC used to buy opera-length pearls with rose luster!",
+      "voText": "Good work! Congrats, you've won a $8,250 gift certificate — Cartier GC used to buy opera-length pearls with rose luster!"
+    },
+    {
+      "id": "van_cleef_arpels_gift_certificate",
+      "wording": "Van Cleef & Arpels gift certificate",
+      "display": "Van Cleef & Arpels gift certificate",
+      "kind": "gift_certificate",
+      "value_usd": 3500,
+      "source": "archive",
+      "congratsText": "Good work — you've won a Van Cleef & Arpels gift certificate!",
+      "voText": "You've won! Good work — you've won a Van Cleef & Arpels gift certificate!"
+    },
+    {
+      "id": "gucci_gift_certificate",
+      "wording": "Gucci gift certificate",
+      "display": "Gucci gift certificate",
+      "kind": "gift_certificate",
+      "value_usd": 4500,
+      "source": "archive",
+      "congratsText": "You've won a Gucci gift certificate!",
+      "voText": "Great news! You've won a Gucci gift certificate!"
+    },
+    {
+      "id": "protravelgear_com_gift_certificate",
+      "wording": "Protravelgear.com gift certificate",
+      "display": "Protravelgear.com gift certificate",
+      "kind": "gift_certificate",
+      "value_usd": 650,
+      "source": "archive",
+      "congratsText": "Congratulations, you've won a Protravelgear.com gift certificate!",
+      "voText": "Congratulations! Congratulations, you've won a Protravelgear.com gift certificate!"
+    }
+  ]
+}

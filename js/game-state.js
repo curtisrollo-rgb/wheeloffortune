@@ -8,6 +8,7 @@ import {
   isSolved,
 } from "./puzzle-layout.js?v=3";
 import { pickRandomTrip } from "./trip-prizes.js?v=1";
+import { pickRandomSpa } from "./spa-prizes.js?v=1";
 import { prizeSubtitleForWedge } from "./prize-banner.js?v=2";
 
 export const VOWEL_COST = 250;
@@ -39,7 +40,7 @@ export function createGameState() {
     roundType: "round1",
     /** Prize wedge picked up in Round 2 (won on solve). */
     roundPrize: null,
-    /** @type {"car"|"trip"|"prize"|null} Waiting for a consonant hit before prize is revealed. */
+    /** @type {"car"|"trip"|"spa"|"prize"|null} Waiting for a consonant hit before prize is revealed. */
     pendingPrizeKind: null,
     /** Wedge label for generic prize wedges (GIFT, SPA, …). */
     pendingPrizeLabel: null,
@@ -48,6 +49,9 @@ export function createGameState() {
     /** @type {{ id: string, label: string, name: string, valueUsd?: number }|null} */
     tripPrize: null,
     tripPrizeClaimed: false,
+    /** @type {{ id: string, label: string, name: string, display?: string, valueUsd?: number }|null} */
+    spaPrize: null,
+    spaPrizeClaimed: false,
     finalConsonantsLeft: 0,
     finalVowelsLeft: 0,
     /** Letters chosen in Final Round before the batch reveal. */
@@ -82,6 +86,8 @@ export function loadPuzzle(state, entry, { roundType = state.roundType } = {}) {
   state.carPrize = null;
   state.tripPrize = null;
   state.tripPrizeClaimed = false;
+  state.spaPrize = null;
+  state.spaPrizeClaimed = false;
   state.finalConsonantsLeft = 0;
   state.finalVowelsLeft = 0;
   state.finalPendingPicks = [];
@@ -272,6 +278,11 @@ function loseTurn(state, message) {
     state.pendingPrizeLabel = null;
     if (!state.tripPrizeClaimed) {
       state.tripPrize = null;
+    }
+    if (!state.spaPrizeClaimed) {
+      state.spaPrize = null;
+    }
+    if (!state.tripPrizeClaimed && !state.spaPrizeClaimed) {
       state.roundPrize = null;
     }
   }
@@ -293,6 +304,19 @@ function tryClaimPendingPrize(state) {
       name: state.tripPrize.label,
       id: state.tripPrize.id,
       trip: state.tripPrize,
+    };
+  }
+  if (state.pendingPrizeKind === "spa" && state.spaPrize && !state.spaPrizeClaimed) {
+    state.pendingPrizeKind = null;
+    state.pendingPrizeLabel = null;
+    state.spaPrizeClaimed = true;
+    state.roundPrize = state.spaPrize.label;
+    return {
+      kind: "spa",
+      subtitle: "Spa Getaway",
+      name: state.spaPrize.display || state.spaPrize.label,
+      id: state.spaPrize.id,
+      spa: state.spaPrize,
     };
   }
   if (state.pendingPrizeKind === "prize" && state.roundPrize) {
@@ -515,6 +539,8 @@ export function applySpinResult(state, wedge) {
     state.carPrize = null;
     state.tripPrize = null;
     state.tripPrizeClaimed = false;
+    state.spaPrize = null;
+    state.spaPrizeClaimed = false;
     loseTurn(state, "Bankrupt! Round earnings wiped. Spin again.");
     return { type: "bankrupt" };
   }
@@ -544,17 +570,36 @@ export function applySpinResult(state, wedge) {
       state.tripPrize = trip;
       state.tripPrizeClaimed = false;
       state.carPrize = null;
+      state.spaPrize = null;
+      state.spaPrizeClaimed = false;
       state.roundPrize = trip?.label || wedge.prize || "Trip";
       state.message = trip
         ? `Landed on TRIP! Call a consonant to claim ${trip.label}.`
         : "Landed on TRIP! Call a consonant to claim your trip.";
       return { type: "prize", prizeKind: "trip" };
     }
+    if (wedge.label === "SPA" || wedge.prizeKind === "spa") {
+      const spa = pickRandomSpa();
+      state.pendingPrizeKind = "spa";
+      state.pendingPrizeLabel = null;
+      state.spaPrize = spa;
+      state.spaPrizeClaimed = false;
+      state.carPrize = null;
+      state.tripPrize = null;
+      state.tripPrizeClaimed = false;
+      state.roundPrize = spa?.label || "Spa Getaway";
+      state.message = spa
+        ? `Landed on SPA! Call a consonant to claim ${spa.display || spa.label}.`
+        : "Landed on SPA! Call a consonant to claim your spa getaway.";
+      return { type: "prize", prizeKind: "spa" };
+    }
     state.pendingPrizeKind = "prize";
     state.pendingPrizeLabel = wedge.label;
     state.carPrize = null;
     state.tripPrize = null;
     state.tripPrizeClaimed = false;
+    state.spaPrize = null;
+    state.spaPrizeClaimed = false;
     state.roundPrize = wedge.prize || wedge.label;
     state.message = `Landed on ${wedge.label}! Call a consonant to claim ${state.roundPrize}.`;
     return { type: "prize", prize: state.roundPrize };

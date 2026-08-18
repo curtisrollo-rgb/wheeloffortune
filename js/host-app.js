@@ -1,5 +1,5 @@
 import { WofClient } from "./net/client.js?v=1";
-import { getWsUrl, getRoomFromUrl, dataUrl } from "./net/config.js?v=2";
+import { getWsUrl, getRoomFromUrl, getSpectateFromUrl, dataUrl } from "./net/config.js?v=3";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
 import { PuzzleBoard } from "./board.js?v=3";
 import { createWheel } from "./wheel.js?v=19";
@@ -14,6 +14,7 @@ import { loadWedgeAmountVo, playWedgeAmountVo } from "./wedge-amount-vo.js?v=2";
 import { loadSolveCongratsVo, playRandomSolveCongrats } from "./solve-congrats-vo.js?v=2";
 import { loadCarPrizeVo, playCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { loadTripPrizeVo, playTripPrizeVo } from "./trip-prize-vo.js?v=1";
+import { loadSpaPrizeVo, playSpaPrizeVo } from "./spa-prize-vo.js?v=1";
 import { buildEnvelopeWedges, getFinalEnvelopePrizes, loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
 import { showEnvelopeReveal } from "./final-envelope-ui.js?v=1";
 import { showPrizeBanner, prizeSubtitleForWedge } from "./prize-banner.js?v=2";
@@ -33,7 +34,7 @@ import {
   playTurnCueVo,
   playSolveAttemptVo,
   playPlayerActionVo,
-} from "./host-vo.js?v=4";
+} from "./host-vo.js?v=5";
 import { ROW_WIDTHS } from "./puzzle-layout.js?v=3";
 import { stampVersion } from "./version.js?v=1";
 
@@ -87,8 +88,7 @@ let round2AssetsLoaded = false;
 let finalAssetsLoaded = false;
 let messageClearTimer = null;
 let wheelHideTimer = null;
-
-const AUTO_ADVANCE_MS = 5500;
+let roundCountdownActive = false;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -137,20 +137,11 @@ async function animateFinalFreeLetter(msg) {
 }
 
 function clearAutoAdvance() {
-  if (autoAdvanceTimer) {
-    clearTimeout(autoAdvanceTimer);
-    autoAdvanceTimer = null;
-  }
+  /* Round auto-advance is server-driven via roundCountdown op. */
 }
 
-function scheduleAutoAdvance(state) {
-  clearAutoAdvance();
-  if (state?.phase !== "ended") return;
-  const next = nextRoundType(state.roundType);
-  if (!next || !client?.connected) return;
-  autoAdvanceTimer = setTimeout(() => {
-    switchRound(next);
-  }, AUTO_ADVANCE_MS);
+function scheduleAutoAdvance(_state) {
+  /* Server broadcasts roundCountdown and auto-advances after 10s. */
 }
 
 function needsFinalEnvelopeReveal(state) {
@@ -223,6 +214,7 @@ function buildRoundSummary(state, players = []) {
   let detail = "";
   if (state?.carPrize?.name) detail = `Plus: ${state.carPrize.name}`;
   else if (state?.tripPrize?.label) detail = `Plus: ${state.tripPrize.label}`;
+  else if (state?.spaPrize?.label) detail = `Plus: ${state.spaPrize.display || state.spaPrize.label}`;
   else if (state?.roundPrize) detail = `Prize: ${state.roundPrize}`;
 
   return {
@@ -233,6 +225,16 @@ function buildRoundSummary(state, players = []) {
     detail,
     scoresLine,
   };
+}
+
+async function revealSpaPrize(spa) {
+  if (!spa?.label && !spa?.display) return;
+  await revealPrizeFromLetter({
+    kind: "spa",
+    subtitle: "Spa Getaway",
+    name: spa.display || spa.label,
+    id: spa.id,
+  });
 }
 
 async function revealTripPrize(trip) {
@@ -253,6 +255,8 @@ async function handleRoundEnd(state, players = []) {
     await maybeRevealFinalEnvelope(state);
   } else if (state.tripPrize?.label && state.roundWinnerSeat && !state.tripPrizeClaimed) {
     await revealTripPrize(state.tripPrize);
+  } else if (state.spaPrize?.label && state.roundWinnerSeat && !state.spaPrizeClaimed) {
+    await revealSpaPrize(state.spaPrize);
   }
 
   const summary = buildRoundSummary(state, players);
@@ -261,15 +265,25 @@ async function handleRoundEnd(state, players = []) {
   scheduleAutoAdvance(state);
 }
 
+function formatCarDisplay(car) {
+  if (!car) return "Bonus Car";
+  if (car.make && car.model) return `${car.make} ${car.model}`;
+  return car.name || "Bonus Car";
+}
+
 async function revealPrizeFromLetter(prizeReveal) {
-  if (!prizeReveal?.name) return;
+  if (!prizeReveal?.name && !prizeReveal?.make) return;
   playSound("solve", { volume: 0.45 });
+  const displayName =
+    prizeReveal.kind === "car"
+      ? formatCarDisplay(prizeReveal)
+      : prizeReveal.name;
   const bannerPromise = showPrizeBanner(
     els.prizeBanner,
     {
       title: "You Won!",
       subtitle: prizeReveal.subtitle || prizeSubtitleForWedge(prizeReveal.wedgeLabel, prizeReveal.kind),
-      name: prizeReveal.name,
+      name: displayName,
     },
     { displayMs: TV_BANNER_MS },
   );
@@ -277,6 +291,8 @@ async function revealPrizeFromLetter(prizeReveal) {
     await playCarPrizeVo(prizeReveal.id);
   } else if (prizeReveal.kind === "trip" && prizeReveal.id) {
     await playTripPrizeVo(prizeReveal.id);
+  } else if (prizeReveal.kind === "spa" && prizeReveal.id) {
+    await playSpaPrizeVo(prizeReveal.id);
   }
   await bannerPromise;
 }
@@ -285,7 +301,9 @@ async function revealCarPrize(car) {
   await revealPrizeFromLetter({
     kind: "car",
     subtitle: "New Car",
-    name: car.name,
+    name: formatCarDisplay(car),
+    make: car.make,
+    model: car.model,
     id: car.id || "car-round2",
   });
 }
@@ -324,13 +342,14 @@ function queueHostVo(task) {
 function announceAction(msg) {
   const name = msg.name || msg.seat || "Player";
   if (msg.action === "pick" && msg.letter) {
-    setMessage(`${name} picks ${String(msg.letter).toUpperCase()}.`);
+    setMessage(`${name} chose ${String(msg.letter).toUpperCase()}.`);
   } else if (msg.action === "buyVowel" && msg.letter) {
-    setMessage(`${name} buys a vowel — ${String(msg.letter).toUpperCase()}.`);
+    setMessage(`${name} chose ${String(msg.letter).toUpperCase()} (vowel).`);
   } else if (msg.action === "solve") {
     setMessage(`${name} is attempting to solve!`);
   } else if (msg.action === "spin") {
     setMessage(`${name} spins the wheel!`);
+    if (els.wedgeResult) els.wedgeResult.textContent = "—";
     showWheelDock();
     return Promise.resolve();
   }
@@ -352,7 +371,7 @@ function scheduleHostBackgroundLoads() {
 function scheduleRound2Assets() {
   if (round2AssetsLoaded) return;
   round2AssetsLoaded = true;
-  runInBackground(() => loadCarPrizeVo(), () => loadTripPrizeVo());
+  runInBackground(() => loadCarPrizeVo(), () => loadTripPrizeVo(), () => loadSpaPrizeVo());
 }
 
 function scheduleFinalAssets() {
@@ -485,7 +504,7 @@ function applyGameState(state, players = []) {
     stopAllVo();
   }
   maybeAnnounceCategory(state);
-  if (state.message) setMessage(state.message);
+  if (state.message && !roundCountdownActive) setMessage(state.message);
 
   if (!spinAnimating) {
     if (state.wedgeLabel) els.wedgeResult.textContent = state.wedgeLabel;
@@ -694,6 +713,7 @@ const els = {
   loadingScreen: $("loading-screen"),
   loadingLabel: $("loading-label"),
   roundLabel: $("round-label"),
+  turnBanner: $("turn-banner"),
   category: $("category-pill"),
   message: $("message-bar"),
   board: $("puzzle-board"),
@@ -715,11 +735,28 @@ const els = {
   prizeBanner: $("prize-banner"),
   roundSummary: $("round-summary"),
   envelopeRevealModal: $("envelope-reveal-modal"),
+  spectatorBanner: $("spectator-banner"),
 };
 
 let client = null;
 let board = new PuzzleBoard(els.board);
 const roomCode = getRoomFromUrl();
+const isSpectator = getSpectateFromUrl();
+
+function handleRoomAttached(msg, { spectating = false } = {}) {
+  updateJoinQr(msg.code).catch(() => {});
+  setMessage(
+    spectating
+      ? `Watching room ${msg.code} — read only.`
+      : "Room connected. Waiting for players…",
+  );
+  if (!spectating) els.btnStartGame.disabled = false;
+  renderScoreboard(msg.players || []);
+  if (msg.wedgeManifest?.length) {
+    wheelLoading = ensureWheelManifest(msg.wedgeManifest);
+  }
+  applyGameState(msg.preview, msg.players);
+}
 
 function hideLoading() {
   document.body.classList.remove("is-loading");
@@ -773,21 +810,43 @@ function renderLetterTrack(called = []) {
   }
 }
 
-function setMessage(text) {
+function setMessage(text, { holdMs = MESSAGE_CLEAR_MS } = {}) {
   if (!els.message) return;
   els.message.textContent = text || "";
   clearTimeout(messageClearTimer);
   if (text) {
     els.message.classList.add("is-visible");
-    messageClearTimer = setTimeout(() => {
-      els.message.classList.remove("is-visible");
-    }, MESSAGE_CLEAR_MS);
+    if (holdMs > 0) {
+      messageClearTimer = setTimeout(() => {
+        els.message.classList.remove("is-visible");
+      }, holdMs);
+    }
   } else {
     els.message.classList.remove("is-visible");
   }
 }
 
+function renderTurnBanner(players = [], activeSeat = null, state = latestGameState) {
+  if (!els.turnBanner) return;
+  const active = players.find((p) => p.seat === activeSeat);
+  const showTurn =
+    active &&
+    state?.started &&
+    state?.phase !== "ended" &&
+    state?.roundType !== "tossup";
+
+  if (!showTurn) {
+    els.turnBanner.textContent = "";
+    els.turnBanner.classList.remove("is-visible");
+    return;
+  }
+
+  els.turnBanner.textContent = `${active.name || active.seat}'s Turn`;
+  els.turnBanner.classList.add("is-visible");
+}
+
 function renderScoreboard(players = [], activeSeat = null) {
+  renderTurnBanner(players, activeSeat);
   els.scoreboard.innerHTML = "";
   for (const player of players) {
     const pill = document.createElement("span");
@@ -858,14 +917,10 @@ function onMessage(msg) {
       stampVersion("#app-version", msg.version);
       break;
     case "hostAttached":
-      updateJoinQr(msg.code).catch(() => {});
-      setMessage("Room connected. Waiting for players…");
-      els.btnStartGame.disabled = false;
-      renderScoreboard(msg.players || []);
-      if (msg.wedgeManifest?.length) {
-        wheelLoading = ensureWheelManifest(msg.wedgeManifest);
-      }
-      applyGameState(msg.preview, msg.players);
+      handleRoomAttached(msg);
+      break;
+    case "spectatorAttached":
+      handleRoomAttached(msg, { spectating: true });
       break;
     case "lobbyUpdate":
       renderScoreboard(msg.players || [], msg.activeSeat);
@@ -873,6 +928,7 @@ function onMessage(msg) {
       els.btnStartGame.disabled = (msg.players || []).length < 1;
       break;
     case "roundChanged":
+      roundCountdownActive = false;
       lastPuzzleLayout = "";
       envelopeRevealShown = false;
       clearAutoAdvance();
@@ -889,6 +945,16 @@ function onMessage(msg) {
       if (msg.state) applyGameState(msg.state, msg.players);
       else setMessage(`Switched to ${ROUND_LABELS[msg.roundType] || msg.roundType}.`);
       onRoundTypeProgressiveLoad(msg.roundType);
+      break;
+    case "roundCountdown":
+      roundCountdownActive = msg.remaining > 0;
+      if (msg.remaining > 0) {
+        const nextLabel = msg.nextLabel || ROUND_LABELS[msg.nextRound] || msg.nextRound || "next round";
+        setMessage(`${nextLabel} starts in ${msg.remaining}…`, { holdMs: 1100 });
+      } else {
+        roundCountdownActive = false;
+        setMessage(`Starting ${msg.nextLabel || ROUND_LABELS[msg.nextRound] || "next round"}…`);
+      }
       break;
     case "turnChanged":
       renderScoreboard(msg.players || [], msg.seat);
@@ -923,6 +989,7 @@ function onMessage(msg) {
     case "spinResult":
       spinAnimating = true;
       pendingSpinWedge = msg.wedge;
+      if (els.wedgeResult) els.wedgeResult.textContent = "—";
       showWheelDock();
       (async () => {
         if (msg.roundType) syncRoundTabs(msg.roundType);
@@ -1120,8 +1187,16 @@ async function connectToRoom() {
 
   try {
     await client.connect(wsUrl);
-    client.attachHost(roomCode);
-    setMessage(`Connected to room ${roomCode}.`);
+    if (isSpectator) {
+      client.attachSpectator(roomCode);
+    } else {
+      client.attachHost(roomCode);
+    }
+    setMessage(
+      isSpectator
+        ? `Connecting to watch room ${roomCode}…`
+        : `Connected to room ${roomCode}.`,
+    );
   } catch {
     setMessage("Could not connect to game server.");
   }
@@ -1174,6 +1249,13 @@ els.btnFullscreen?.addEventListener("click", () => {
 
 async function init() {
   stampVersion();
+  if (isSpectator) {
+    document.body.classList.add("is-spectator-mode");
+    els.spectatorBanner?.classList.remove("is-hidden");
+    if (els.spectatorBanner && roomCode) {
+      els.spectatorBanner.textContent = `Watching room ${roomCode} — read only`;
+    }
+  }
   setRoundTabsEnabled(false);
   board.render(emptyBoardRows());
   renderLetterTrack([]);

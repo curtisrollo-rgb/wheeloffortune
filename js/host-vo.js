@@ -46,27 +46,8 @@ function clipsToUrls(clips) {
   return list.filter((c) => c?.file).map((c) => `${c.file}?v=2`);
 }
 
-function speakFallback(text, { volume = 1 } = {}) {
-  if (!text || !window.speechSynthesis) return Promise.resolve();
-  stopAllVo();
-  const gen = ++playGeneration;
-
-  return new Promise((resolve) => {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.volume = volume;
-    utter.rate = 0.95;
-    const finish = () => {
-      if (gen !== playGeneration) return resolve();
-      resolve();
-    };
-    utter.addEventListener("end", finish, { once: true });
-    utter.addEventListener("error", finish, { once: true });
-    window.speechSynthesis.speak(utter);
-  });
-}
-
-function playUrl(url, fallbackText, { volume = 0.88 } = {}) {
-  if (!url) return speakFallback(fallbackText, { volume });
+function playUrl(url, { volume = 0.88 } = {}) {
+  if (!url) return Promise.resolve();
 
   stopAllVo();
   const gen = ++playGeneration;
@@ -83,10 +64,8 @@ function playUrl(url, fallbackText, { volume = 0.88 } = {}) {
     };
 
     audio.addEventListener("ended", finish, { once: true });
-    audio.addEventListener("error", () => speakFallback(fallbackText, { volume }).then(finish), {
-      once: true,
-    });
-    audio.play().catch(() => speakFallback(fallbackText, { volume }).then(finish));
+    audio.addEventListener("error", finish, { once: true });
+    audio.play().catch(finish);
   });
 }
 
@@ -121,46 +100,62 @@ export async function loadHostVo() {
 }
 
 export function playWelcomeVo() {
-  return playUrl(pickRandom(welcomeClips), "Welcome to Wheel of Fortune!");
+  return playUrl(pickRandom(welcomeClips));
 }
 
-export function playTurnCueVo(playerName) {
-  const name = playerName || "Player";
-  return playUrl(pickRandom(turnSpinClips), `${name}, spin the wheel!`);
+export function playTurnCueVo(_playerName) {
+  return playUrl(pickRandom(turnSpinClips));
 }
 
-export function playPickLetterVo(playerName, letter) {
+function speakLetter(letter) {
+  if (!window.speechSynthesis) return Promise.resolve();
   const upper = String(letter || "").toUpperCase();
-  const name = playerName || "Player";
+  if (!upper) return Promise.resolve();
+  stopAllVo();
+  const gen = ++playGeneration;
+  return new Promise((resolve) => {
+    const utter = new SpeechSynthesisUtterance(`The letter ${upper}.`);
+    utter.rate = 0.95;
+    utter.pitch = 1.05;
+    utter.volume = 0.88;
+    const finish = () => {
+      if (gen !== playGeneration) return resolve();
+      resolve();
+    };
+    utter.onend = finish;
+    utter.onerror = finish;
+    window.speechSynthesis.speak(utter);
+  });
+}
+
+export function playPickLetterVo(_playerName, letter) {
+  const upper = String(letter || "").toUpperCase();
   const urls = pickClips.get(upper) || [];
-  return playUrl(pickRandom(urls), `${name} picks ${upper}.`);
+  const url = pickRandom(urls);
+  if (url) return playUrl(url);
+  return speakLetter(upper);
 }
 
-export function playBuyVowelVo(playerName, letter) {
+export function playBuyVowelVo(_playerName, letter) {
   const upper = String(letter || "").toUpperCase();
-  const name = playerName || "Player";
   const urls = vowelClips.get(upper) || [];
-  if (urls.length) {
-    return playUrl(pickRandom(urls), `${name} would like to buy an ${upper}.`);
-  }
-  return playUrl(pickRandom(buyVowelClips), `${name} would like to buy a vowel.`);
+  if (urls.length) return playUrl(pickRandom(urls));
+  return playUrl(pickRandom(buyVowelClips));
 }
 
-export function playSolveAttemptVo(playerName) {
-  const name = playerName || "Player";
-  return playUrl(pickRandom(solveAttemptClips), `${name} is attempting to solve the puzzle.`);
+export function playSolveAttemptVo(_playerName) {
+  return playUrl(pickRandom(solveAttemptClips));
 }
 
 /** @param {{ action: string, name?: string, letter?: string, seat?: string }} msg */
 export function playPlayerActionVo(msg) {
-  const name = msg.name || msg.seat || "Player";
   switch (msg.action) {
     case "pick":
-      return playPickLetterVo(name, msg.letter);
+      return playPickLetterVo(msg.name, msg.letter);
     case "buyVowel":
-      return playBuyVowelVo(name, msg.letter);
+      return playBuyVowelVo(msg.name, msg.letter);
     case "solve":
-      return playSolveAttemptVo(name);
+      return playSolveAttemptVo(msg.name);
     case "spin":
       // Turn cue ("spin the wheel") is handled by turnChanged only.
       return Promise.resolve();

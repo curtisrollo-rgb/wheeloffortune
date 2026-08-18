@@ -19,11 +19,16 @@ import { ROOM_CODES } from "./room-words.js";
  * @property {import('ws').WebSocket} ws
  */
 
+/** @typedef {object} SpectatorConn
+ * @property {import('ws').WebSocket} ws
+ */
+
 /** @typedef {object} Room
  * @property {string} code
  * @property {number} createdAt
  * @property {LobbyConn|null} lobby
  * @property {HostConn|null} host
+ * @property {SpectatorConn[]} spectators
  * @property {PlayerConn[]} players
  * @property {string[]} log
  * @property {object|null} game
@@ -50,6 +55,7 @@ export function createRoom() {
     createdAt: Date.now(),
     lobby: null,
     host: null,
+    spectators: [],
     players: [],
     log: [],
     game: null,
@@ -90,9 +96,22 @@ export function setHost(room, ws) {
   room.host = { ws };
 }
 
+/** @param {import('ws').WebSocket} ws @param {Room} room */
+export function addSpectator(room, ws) {
+  if (!room.spectators) room.spectators = [];
+  room.spectators = room.spectators.filter((s) => s.ws !== ws);
+  room.spectators.push({ ws });
+}
+
 /** @param {import('ws').WebSocket} ws */
 export function removeConnection(ws) {
   for (const room of rooms.values()) {
+    const specIdx = room.spectators?.findIndex((s) => s.ws === ws) ?? -1;
+    if (specIdx >= 0) {
+      room.spectators.splice(specIdx, 1);
+      return { room, seat: null, role: "spectator", name: null };
+    }
+
     const idx = room.players.findIndex((p) => p.ws === ws);
     if (idx >= 0) {
       const [removed] = room.players.splice(idx, 1);
@@ -132,11 +151,16 @@ export function playerSummaries(room) {
 
 /** @param {Room} room */
 export function roomStatus(room) {
+  const g = room.game;
   return {
     code: room.code,
     playerCount: room.players.length,
     hostConnected: !!room.host,
-    gameStarted: !!room.game?.started,
+    spectatorCount: room.spectators?.length ?? 0,
+    gameStarted: !!g?.started,
+    roundType: g?.roundType ?? null,
+    phase: g?.phase ?? null,
+    category: g?.started && !g?.puzzleHidden ? g?.category ?? null : null,
     players: playerSummaries(room),
     log: room.log.slice(-20),
   };

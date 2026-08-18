@@ -17,7 +17,7 @@
   { "label": "$650", "backgroundColor": "#00aef0", "value": 650 },
   { "label": "$1000", "backgroundColor": "#ee1c24", "value": 1000 },
   { "label": "$500", "backgroundColor": "#f6989d", "value": 500 },
-  { "label": "SPA", "backgroundColor": "#f26522", "type": "prize", "prize": "Luxury Spa Getaway", "value": 0 },
+  { "label": "SPA", "backgroundColor": "#f26522", "type": "prize", "prizeKind": "spa", "value": 0 },
   { "label": "$900", "backgroundColor": "#3cb878", "value": 900 },
   { "label": "BANKRUPT", "backgroundColor": "#000000", "value": 0, "type": "bankrupt" },
   { "label": "$600", "backgroundColor": "#a186be", "value": 600 },

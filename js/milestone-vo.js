@@ -50,37 +50,11 @@ function pickClip(key) {
   return urls[Math.floor(Math.random() * urls.length)];
 }
 
-/** @param {string} key @param {{ volume?: number }} [opts] */
-function speakFallback(key, opts = {}) {
-  const lines = {
-    onlyVowelsRemain: "Only vowels remain in the puzzle.",
-    noMoreVowels: "There are no more vowels in the puzzle.",
-  };
-  const text = lines[key];
-  if (!text || !window.speechSynthesis) return Promise.resolve();
-
-  stopAllVo();
-  const gen = ++playGeneration;
-
-  return new Promise((resolve) => {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.volume = opts.volume ?? 0.88;
-    utter.rate = 0.92;
-    const finish = () => {
-      if (gen !== playGeneration) return resolve();
-      resolve();
-    };
-    utter.addEventListener("end", finish, { once: true });
-    utter.addEventListener("error", finish, { once: true });
-    window.speechSynthesis.speak(utter);
-  });
-}
-
 function playPool(key, { volume = 0.88 } = {}) {
   if (!ready) return Promise.resolve();
 
   const url = pickClip(key);
-  if (!url) return speakFallback(key, { volume });
+  if (!url) return Promise.resolve();
 
   stopAllVo();
   const gen = ++playGeneration;

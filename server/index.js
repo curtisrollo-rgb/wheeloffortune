@@ -14,6 +14,7 @@ import {
   setLobby,
   addPlayer,
   appendLog,
+  addSpectator,
 } from "./rooms.js";
 import {
   handleBuzz,
@@ -46,7 +47,19 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.28";
+const VERSION = "0.2.31";
+
+const ROUND_ORDER = ["tossup", "round1", "round2", "final"];
+const ROUND_LABELS = {
+  tossup: "Toss-Up",
+  round1: "Round 1",
+  round2: "Round 2",
+  final: "Final Round",
+};
+const ROUND_ADVANCE_SEC = 10;
+
+/** @type {Map<string, { interval: NodeJS.Timeout, timeout: NodeJS.Timeout }>} */
+const roundCountdownTimers = new Map();
 
 /** @type {Map<import('ws').WebSocket, { code: string, role: 'host'|'player'|'lobby', seat?: import('./rooms.js').PlayerSeat|null, name?: string }>} */
 const connections = new Map();
@@ -72,6 +85,9 @@ function broadcast(room, payload, exceptWs = null) {
   for (const player of room.players) {
     if (player.ws !== exceptWs) send(player.ws, payload);
   }
+  for (const spectator of room.spectators || []) {
+    if (spectator.ws !== exceptWs) send(spectator.ws, payload);
+  }
 }
 
 /** @param {import('./rooms.js').Room} room @param {string} [message] */
@@ -86,6 +102,70 @@ function broadcastLobby(room, message = "Waiting for players…") {
 }
 
 /** @param {import('./rooms.js').Room} room */
+function clearRoundCountdown(room) {
+  const entry = roundCountdownTimers.get(room.code);
+  if (!entry) return;
+  clearInterval(entry.interval);
+  clearTimeout(entry.timeout);
+  roundCountdownTimers.delete(room.code);
+}
+
+/** @param {import('./rooms.js').Room} room */
+function advanceRoundAutomatically(room, nextRound) {
+  clearRoundCountdown(room);
+  const result = setRound(room, nextRound);
+  if (result.error) return;
+  appendLog(room, `Auto-advanced to ${nextRound}`);
+  broadcast(room, {
+    op: "roundChanged",
+    roundType: nextRound,
+    wedgeManifest: getWedgeManifestForRound(nextRound),
+    state: publicGameState(room),
+  });
+  if (nextRound === "tossup") {
+    broadcast(room, { op: "beginTossUpReady" });
+  }
+  if (room.game.activeSeat) {
+    broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+  }
+  broadcastGameState(room);
+}
+
+/** @param {import('./rooms.js').Room} room */
+function maybeScheduleRoundAdvance(room) {
+  const g = room.game;
+  if (!g?.started || g.phase !== "ended") {
+    clearRoundCountdown(room);
+    return;
+  }
+  const idx = ROUND_ORDER.indexOf(g.roundType);
+  const next = idx >= 0 && idx < ROUND_ORDER.length - 1 ? ROUND_ORDER[idx + 1] : null;
+  if (!next || roundCountdownTimers.has(room.code)) return;
+
+  let remaining = ROUND_ADVANCE_SEC;
+  const nextLabel = ROUND_LABELS[next] || next;
+
+  const tick = () => {
+    broadcast(room, { op: "roundCountdown", remaining, nextRound: next, nextLabel });
+  };
+  tick();
+
+  const interval = setInterval(() => {
+    remaining -= 1;
+    if (remaining > 0) tick();
+  }, 1000);
+
+  const timeout = setTimeout(() => {
+    clearInterval(interval);
+    roundCountdownTimers.delete(room.code);
+    broadcast(room, { op: "roundCountdown", remaining: 0, nextRound: next, nextLabel });
+    advanceRoundAutomatically(room, next);
+  }, ROUND_ADVANCE_SEC * 1000);
+
+  roundCountdownTimers.set(room.code, { interval, timeout });
+}
+
+/** @param {import('./rooms.js').Room} room */
 function broadcastGameState(room) {
   const state = publicGameState(room);
   const payload = {
@@ -94,6 +174,7 @@ function broadcastGameState(room) {
     players: playerSummaries(room),
   };
   broadcast(room, payload);
+  maybeScheduleRoundAdvance(room);
 }
 
 function jsonResponse(res, status, body) {
@@ -115,6 +196,16 @@ const server = http.createServer((req, res) => {
       puzzleCount: puzzleCount(),
       puzzleSource: getPuzzleSource(),
     });
+  }
+  if (req.url === "/rooms" || req.url?.startsWith("/rooms?")) {
+    const rooms = listRooms()
+      .filter((r) => r.playerCount > 0 || r.hostConnected || r.gameStarted)
+      .sort((a, b) => {
+        if (a.gameStarted !== b.gameStarted) return Number(b.gameStarted) - Number(a.gameStarted);
+        if (a.playerCount !== b.playerCount) return b.playerCount - a.playerCount;
+        return a.code.localeCompare(b.code);
+      });
+    return jsonResponse(res, 200, { ok: true, version: VERSION, rooms });
   }
   jsonResponse(res, 404, { error: "Not found" });
 });
@@ -181,6 +272,34 @@ wss.on("connection", (ws) => {
         players: playerSummaries(room),
       });
       broadcastLobby(room, "TV display connected.");
+      return;
+    }
+
+    if (op === "attachSpectator") {
+      const info = connections.get(ws);
+      if (info?.code) return error(ws, "Leave your current room first.");
+      const code = String(msg.code || "").toUpperCase();
+      const room = getRoom(code);
+      if (!room) return error(ws, "Room not found");
+
+      addSpectator(room, ws);
+      connections.set(ws, { code, role: "spectator", seat: null });
+      appendLog(room, "Spectator connected");
+
+      const preview = ensurePreviewBoard(room);
+      send(ws, {
+        op: "spectatorAttached",
+        code,
+        players: playerSummaries(room),
+        gameStarted: !!room.game?.started,
+        preview,
+        wedgeManifest: getWedgeManifestForRound(room.game?.roundType || "tossup"),
+      });
+      if (room.game?.started) {
+        send(ws, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+      } else {
+        send(ws, { op: "gameUpdate", state: preview, players: playerSummaries(room) });
+      }
       return;
     }
 
@@ -460,6 +579,7 @@ wss.on("connection", (ws) => {
       if (!info || info.role !== "host") return error(ws, "Host only.");
       const room = getRoom(info.code);
       if (!room) return error(ws, "Room not found.");
+      clearRoundCountdown(room);
       const roundType = String(msg.roundType || "");
       const result = setRound(room, roundType);
       if (result.error) return error(ws, result.error);

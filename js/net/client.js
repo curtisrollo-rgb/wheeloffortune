@@ -51,6 +51,10 @@ export class WofClient {
           this.roomCode = msg.code;
           this.role = "host";
         }
+        if (msg.op === "spectatorAttached") {
+          this.roomCode = msg.code;
+          this.role = "spectator";
+        }
         this.hooks.onMessage?.(msg);
       };
     });
@@ -83,6 +87,10 @@ export class WofClient {
 
   attachHost(code) {
     this.send({ op: "attachHost", code: String(code).toUpperCase() });
+  }
+
+  attachSpectator(code) {
+    this.send({ op: "attachSpectator", code: String(code).toUpperCase() });
   }
 
   rejoinRoom(code, seat, name) {

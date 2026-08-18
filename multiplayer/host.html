@@ -13,7 +13,7 @@
   </script>
   <link rel="stylesheet" href="css/game.css?v=45" />
   <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=8" />
-  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=6" />
+  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=9" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page big-board-page is-loading">
@@ -28,13 +28,15 @@
     </div>
   </div>
 
+  <p id="spectator-banner" class="spectator-banner is-hidden" aria-live="polite">Watching — read only</p>
+
   <header class="big-board-header">
-    <div class="big-board-meta">
-      <p id="round-label" class="big-board-round">Waiting</p>
-      <h1 id="category-pill" class="category-headline" aria-live="polite">—</h1>
+    <p id="round-label" class="big-board-round">Waiting</p>
+    <p id="turn-banner" class="turn-banner" aria-live="polite"></p>
+    <div class="big-board-header-right">
+      <div id="scoreboard" class="scoreboard" aria-live="polite"></div>
+      <button id="btn-fullscreen" type="button" class="btn-fullscreen" title="Enter fullscreen" aria-label="Toggle fullscreen">⛶</button>
     </div>
-    <div id="scoreboard" class="scoreboard" aria-live="polite"></div>
-    <button id="btn-fullscreen" type="button" class="btn-fullscreen" title="Enter fullscreen" aria-label="Toggle fullscreen">⛶</button>
   </header>
 
   <div id="tossup-countdown" class="tossup-countdown is-hidden" aria-live="assertive">3</div>
@@ -43,6 +45,10 @@
   <main class="big-board-main">
     <div class="layout">
       <section class="board-section">
+        <div class="board-top-meta">
+          <h1 id="category-pill" class="category-headline" aria-live="polite">—</h1>
+        </div>
+        <p id="message-bar" class="message-bar" aria-live="polite"></p>
         <div id="prize-banner" class="prize-banner is-hidden" aria-live="polite">
           <p class="prize-banner-subtitle">New Car</p>
           <p class="prize-banner-title">You Won!</p>
@@ -62,8 +68,6 @@
 
     <div id="letter-track" class="letter-track" aria-label="Letters called"></div>
   </main>
-
-  <p id="message-bar" class="message-bar" aria-live="polite"></p>
 
   <section id="wheel-section" class="wheel-section wheel-dock">
     <div id="final-envelope-panel" class="final-envelope-panel is-hidden">
@@ -115,6 +119,6 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=26"></script>
+  <script type="module" src="js/host-app.js?v=30"></script>
 </body>
 </html>

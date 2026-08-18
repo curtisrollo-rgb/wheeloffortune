@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wheel of Fortune — Online Lobby</title>
-  <link rel="stylesheet" href="css/multiplayer.css?v=3" />
+  <link rel="stylesheet" href="css/multiplayer.css?v=9" />
 </head>
 <body>
   <div class="page-wrap">
@@ -45,6 +45,16 @@
       <p id="room-status" class="status-line" style="margin-top: 0.65rem"></p>
     </div>
 
+    <div class="panel" id="watch-panel" hidden>
+      <div class="watch-panel-head">
+        <h2>Watch a game</h2>
+        <button id="btn-refresh-watch" type="button" class="btn btn-secondary btn-sm">Refresh</button>
+      </div>
+      <p class="status-line">Open the big board as a read-only spectator — no controls.</p>
+      <ul id="watch-list" class="watch-list" aria-live="polite"></ul>
+      <p id="watch-status" class="status-line" style="margin-top: 0.65rem"></p>
+    </div>
+
     <div class="panel">
       <h2>Players</h2>
       <div class="link-grid">
@@ -61,6 +71,6 @@
     </p>
   </div>
 
-  <script type="module" src="../js/net/lobby.js?v=3"></script>
+  <script type="module" src="../js/net/lobby.js?v=4"></script>
 </body>
 </html>

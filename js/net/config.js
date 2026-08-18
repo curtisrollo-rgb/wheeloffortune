@@ -39,13 +39,27 @@ export function getNameFromUrl() {
   return new URLSearchParams(location.search).get("name") ?? "";
 }
 
+export function getSpectateFromUrl() {
+  const v = new URLSearchParams(location.search).get("spectate");
+  return v === "1" || v === "true" || v === "yes";
+}
+
+/** Convert ws/wss URL to http/https for REST endpoints on the same host. */
+export function wsToHttpUrl(wsUrl) {
+  const trimmed = String(wsUrl || "").trim();
+  if (trimmed.startsWith("wss://")) return `https://${trimmed.slice(6)}`;
+  if (trimmed.startsWith("ws://")) return `http://${trimmed.slice(5)}`;
+  return trimmed.replace(/\/$/, "");
+}
+
 /** Build a URL under multiplayer/ (host.html, join.html, etc.). */
-export function pageUrl(page, { room, seat, name, ws } = {}) {
+export function pageUrl(page, { room, seat, name, ws, spectate } = {}) {
   const u = new URL(page, multiplayerBase());
   if (room) u.searchParams.set("room", room.toUpperCase());
   if (seat) u.searchParams.set("seat", seat);
   if (name) u.searchParams.set("name", name);
   if (ws) u.searchParams.set("ws", ws);
+  if (spectate) u.searchParams.set("spectate", "1");
   return u.pathname + u.search;
 }
 

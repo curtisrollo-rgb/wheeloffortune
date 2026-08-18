@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { randomBytes } from "crypto";
+import { pickRandomCar } from "./car-prizes.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -51,11 +52,13 @@ export function getEnvelopeWedges() {
     };
 
     if (entry.type === "car") {
+      const car = pickRandomCar() || { id: "car-bonus", name: "Bonus Car", make: "", model: "" };
+      const label = car.make && car.model ? `${car.make} ${car.model}` : car.name;
       return {
         ...base,
         prizeType: "car",
         value: 0,
-        prize: { kind: "car", id: "car-bonus", name: "Bonus Car", label: "New Bonus Car" },
+        prize: { kind: "car", id: car.id, name: label, make: car.make, model: car.model, label: "New Bonus Car" },
       };
     }
     if (entry.type === "trip") {

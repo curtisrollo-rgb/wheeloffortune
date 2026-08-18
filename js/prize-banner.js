@@ -6,6 +6,7 @@ let hideTimer = null;
 export function prizeSubtitleForWedge(wedgeLabel, kind) {
   if (kind === "car") return "New Car";
   if (kind === "trip") return "Vacation Trip";
+  if (kind === "spa") return "Spa Getaway";
   const label = String(wedgeLabel || "").toUpperCase();
   if (label === "GIFT") return "Gift Card";
   if (label === "SPA") return "Spa Getaway";

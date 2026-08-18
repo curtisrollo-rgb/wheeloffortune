@@ -15,6 +15,7 @@ import { pickRandomPuzzle, puzzleCount } from "./puzzles.js";
 import { getWedgesForRound } from "./wedges.js";
 import { pickRandomTrip } from "./trip-prizes.js";
 import { pickRandomCar } from "./car-prizes.js";
+import { pickRandomSpa, spaDisplayLabel } from "./spa-prizes.js";
 import { randomBytes } from "crypto";
 import {
   TOSS_UP_WIN,
@@ -283,6 +284,7 @@ export function startFinalRstlneSequence(room, emit) {
 function prizeSubtitleForWedge(wedgeLabel, kind) {
   if (kind === "car") return "New Car";
   if (kind === "trip") return "Vacation Trip";
+  if (kind === "spa") return "Spa Getaway";
   const label = String(wedgeLabel || "").toUpperCase();
   if (label === "GIFT") return "Gift Card";
   if (label === "SPA") return "Spa Getaway";
@@ -385,6 +387,8 @@ export function createInitialGame() {
     carPrize: null,
     tripPrize: null,
     tripPrizeClaimed: false,
+    spaPrize: null,
+    spaPrizeClaimed: false,
     solveBlocked: false,
     finalConsonantsLeft: 0,
     finalVowelsLeft: 0,
@@ -470,6 +474,11 @@ function advanceTurn(room) {
     room.game.pendingPrizeLabel = null;
     if (!room.game.tripPrizeClaimed) {
       room.game.tripPrize = null;
+    }
+    if (!room.game.spaPrizeClaimed) {
+      room.game.spaPrize = null;
+    }
+    if (!room.game.tripPrizeClaimed && !room.game.spaPrizeClaimed) {
       room.game.roundPrize = null;
     }
   }
@@ -668,6 +677,8 @@ export function publicGameState(room) {
     carPrize: room.game.carPrize,
     tripPrize: room.game.tripPrize,
     tripPrizeClaimed: !!room.game.tripPrizeClaimed,
+    spaPrize: room.game.spaPrize,
+    spaPrizeClaimed: !!room.game.spaPrizeClaimed,
     puzzleId: room.game.puzzle?.id ?? null,
     called: [...room.game.called],
     finalPendingPicks: [...(room.game.finalPendingPicks || [])],
@@ -763,7 +774,12 @@ export function letterResultPayload(room, seat, result) {
     noMoreVowels: !!result.noMoreVowels,
     carWon: result.prizeReveal?.kind === "car" || !!result.carWon,
     carPrize: result.prizeReveal?.kind === "car"
-      ? { id: result.prizeReveal.id, name: result.prizeReveal.name }
+      ? {
+          id: result.prizeReveal.id,
+          name: result.prizeReveal.name,
+          make: result.prizeReveal.make,
+          model: result.prizeReveal.model,
+        }
       : result.carPrize ?? null,
     prizeReveal: result.prizeReveal ?? null,
     finalPick: !!result.finalPick,
@@ -812,6 +828,8 @@ export function handleSpin(room, seat, _power) {
     room.game.pendingPrizeLabel = null;
     room.game.tripPrize = null;
     room.game.tripPrizeClaimed = false;
+    room.game.spaPrize = null;
+    room.game.spaPrizeClaimed = false;
     room.game.wedgeLabel = wedge.label;
     room.game.message = `${name} hit BANKRUPT! Round earnings wiped.`;
     advanceTurn(room);
@@ -846,19 +864,33 @@ export function handleSpin(room, seat, _power) {
       room.game.pendingPrizeKind = "car";
       room.game.roundPrize = null;
       room.game.tripPrize = null;
+      room.game.spaPrize = null;
       room.game.message = `${name} landed on CAR! Call a consonant to claim it.`;
     } else if (wedge.label === "TRIP" || wedge.prizeKind === "trip") {
       const trip = pickRandomTrip();
       room.game.pendingPrizeKind = "trip";
       room.game.tripPrize = trip;
       room.game.tripPrizeClaimed = false;
+      room.game.spaPrize = null;
+      room.game.spaPrizeClaimed = false;
       room.game.roundPrize = trip?.label || wedge.prize || "Trip";
       room.game.message = `${name} landed on TRIP! Call a consonant to claim ${room.game.roundPrize}!`;
+    } else if (wedge.label === "SPA" || wedge.prizeKind === "spa") {
+      const spa = pickRandomSpa();
+      room.game.pendingPrizeKind = "spa";
+      room.game.spaPrize = spa;
+      room.game.spaPrizeClaimed = false;
+      room.game.tripPrize = null;
+      room.game.tripPrizeClaimed = false;
+      room.game.roundPrize = spa?.label || spaDisplayLabel(spa) || "Spa Getaway";
+      room.game.message = `${name} landed on SPA! Call a consonant to claim ${room.game.roundPrize}!`;
     } else {
       room.game.pendingPrizeKind = "prize";
       room.game.pendingPrizeLabel = wedge.label;
       room.game.tripPrize = null;
       room.game.tripPrizeClaimed = false;
+      room.game.spaPrize = null;
+      room.game.spaPrizeClaimed = false;
       room.game.roundPrize = wedge.prize || wedge.label;
       room.game.message = `${name} landed on ${wedge.label}! Call a consonant to claim ${room.game.roundPrize}!`;
     }
@@ -872,6 +904,7 @@ export function handleSpin(room, seat, _power) {
         prize: room.game.roundPrize,
         prizeKind: room.game.pendingPrizeKind || wedge.prizeKind || null,
         tripId: room.game.tripPrize?.id ?? null,
+        spaId: room.game.spaPrize?.id ?? null,
       },
       state: publicGameState(room),
     };
@@ -949,6 +982,8 @@ function finishSolveByLetters(room, seat) {
     message += ` Plus: ${room.game.carPrize.name}!`;
   } else if (room.game.tripPrize?.label) {
     message += ` Plus: ${room.game.tripPrize.label}!`;
+  } else if (room.game.spaPrize?.label) {
+    message += ` Plus: ${room.game.spaPrize.label}!`;
   } else if (room.game.roundPrize) {
     message += ` Plus: ${room.game.roundPrize}!`;
   }
@@ -1042,12 +1077,20 @@ export function handleGuessLetter(room, seat, letter) {
 
     let prizeReveal = null;
     if (room.game.pendingPrizeKind === "car") {
-      const car = pickRandomCar() || { id: "car-round2", name: "Bonus Car" };
+      const car = pickRandomCar() || { id: "car-round2", name: "Bonus Car", make: "", model: "" };
+      const displayName = car.make && car.model ? `${car.make} ${car.model}` : car.name;
       room.game.pendingPrizeKind = null;
       room.game.pendingPrizeLabel = null;
-      room.game.carPrize = car;
-      room.game.roundPrize = car.name;
-      prizeReveal = { kind: "car", subtitle: "New Car", name: car.name, id: car.id };
+      room.game.carPrize = { ...car, name: displayName };
+      room.game.roundPrize = displayName;
+      prizeReveal = {
+        kind: "car",
+        subtitle: "New Car",
+        name: displayName,
+        make: car.make,
+        model: car.model,
+        id: car.id,
+      };
     } else if (room.game.pendingPrizeKind === "trip" && room.game.tripPrize) {
       room.game.pendingPrizeKind = null;
       room.game.pendingPrizeLabel = null;
@@ -1058,6 +1101,17 @@ export function handleGuessLetter(room, seat, letter) {
         subtitle: "Vacation Trip",
         name: room.game.tripPrize.label,
         id: room.game.tripPrize.id,
+      };
+    } else if (room.game.pendingPrizeKind === "spa" && room.game.spaPrize) {
+      room.game.pendingPrizeKind = null;
+      room.game.pendingPrizeLabel = null;
+      room.game.spaPrizeClaimed = true;
+      room.game.roundPrize = room.game.spaPrize.label;
+      prizeReveal = {
+        kind: "spa",
+        subtitle: "Spa Getaway",
+        name: room.game.spaPrize.display || room.game.spaPrize.label,
+        id: room.game.spaPrize.id,
       };
     } else if (room.game.pendingPrizeKind === "prize" && room.game.roundPrize) {
       const subtitle = prizeSubtitleForWedge(room.game.pendingPrizeLabel, "prize");

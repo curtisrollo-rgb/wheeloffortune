@@ -1,0 +1,185 @@
+{
+  "comment": "Spa wedge prizes — FEATURED SPA TRIP archive entries plus spa-focused resorts.",
+  "spas": [
+    {
+      "id": "shangri_la_hotel_in_vancouver",
+      "wording": "FEATURED SPA TRIP: Shangri-La Hotel in Vancouver",
+      "display": "Shangri-La Hotel in Vancouver",
+      "value_usd": 7700,
+      "source": "archive",
+      "congratsText": "Congratulations, you've won a spa getaway to Shangri-La Hotel in Vancouver!",
+      "voText": "Great news! Congratulations, you've won a spa getaway to Shangri-La Hotel in Vancouver!"
+    },
+    {
+      "id": "argentario_gold_resort_spa_in_italy_from_spa_finder_wellness",
+      "wording": "FEATURED SPA TRIP: Argentario Gold Resort & Spa in Italy from Spa Finder Wellness",
+      "display": "Argentario Gold Resort & Spa in Italy from Spa Finder Wellness",
+      "value_usd": 7200,
+      "source": "archive",
+      "congratsText": "Congrats, you've won a spa getaway at Argentario Gold Resort & Spa in Italy from Spa Finder Wellness!",
+      "voText": "Congratulations! Congrats, you've won a spa getaway at Argentario Gold Resort & Spa in Italy from Spa Finder Wellness!"
+    },
+    {
+      "id": "aventura_spa_palace_in_mexico_w_mexicana_airlines_airfare",
+      "wording": "FEATURED SPA TRIP: Aventura Spa Palace in Mexico w/ Mexicana Airlines airfare",
+      "display": "Aventura Spa Palace in Mexico w/ Mexicana Airlines airfare",
+      "value_usd": 7000,
+      "source": "archive",
+      "congratsText": "Good work — you've won a spa getaway at Aventura Spa Palace in Mexico w/ Mexicana Airlines airfare!",
+      "voText": "Congrats! Good work — you've won a spa getaway at Aventura Spa Palace in Mexico w/ Mexicana Airlines airfare!"
+    },
+    {
+      "id": "el_conquistador_resort_in_puerto_rico",
+      "wording": "FEATURED SPA TRIP: El Conquistador Resort in Puerto Rico",
+      "display": "El Conquistador Resort in Puerto Rico",
+      "value_usd": 6700,
+      "source": "archive",
+      "congratsText": "You've won a spa getaway to El Conquistador Resort in Puerto Rico!",
+      "voText": "Good work! You've won a spa getaway to El Conquistador Resort in Puerto Rico!"
+    },
+    {
+      "id": "westin_maui_resort_spa_ka_anapali",
+      "wording": "FEATURED SPA TRIP: Westin Maui Resort & Spa Ka'anapali",
+      "display": "Westin Maui Resort & Spa Ka'anapali",
+      "value_usd": 6640,
+      "source": "archive",
+      "congratsText": "Congratulations, you've won a spa getaway at Westin Maui Resort & Spa Ka'anapali!",
+      "voText": "You've won! Congratulations, you've won a spa getaway at Westin Maui Resort & Spa Ka'anapali!"
+    },
+    {
+      "id": "radisson_aruba_resort_casino_incl_a_day_of_pampering_at_larimar_spa",
+      "wording": "FEATURED SPA TRIP: Radisson Aruba Resort & Casino (incl. a day of pampering at Larimar Spa)",
+      "display": "Radisson Aruba Resort & Casino (incl. a day of pampering at Larimar Spa)",
+      "value_usd": 6500,
+      "source": "archive",
+      "congratsText": "Congrats, you've won a spa getaway to Radisson Aruba Resort & Casino (incl. a day of pampering at Larimar Spa)!",
+      "voText": "Great news! Congrats, you've won a spa getaway to Radisson Aruba Resort & Casino (incl. a day of pampering at Larimar Spa)!"
+    },
+    {
+      "id": "safety_harbor_spa_fitness_center_in_tampa_fl_via_delta_airlines",
+      "wording": "FEATURED PRIZE: spa vacation to Safety Harbor Spa & Fitness Center in Tampa, FL via Delta airlines",
+      "display": "Safety Harbor Spa & Fitness Center in Tampa, FL via Delta airlines",
+      "value_usd": 7098,
+      "source": "archive",
+      "congratsText": "Good work — you've won a spa getaway at Safety Harbor Spa & Fitness Center in Tampa, FL via Delta airlines!",
+      "voText": "Congratulations! Good work — you've won a spa getaway at Safety Harbor Spa & Fitness Center in Tampa, FL via Delta airlines!"
+    },
+    {
+      "id": "gran_velas_all_suites_spa_resort_in_nuevo_vallarta",
+      "wording": "TRIP ON THE WHEEL: Gran Velas All Suites & Spa Resort in Nuevo Vallarta",
+      "display": "Gran Velas All Suites & Spa Resort in Nuevo Vallarta",
+      "value_usd": 9600,
+      "source": "archive",
+      "congratsText": "You've won a spa getaway at Gran Velas All Suites & Spa Resort in Nuevo Vallarta!",
+      "voText": "Congrats! You've won a spa getaway at Gran Velas All Suites & Spa Resort in Nuevo Vallarta!"
+    },
+    {
+      "id": "zo_try_cura_ao_resort_spa_includes_an_underwater_walking_tour",
+      "wording": "FEATURED TRIP: Zoëtry Curaçao Resort & Spa (includes an underwater walking tour)",
+      "display": "Zoëtry Curaçao Resort & Spa (includes an underwater walking tour)",
+      "value_usd": 9470,
+      "source": "archive",
+      "congratsText": "Congratulations, you've won a spa getaway at Zoëtry Curaçao Resort & Spa (includes an underwater walking tour)!",
+      "voText": "Good work! Congratulations, you've won a spa getaway at Zoëtry Curaçao Resort & Spa (includes an underwater walking tour)!"
+    },
+    {
+      "id": "thermae_sylla_spa_wellness_hotel_in_greece",
+      "wording": "FEATURED TRIP: Thermae Sylla Spa Wellness Hotel in GREECE",
+      "display": "Thermae Sylla Spa Wellness Hotel in GREECE",
+      "value_usd": 7134,
+      "source": "spa_resort",
+      "congratsText": "Congrats, you've won a spa getaway at Thermae Sylla Spa Wellness Hotel in GREECE!",
+      "voText": "You've won! Congrats, you've won a spa getaway at Thermae Sylla Spa Wellness Hotel in GREECE!"
+    },
+    {
+      "id": "salish_lodge_spa_in_washington",
+      "wording": "FEATURED TRIP: to the Salish Lodge & Spa in Washington",
+      "display": "Salish Lodge & Spa in Washington",
+      "value_usd": 5000,
+      "source": "spa_resort",
+      "congratsText": "Good work — you've won a spa getaway at Salish Lodge & Spa in Washington!",
+      "voText": "Great news! Good work — you've won a spa getaway at Salish Lodge & Spa in Washington!"
+    },
+    {
+      "id": "springs_resort_spa_in_costa_rica",
+      "wording": "FEATURED TRIP: Springs Resort & Spa in COSTA RICA",
+      "display": "Springs Resort & Spa in COSTA RICA",
+      "value_usd": 6800,
+      "source": "spa_resort",
+      "congratsText": "You've won a spa getaway at Springs Resort & Spa in COSTA RICA!",
+      "voText": "Congratulations! You've won a spa getaway at Springs Resort & Spa in COSTA RICA!"
+    },
+    {
+      "id": "the_silverado_resort_spa_in_napa_valley",
+      "wording": "FEATURED TRIP: the Silverado Resort & Spa in Napa Valley",
+      "display": "the Silverado Resort & Spa in Napa Valley",
+      "value_usd": 9250,
+      "source": "spa_resort",
+      "congratsText": "Congratulations, you've won a spa getaway at the Silverado Resort & Spa in Napa Valley!",
+      "voText": "Congrats! Congratulations, you've won a spa getaway at the Silverado Resort & Spa in Napa Valley!"
+    },
+    {
+      "id": "mirror_lake_inn_resort_spa_in_lake_placid_ny",
+      "wording": "FEATURED TRIP: Mirror Lake Inn Resort & Spa in Lake Placid, NY",
+      "display": "Mirror Lake Inn Resort & Spa in Lake Placid, NY",
+      "value_usd": 8000,
+      "source": "spa_resort",
+      "congratsText": "Congrats, you've won a spa getaway at Mirror Lake Inn Resort & Spa in Lake Placid, NY!",
+      "voText": "Good work! Congrats, you've won a spa getaway at Mirror Lake Inn Resort & Spa in Lake Placid, NY!"
+    },
+    {
+      "id": "club_barbados_resort_spa",
+      "wording": "Club BARBADOS Resort & Spa",
+      "display": "Club BARBADOS Resort & Spa",
+      "value_usd": 9680,
+      "source": "spa_resort",
+      "congratsText": "Good work — you've won a spa getaway at Club BARBADOS Resort & Spa!",
+      "voText": "You've won! Good work — you've won a spa getaway at Club BARBADOS Resort & Spa!"
+    },
+    {
+      "id": "salterra_luxury_collection_resort_spa_in_turks_caicos",
+      "wording": "Salterra Luxury Collection Resort & Spa in TURKS & CAICOS",
+      "display": "Salterra Luxury Collection Resort & Spa in TURKS & CAICOS",
+      "value_usd": 10670,
+      "source": "spa_resort",
+      "congratsText": "You've won a spa getaway at Salterra Luxury Collection Resort & Spa in TURKS & CAICOS!",
+      "voText": "Great news! You've won a spa getaway at Salterra Luxury Collection Resort & Spa in TURKS & CAICOS!"
+    },
+    {
+      "id": "corazon_cabo_resort_spa_in_mexico",
+      "wording": "Corazon Cabo Resort & Spa in MEXICO",
+      "display": "Corazon Cabo Resort & Spa in MEXICO",
+      "value_usd": 8000,
+      "source": "spa_resort",
+      "congratsText": "Congratulations, you've won a spa getaway at Corazon Cabo Resort & Spa in MEXICO!",
+      "voText": "Congratulations! Congratulations, you've won a spa getaway at Corazon Cabo Resort & Spa in MEXICO!"
+    },
+    {
+      "id": "hyatt_regency_maui_resort_spa",
+      "wording": "Hyatt Regency MAUI Resort & Spa",
+      "display": "Hyatt Regency MAUI Resort & Spa",
+      "value_usd": 7700,
+      "source": "spa_resort",
+      "congratsText": "Congrats, you've won a spa getaway at Hyatt Regency MAUI Resort & Spa!",
+      "voText": "Congrats! Congrats, you've won a spa getaway at Hyatt Regency MAUI Resort & Spa!"
+    },
+    {
+      "id": "outrigger_kauai_beach_resort_spa",
+      "wording": "Outrigger KAUAI Beach Resort & Spa",
+      "display": "Outrigger KAUAI Beach Resort & Spa",
+      "value_usd": 8500,
+      "source": "spa_resort",
+      "congratsText": "Good work — you've won a spa getaway at Outrigger KAUAI Beach Resort & Spa!",
+      "voText": "Good work! Good work — you've won a spa getaway at Outrigger KAUAI Beach Resort & Spa!"
+    },
+    {
+      "id": "tia_wellness_resort_in_vietnam",
+      "wording": "TIA Wellness Resort in VIETNAM",
+      "display": "TIA Wellness Resort in VIETNAM",
+      "value_usd": 8082,
+      "source": "spa_resort",
+      "congratsText": "You've won a spa getaway to TIA Wellness Resort in VIETNAM!",
+      "voText": "You've won! You've won a spa getaway to TIA Wellness Resort in VIETNAM!"
+    }
+  ]
+}

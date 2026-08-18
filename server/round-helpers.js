@@ -204,6 +204,8 @@ export function resetRoundFields(game) {
   game.carPrize = null;
   game.tripPrize = null;
   game.tripPrizeClaimed = false;
+  game.spaPrize = null;
+  game.spaPrizeClaimed = false;
   game.solveBlocked = false;
   game.finalConsonantsLeft = 0;
   game.finalVowelsLeft = 0;
@@ -260,9 +262,10 @@ export function pickFinalist(room) {
 export function bankFinalWin(game, seat, player, amount) {
   const prize = game.finalEnvelopePrize;
   if (prize?.kind === "car") {
-    game.carPrize = { id: prize.id, name: prize.name };
-    game.roundPrize = prize.name;
-    game.message = `Correct! ${player?.name ?? seat} wins a ${prize.name}!`;
+    const label = prize.make && prize.model ? `${prize.make} ${prize.model}` : prize.name;
+    game.carPrize = { id: prize.id, name: label, make: prize.make, model: prize.model };
+    game.roundPrize = label;
+    game.message = `Correct! ${player?.name ?? seat} wins a ${label}!`;
   } else if (prize?.kind === "trip") {
     game.roundPrize = prize.label;
     if (player) player.score = (player.score || 0) + amount;

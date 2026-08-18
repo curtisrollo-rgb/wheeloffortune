@@ -48,6 +48,13 @@ let spinDirection = 1;
 let spinAnim = null;
 /** @type {null | Record<string, unknown>} */
 let gameState = null;
+let spinRevealPending = false;
+let spinRevealTimer = null;
+/** @type {null | { label?: string, value?: number, type?: string, prize?: string }} */
+let pendingSpinWedge = null;
+
+const MOBILE_SPIN = window.matchMedia("(max-width: 768px)").matches;
+const SPIN_REVEAL_MS = (MOBILE_SPIN ? 4000 : 5800) + 620;
 let audioReady = false;
 let awaitingSolveResult = false;
 
@@ -340,6 +347,41 @@ function actionFlags(state) {
   };
 }
 
+function formatSpinResult(wedge) {
+  if (!wedge) return "Spin complete.";
+  if (wedge.type === "bankrupt") return "You spun Bankrupt!";
+  if (wedge.type === "loseTurn") return "You spun Lose a Turn!";
+  if (wedge.type === "prize") return `You spun ${wedge.prize || wedge.label || "a prize"}!`;
+  if (typeof wedge.value === "number" && wedge.value > 0) {
+    return `You spun $${wedge.value.toLocaleString()}!`;
+  }
+  if (wedge.label) return `You spun ${wedge.label}!`;
+  return "Spin complete.";
+}
+
+function clearSpinReveal() {
+  if (spinRevealTimer) {
+    window.clearTimeout(spinRevealTimer);
+    spinRevealTimer = null;
+  }
+  spinRevealPending = false;
+  pendingSpinWedge = null;
+}
+
+function scheduleSpinReveal(wedge) {
+  clearSpinReveal();
+  pendingSpinWedge = wedge;
+  spinRevealPending = true;
+  setStatus("Spinning…");
+  spinRevealTimer = window.setTimeout(() => {
+    spinRevealTimer = null;
+    spinRevealPending = false;
+    setStatus(formatSpinResult(pendingSpinWedge));
+    pendingSpinWedge = null;
+    if (gameState) applyGameState(gameState);
+  }, SPIN_REVEAL_MS);
+}
+
 function applyGameState(state) {
   gameState = state ? { ...state, ...actionFlags(state) } : null;
   syncCalledLetters(state?.called || [], state?.finalPendingPicks || []);
@@ -378,6 +420,11 @@ function applyGameState(state) {
   }
 
   if (!isMyTurn || !state) return;
+
+  if (spinRevealPending) {
+    setStatus("Spinning…");
+    return;
+  }
 
   if (state.roundMoney > 0 && state.roundBank > 0) {
     setStatus(`$${state.roundBank.toLocaleString()} bank · $${state.roundMoney}/letter`);
@@ -418,7 +465,8 @@ function stopSpinGauge() {
   if (!isMyTurn || !client?.connected || vowelMode) return;
   sfx("spin", { volume: 0.55 });
   client.spin(Number(spinPower.toFixed(3)));
-  setStatus(`Spin sent (${Math.round(spinPower * 100)}% power).`);
+  spinRevealPending = true;
+  setStatus("Spinning…");
   els.spinGaugeFill.style.width = "0%";
   spinPower = 0;
 }
@@ -491,6 +539,7 @@ function onMessage(msg) {
       setStatus("Game started!");
       break;
     case "turnChanged":
+      if (msg.seat !== mySeat) clearSpinReveal();
       if (msg.seat) mySeat = mySeat || msg.seat;
       setTurnActive(msg.seat === mySeat);
       if (msg.seat === mySeat) setStatus(msg.message || "Your turn!");
@@ -500,6 +549,14 @@ function onMessage(msg) {
         setStatus(`Get ready… ${msg.count}`);
       } else {
         setStatus("Letters revealing — ring in when you know it!");
+      }
+      break;
+    case "roundCountdown":
+      if (msg.remaining > 0) {
+        const nextLabel = msg.nextLabel || msg.nextRound || "next round";
+        setStatus(`${nextLabel} starts in ${msg.remaining}…`);
+      } else {
+        setStatus(`Starting ${msg.nextLabel || msg.nextRound || "next round"}…`);
       }
       break;
     case "gameUpdate":
@@ -559,6 +616,7 @@ function onMessage(msg) {
         } else {
           sfx("land", { volume: 0.45 });
         }
+        scheduleSpinReveal(wedge);
       }
       break;
     case "solveResult":

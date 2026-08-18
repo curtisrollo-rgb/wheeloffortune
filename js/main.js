@@ -2,7 +2,7 @@ import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=
 import { runInBackground } from "./progressive-load.js?v=1";
 import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
 import { stopAllVo } from "./vo-bus.js?v=1";
-import { loadCategoryVo, warmCategoryVo, playCategoryVo, canonicalCategory } from "./category-vo.js?v=7";
+import { loadCategoryVo, warmCategoryVo, playCategoryVo, canonicalCategory } from "./category-vo.js?v=8";
 import {
   loadSolveCongratsVo,
   playRandomSolveCongrats,
@@ -57,6 +57,8 @@ import { loadCarPrizes, pickRandomCar, getAllCars } from "./car-prizes.js?v=2";
 import { loadCarPrizeVo, playCarPrizeVo } from "./car-prize-vo.js?v=1";
 import { loadTripPrizes, getAllTrips } from "./trip-prizes.js?v=1";
 import { loadTripPrizeVo, playTripPrizeVo } from "./trip-prize-vo.js?v=1";
+import { loadSpaPrizes } from "./spa-prizes.js?v=1";
+import { loadSpaPrizeVo, playSpaPrizeVo } from "./spa-prize-vo.js?v=1";
 import { showPrizeBanner, prizeSubtitleForWedge } from "./prize-banner.js?v=2";
 import {
   loadFinalEnvelopeAmounts,
@@ -617,6 +619,18 @@ async function revealCarPrize() {
   return car;
 }
 
+async function revealSpaPrize(spa) {
+  if (!spa?.label && !spa?.display) return;
+  playSound("solve", { volume: 0.45 });
+  const bannerPromise = showPrizeBanner(els.prizeBanner, {
+    title: "You Won!",
+    subtitle: "Spa Getaway",
+    name: spa.display || spa.label,
+  });
+  if (spa.id) await playSpaPrizeVo(spa.id);
+  await bannerPromise;
+}
+
 async function revealTripPrize(trip) {
   if (!trip?.label) return;
   playSound("solve", { volume: 0.45 });
@@ -644,6 +658,8 @@ async function handlePrizeReveal(result) {
     await revealCarPrize();
   } else if (result.prizeReveal?.kind === "trip") {
     await revealTripPrize(result.prizeReveal.trip || state.tripPrize);
+  } else if (result.prizeReveal?.kind === "spa") {
+    await revealSpaPrize(result.prizeReveal.spa || state.spaPrize);
   } else if (result.prizeReveal) {
     await revealGenericPrize(result.prizeReveal);
   } else if (result.needsCarReveal) {
@@ -943,8 +959,10 @@ async function init() {
     () => loadFinalLossVo(),
     () => loadCarPrizes(),
     () => loadTripPrizes(),
+    () => loadSpaPrizes(),
     () => loadCarPrizeVo(),
     () => loadTripPrizeVo(),
+    () => loadSpaPrizeVo(),
   );
 
   startNewPuzzle("round1");
