@@ -213,12 +213,29 @@ export async function createWheel(container, wedges, opts = {}) {
 
   /** @returns {Promise<{ index: number, wedge: object }>} */
   function runSpinTo(index, profile, { playStartSound = false, phase = "spinning" } = {}) {
+    const timeoutMs = Math.max(3500, Math.ceil((profile?.duration || 0) * (profile?.revolutions || 1)) + 2500);
     return new Promise((resolve) => {
-      restResolve = resolve;
+      let settled = false;
+      const finish = (result) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeoutId);
+        if (restResolve) restResolve = null;
+        resolve(result);
+      };
+
+      restResolve = (result) => finish(result);
       spinPhase = phase;
       setSpinningClass(container, true);
       if (playStartSound) playSound("spin", { volume: MOBILE_WHEEL ? 0.35 : 0.45 });
       wheel.spinToItem(index, profile.duration, true, profile.revolutions, 1, profile.easing);
+
+      const timeoutId = setTimeout(() => {
+        spinPhase = "idle";
+        setSpinningClass(container, false);
+        const safeIndex = wheel.getCurrentIndex();
+        finish({ index: safeIndex, wedge: wedges[safeIndex] });
+      }, timeoutMs);
     });
   }
 

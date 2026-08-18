@@ -1,8 +1,8 @@
 import { WofClient } from "./net/client.js?v=1";
 import { getWsUrl, getRoomFromUrl, getSpectateFromUrl, dataUrl } from "./net/config.js?v=3";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
-import { PuzzleBoard } from "./board.js?v=3";
-import { createWheel } from "./wheel.js?v=19";
+import { PuzzleBoard } from "./board.js?v=4";
+import { createWheel } from "./wheel.js?v=20";
 import { runInBackground } from "./progressive-load.js?v=1";
 import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
 import { preloadBgm, fadeInBgm, fadeOutBgm, stopBgm } from "./bgm.js?v=1";
@@ -52,6 +52,12 @@ const WHEEL_HIDE_DELAY_MS = 2200;
 const WHEEL_DOCK_OPEN_MS = 620;
 const TV_BANNER_MS = 3200;
 const TV_SUMMARY_MS = 3600;
+const SPIN_ANIMATION_TIMEOUT_MS = 14000;
+const HOST_VO_TIMEOUT_MS = 12000;
+const BOARD_REVEAL_TIMEOUT_MS = 12000;
+const HOST_STUCK_CHECK_MS = 4000;
+const HOST_RECONNECT_BASE_MS = 1200;
+const HOST_RECONNECT_MAX_MS = 15000;
 
 function emptyBoardRows() {
   return ROW_WIDTHS.map((w) => "#".repeat(w));
@@ -75,6 +81,7 @@ let lastAnnouncedPuzzleId = null;
 let welcomePlayed = false;
 let hostVoChain = Promise.resolve();
 let spinAnimating = false;
+let spinStartedAt = 0;
 let pendingSpinWedge = null;
 let pendingGameState = null;
 let currentRoundType = "tossup";
@@ -89,9 +96,70 @@ let finalAssetsLoaded = false;
 let messageClearTimer = null;
 let wheelHideTimer = null;
 let roundCountdownActive = false;
+let reconnectTimer = null;
+let reconnectAttempts = 0;
+let stuckFlagTimer = null;
+let boardRevealStartedAt = 0;
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function withTimeout(promise, ms, label = "operation") {
+  return Promise.race([
+    promise,
+    sleep(ms).then(() => {
+      throw new Error(`${label} timed out after ${ms}ms`);
+    }),
+  ]);
+}
+
+function resetHostSyncFlags(reason) {
+  if (spinAnimating || boardRevealBusy) {
+    console.warn("Resetting stuck TV display flags:", reason, {
+      spinAnimating,
+      boardRevealBusy,
+    });
+  }
+  spinAnimating = false;
+  spinStartedAt = 0;
+  boardRevealBusy = false;
+  boardRevealStartedAt = 0;
+  pendingSpinWedge = null;
+}
+
+function finishSpinAnimation({ applyPending = true } = {}) {
+  spinAnimating = false;
+  spinStartedAt = 0;
+  pendingSpinWedge = null;
+  if (applyPending) flushPendingGameState();
+  hideWheelDock();
+}
+
+function markBoardRevealBusy() {
+  boardRevealBusy = true;
+  boardRevealStartedAt = Date.now();
+}
+
+function clearBoardRevealBusy() {
+  boardRevealBusy = false;
+  boardRevealStartedAt = 0;
+}
+
+function checkStuckHostFlags() {
+  const now = Date.now();
+  if (spinAnimating && spinStartedAt && now - spinStartedAt > SPIN_ANIMATION_TIMEOUT_MS) {
+    finishSpinAnimation();
+  }
+  if (boardRevealBusy && boardRevealStartedAt && now - boardRevealStartedAt > BOARD_REVEAL_TIMEOUT_MS) {
+    clearBoardRevealBusy();
+    flushPendingGameState();
+  }
+}
+
+function startStuckFlagWatch() {
+  if (stuckFlagTimer) return;
+  stuckFlagTimer = setInterval(checkStuckHostFlags, HOST_STUCK_CHECK_MS);
 }
 
 function formatFinalTimer(ms) {
@@ -113,11 +181,15 @@ function hideFinalTimer() {
 }
 
 async function animateFinalFreeLetter(msg) {
-  boardRevealBusy = true;
+  markBoardRevealBusy();
   try {
     setMessage(`Revealing ${msg.letter}…`);
     if (msg.indices?.length) {
-      await board.revealTiles(msg.indices, msg.rows);
+      await withTimeout(
+        board.revealTiles(msg.indices, msg.rows),
+        BOARD_REVEAL_TIMEOUT_MS,
+        "Final free letter",
+      );
     } else {
       playSound("miss", { volume: 0.22 });
     }
@@ -126,13 +198,13 @@ async function animateFinalFreeLetter(msg) {
       lastPuzzleLayout = puzzleLayoutKey(msg.rows);
     }
     if (msg.autoSolved) {
-      await board.revealAll(msg.rows);
+      await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Final auto solve");
       playSound("solve", { volume: 0.55 });
       await playRandomSolveCongrats();
       stopBgm();
     }
   } finally {
-    boardRevealBusy = false;
+    clearBoardRevealBusy();
   }
 }
 
@@ -335,7 +407,9 @@ function updateNextRoundButton(state) {
 }
 
 function queueHostVo(task) {
-  hostVoChain = hostVoChain.then(task).catch((err) => console.warn("Host VO:", err));
+  hostVoChain = hostVoChain
+    .then(() => withTimeout(Promise.resolve().then(task), HOST_VO_TIMEOUT_MS, "Host VO"))
+    .catch((err) => console.warn("Host VO:", err));
   return hostVoChain;
 }
 
@@ -471,7 +545,7 @@ function maybeAnnounceCategory(state) {
   });
 }
 
-function applyGameState(state, players = []) {
+function applyGameState(state, players = [], { skipSpinHud = false } = {}) {
   if (!state) return;
   latestGameState = state;
 
@@ -506,7 +580,7 @@ function applyGameState(state, players = []) {
   maybeAnnounceCategory(state);
   if (state.message && !roundCountdownActive) setMessage(state.message);
 
-  if (!spinAnimating) {
+  if (!spinAnimating && !skipSpinHud) {
     if (state.wedgeLabel) els.wedgeResult.textContent = state.wedgeLabel;
     updateRoundMoneyPill(state);
   }
@@ -539,18 +613,27 @@ function flushPendingGameState() {
   const pending = pendingGameState;
   pendingGameState = null;
   applyGameState(pending.state, pending.players);
+  if (pending.state?.phase === "ended") {
+    queueHostVo(async () => {
+      await handleRoundEnd(pending.state, pending.players);
+    });
+  }
 }
 
 async function handleLetterResult(msg) {
   if (msg.finalPick) return;
 
   if (msg.finalReveal && msg.steps?.length) {
-    boardRevealBusy = true;
+    markBoardRevealBusy();
     try {
       for (const step of msg.steps) {
         setMessage(`Revealing ${step.letter}…`);
         if (step.indices?.length) {
-          await board.revealTiles(step.indices, step.rows);
+          await withTimeout(
+            board.revealTiles(step.indices, step.rows),
+            BOARD_REVEAL_TIMEOUT_MS,
+            "Final reveal",
+          );
         } else {
           playSound("miss", { volume: 0.25 });
         }
@@ -561,13 +644,13 @@ async function handleLetterResult(msg) {
         }
       }
       if (msg.solved && msg.rows?.length) {
-        await board.revealAll(msg.rows);
+        await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Final solve reveal");
         playSound("solve", { volume: 0.55 });
         await playRandomSolveCongrats();
         stopBgm();
       }
     } finally {
-      boardRevealBusy = false;
+      clearBoardRevealBusy();
     }
     return;
   }
@@ -579,9 +662,13 @@ async function handleLetterResult(msg) {
   }
 
   if (msg.hit && msg.indices?.length) {
-    boardRevealBusy = true;
+    markBoardRevealBusy();
     try {
-      await board.revealTiles(msg.indices, msg.rows);
+      await withTimeout(
+        board.revealTiles(msg.indices, msg.rows),
+        BOARD_REVEAL_TIMEOUT_MS,
+        "Letter reveal",
+      );
       if (msg.prizeReveal) {
         await revealPrizeFromLetter(msg.prizeReveal);
       } else if (msg.carWon && msg.carPrize) {
@@ -606,7 +693,7 @@ async function handleLetterResult(msg) {
         lastPuzzleLayout = puzzleLayoutKey(msg.rows);
       }
     } finally {
-      boardRevealBusy = false;
+      clearBoardRevealBusy();
     }
     return;
   }
@@ -627,10 +714,10 @@ async function maybeRevealSolvedBoard(rows, message, { skipCongrats = false } = 
   if (rows.some((row) => row.includes("_"))) return;
   if (!boardHasHiddenTiles()) return;
 
-  boardRevealBusy = true;
+  markBoardRevealBusy();
   try {
     if (message) setMessage(message);
-    await board.revealAll(rows);
+    await withTimeout(board.revealAll(rows), BOARD_REVEAL_TIMEOUT_MS, "Solve reveal");
     playSound("solve", { volume: 0.55 });
     if (!skipCongrats) {
       await playRandomSolveCongrats();
@@ -638,7 +725,7 @@ async function maybeRevealSolvedBoard(rows, message, { skipCongrats = false } = 
     board.rows = rows;
     lastPuzzleLayout = puzzleLayoutKey(rows);
   } finally {
-    boardRevealBusy = false;
+    clearBoardRevealBusy();
   }
 }
 
@@ -646,36 +733,47 @@ async function handleSolveResult(msg) {
   stopBgm();
   hideFinalTimer();
   if (!msg.rows?.length) return;
-  boardRevealBusy = true;
+  markBoardRevealBusy();
   try {
     if (msg.message) setMessage(msg.message);
-    await board.revealAll(msg.rows);
+    await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Solve result");
     playSound("solve", { volume: 0.55 });
     await playRandomSolveCongrats();
     board.rows = msg.rows;
     lastPuzzleLayout = puzzleLayoutKey(msg.rows);
   } finally {
-    boardRevealBusy = false;
+    clearBoardRevealBusy();
   }
 }
 
 async function handleTossUpTile(msg) {
   if (!msg.indices?.length) return;
-  boardRevealBusy = true;
+  markBoardRevealBusy();
   try {
-    await board.revealTiles(msg.indices, msg.rows);
+    await withTimeout(
+      board.revealTiles(msg.indices, msg.rows),
+      BOARD_REVEAL_TIMEOUT_MS,
+      "Toss-up tile",
+    );
     if (msg.rows?.length) {
       board.rows = msg.rows;
       lastPuzzleLayout = puzzleLayoutKey(msg.rows);
     }
   } finally {
-    boardRevealBusy = false;
+    clearBoardRevealBusy();
   }
 }
 
 async function handleFinalFreeReveal(msg) {
-  boardRevealBusy = true;
+  markBoardRevealBusy();
   try {
+    await withTimeout(handleFinalFreeRevealInner(msg), BOARD_REVEAL_TIMEOUT_MS * 2, "Final free reveal");
+  } finally {
+    clearBoardRevealBusy();
+  }
+}
+
+async function handleFinalFreeRevealInner(msg) {
     await playRandomFinalGoodLuckVo();
 
     if (msg.steps?.length) {
@@ -702,9 +800,6 @@ async function handleFinalFreeReveal(msg) {
       playSound("solve", { volume: 0.55 });
       await playRandomSolveCongrats();
     }
-  } finally {
-    boardRevealBusy = false;
-  }
 }
 
 const $ = (id) => document.getElementById(id);
@@ -892,6 +987,7 @@ function manifestMatchesWheel(manifest, wedges = []) {
 
 async function loadWheelFromManifest(manifest) {
   if (!manifest?.length) return;
+  if (spinAnimating) return;
   const job = (async () => {
     updateWheelSection(currentRoundType);
     els.wheelHost.innerHTML = "";
@@ -977,6 +1073,7 @@ function onMessage(msg) {
     case "gameUpdate":
       if (spinAnimating) {
         pendingGameState = { state: msg.state, players: msg.players };
+        applyGameState(msg.state, msg.players, { skipSpinHud: true });
         break;
       }
       applyGameState(msg.state, msg.players);
@@ -988,58 +1085,56 @@ function onMessage(msg) {
       break;
     case "spinResult":
       spinAnimating = true;
+      spinStartedAt = Date.now();
       pendingSpinWedge = msg.wedge;
       if (els.wedgeResult) els.wedgeResult.textContent = "—";
       showWheelDock();
-      (async () => {
-        if (msg.roundType) syncRoundTabs(msg.roundType);
-        if (msg.wedgeManifest?.length) {
-          await ensureWheelManifest(msg.wedgeManifest);
-        } else if (msg.roundType && msg.roundType !== currentRoundType) {
-          await loadWheelForRound(msg.roundType);
-        } else {
-          await ensureWheelReady(msg.roundType);
-        }
-        if (!wheelApi?.spinToIndex) {
-          console.warn("Spin animation: wheel not ready");
-          spinAnimating = false;
-          flushPendingGameState();
-          hideWheelDock(800);
-          return;
-        }
-        await sleep(WHEEL_DOCK_OPEN_MS);
-        await wheelApi.spinToIndex(msg.index);
-        const wedge = msg.wedge;
-        const state = pendingGameState?.state ?? latestGameState;
-        applySpinWedgeToHud(wedge, {
-          ...state,
-          roundMoney: wedge?.value ?? state?.roundMoney ?? 0,
-          wedgeLabel: wedge?.label,
-        });
-        spinAnimating = false;
-        pendingSpinWedge = null;
-        flushPendingGameState();
-        hideWheelDock();
-        if (wedge?.type === "bankrupt" || wedge?.type === "loseTurn") {
-          playPenaltyVo(wedge.type);
-        } else if (wedge?.type === "prize") {
-          if (wedge.prizeKind === "car") {
-            playSound("land", { volume: 0.45 });
-          } else if (wedge.prizeKind === "trip") {
-            playSound("solve", { volume: 0.4 });
+      withTimeout(
+        (async () => {
+          if (msg.roundType) syncRoundTabs(msg.roundType);
+          if (msg.wedgeManifest?.length) {
+            await ensureWheelManifest(msg.wedgeManifest);
+          } else if (msg.roundType && msg.roundType !== currentRoundType) {
+            await loadWheelForRound(msg.roundType);
           } else {
-            playSound("solve", { volume: 0.35 });
+            await ensureWheelReady(msg.roundType);
           }
-        } else if (wedge?.value > 0) {
-          playWedgeAmountVo(wedge.value);
-        } else if (wedge?.type === "bonusEnvelope") {
-          playSound("land", { volume: 0.55 });
-        }
-      })().catch((err) => {
+          if (!wheelApi?.spinToIndex) {
+            console.warn("Spin animation: wheel not ready");
+            finishSpinAnimation();
+            return;
+          }
+          await sleep(WHEEL_DOCK_OPEN_MS);
+          await wheelApi.spinToIndex(msg.index);
+          const wedge = msg.wedge;
+          const state = pendingGameState?.state ?? latestGameState;
+          applySpinWedgeToHud(wedge, {
+            ...state,
+            roundMoney: wedge?.value ?? state?.roundMoney ?? 0,
+            wedgeLabel: wedge?.label,
+          });
+          finishSpinAnimation();
+          if (wedge?.type === "bankrupt" || wedge?.type === "loseTurn") {
+            playPenaltyVo(wedge.type);
+          } else if (wedge?.type === "prize") {
+            if (wedge.prizeKind === "car") {
+              playSound("land", { volume: 0.45 });
+            } else if (wedge.prizeKind === "trip") {
+              playSound("solve", { volume: 0.4 });
+            } else {
+              playSound("solve", { volume: 0.35 });
+            }
+          } else if (wedge?.value > 0) {
+            playWedgeAmountVo(wedge.value);
+          } else if (wedge?.type === "bonusEnvelope") {
+            playSound("land", { volume: 0.55 });
+          }
+        })(),
+        SPIN_ANIMATION_TIMEOUT_MS,
+        "Spin animation",
+      ).catch((err) => {
         console.warn("Spin animation:", err);
-        spinAnimating = false;
-        flushPendingGameState();
-        hideWheelDock(600);
+        finishSpinAnimation();
       });
       break;
     case "buzzWinner":
@@ -1059,13 +1154,13 @@ function onMessage(msg) {
     case "tossUpComplete":
       queueHostVo(async () => {
         if (msg.rows?.length) {
-          boardRevealBusy = true;
+          markBoardRevealBusy();
           try {
-            await board.revealAll(msg.rows);
+            await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Toss-up complete");
             board.rows = msg.rows;
             lastPuzzleLayout = puzzleLayoutKey(msg.rows);
           } finally {
-            boardRevealBusy = false;
+            clearBoardRevealBusy();
           }
         }
         if (msg.message) setMessage(msg.message);
@@ -1090,21 +1185,11 @@ function onMessage(msg) {
       });
       break;
     case "finalEnvelopeSealed":
-      if (spinAnimating) {
-        spinAnimating = false;
-        pendingSpinWedge = null;
-        flushPendingGameState();
-        hideWheelDock(0);
-      }
+      if (spinAnimating) finishSpinAnimation();
       setMessage("Bonus envelope sealed!");
       break;
     case "finalRstlneStart":
-      if (spinAnimating) {
-        spinAnimating = false;
-        pendingSpinWedge = null;
-        flushPendingGameState();
-        hideWheelDock(0);
-      }
+      if (spinAnimating) finishSpinAnimation();
       setMessage(msg.message || "Let's get you R, S, T, L, N, and E!");
       break;
     case "finalFreeLetter":
@@ -1127,13 +1212,13 @@ function onMessage(msg) {
       hideFinalTimer();
       queueHostVo(async () => {
         if (msg.rows?.length) {
-          boardRevealBusy = true;
+          markBoardRevealBusy();
           try {
-            await board.revealAll(msg.rows);
+            await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Final timer expired");
             board.rows = msg.rows;
             lastPuzzleLayout = puzzleLayoutKey(msg.rows);
           } finally {
-            boardRevealBusy = false;
+            clearBoardRevealBusy();
           }
         }
         if (msg.message) setMessage(msg.message);
@@ -1141,6 +1226,9 @@ function onMessage(msg) {
       });
       break;
     case "finalFreeReveal":
+      queueHostVo(async () => {
+        await handleFinalFreeReveal(msg);
+      });
       break;
     case "letterResult":
       queueHostVo(async () => {
@@ -1167,6 +1255,34 @@ function onMessage(msg) {
   }
 }
 
+function scheduleHostReconnect() {
+  if (reconnectTimer || !roomCode) return;
+  const delay = Math.min(
+    HOST_RECONNECT_MAX_MS,
+    HOST_RECONNECT_BASE_MS * 2 ** reconnectAttempts,
+  );
+  reconnectTimer = setTimeout(async () => {
+    reconnectTimer = null;
+    reconnectAttempts += 1;
+    const wsUrl = getWsUrl();
+    if (!wsUrl) return;
+    setMessage(`Reconnecting to room ${roomCode}…`);
+    try {
+      await client.connect(wsUrl);
+      if (isSpectator) {
+        client.attachSpectator(roomCode);
+      } else {
+        client.attachHost(roomCode);
+      }
+      reconnectAttempts = 0;
+      resetHostSyncFlags("reconnect");
+      setMessage(`Reconnected to room ${roomCode}.`);
+    } catch {
+      scheduleHostReconnect();
+    }
+  }, delay);
+}
+
 async function connectToRoom() {
   const wsUrl = getWsUrl();
   if (!roomCode) {
@@ -1182,7 +1298,16 @@ async function connectToRoom() {
 
   client = new WofClient({
     onMessage,
-    onClose: () => setMessage("Disconnected from server."),
+    onOpen: () => {
+      reconnectAttempts = 0;
+      clearTimeout(reconnectTimer);
+      reconnectTimer = null;
+    },
+    onClose: () => {
+      resetHostSyncFlags("disconnect");
+      setMessage("Disconnected from server. Reconnecting…");
+      scheduleHostReconnect();
+    },
   });
 
   try {
@@ -1197,8 +1322,10 @@ async function connectToRoom() {
         ? `Connecting to watch room ${roomCode}…`
         : `Connected to room ${roomCode}.`,
     );
+    startStuckFlagWatch();
   } catch {
     setMessage("Could not connect to game server.");
+    scheduleHostReconnect();
   }
 }
 

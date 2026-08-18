@@ -102,12 +102,20 @@ export class PuzzleBoard {
     const pause = fast ? SOLVE_PAUSE : REVEAL_PAUSE;
     const flipDuration = fast ? SOLVE_FLIP : REVEAL_FLIP;
     const ordered = shuffle(elements);
+    const revealTimeoutMs = fast ? 8000 : 12000;
 
     return new Promise((resolve) => {
-      const tl = gsap.timeline({ onComplete: () => {
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeoutId);
         this.rows = sourceRows;
         resolve();
-      }});
+      };
+      const timeoutId = setTimeout(finish, revealTimeoutMs);
+
+      const tl = gsap.timeline({ onComplete: finish });
 
       ordered.forEach((el, i) => {
         const ri = Number(el.dataset.row);
