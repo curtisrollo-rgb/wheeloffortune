@@ -364,6 +364,17 @@ export function startTossUpRevealLoop(room, emit) {
   tossUpTimers.set(room.code, timer);
 }
 
+/** @param {{ label?: string, display?: string, wording?: string, valueUsd?: number }|null|undefined} prize */
+export function formatTripSpaPrizeDetail(prize) {
+  if (!prize) return "";
+  const bits = [];
+  if (prize.valueUsd > 0) bits.push(`Approx. value: $${prize.valueUsd.toLocaleString()}`);
+  const wording = String(prize.wording || "").trim();
+  const headline = String(prize.display || prize.label || "").trim();
+  if (wording && wording !== headline) bits.push(wording);
+  return bits.join(" · ");
+}
+
 /** @param {import('./rooms.js').Room} room */
 export function createInitialGame() {
   return {
@@ -447,7 +458,7 @@ export function ensurePreviewBoard(room) {
   }
   const hasPuzzleTiles = room.game.rows?.some((row) => row.includes("_"));
   if (!room.game.started && !hasPuzzleTiles) {
-    loadPuzzleForRound(room, room.game.roundType || "round1", { preview: true });
+    loadPuzzleForRound(room, room.game.roundType || "tossup", { preview: true });
   }
   return publicGameState(room);
 }
@@ -499,12 +510,13 @@ export function startGame(room) {
     room.game = createInitialGame();
   }
 
+  room.game.roundType = "tossup";
+
   const hasPuzzleTiles = room.game.rows?.some((row) => row.includes("_"));
   if (!hasPuzzleTiles) {
-    loadPuzzleForRound(room, room.game.roundType || "round1");
+    loadPuzzleForRound(room, "tossup");
   } else {
-    room.game.started = true;
-    setupRoundPhase(room.game, room.game.roundType || "round1", room);
+    setupRoundPhase(room.game, "tossup", room);
     resetRoundFields(room.game);
   }
 
@@ -1100,6 +1112,7 @@ export function handleGuessLetter(room, seat, letter) {
         kind: "trip",
         subtitle: "Vacation Trip",
         name: room.game.tripPrize.label,
+        detail: formatTripSpaPrizeDetail(room.game.tripPrize),
         id: room.game.tripPrize.id,
       };
     } else if (room.game.pendingPrizeKind === "spa" && room.game.spaPrize) {
@@ -1111,6 +1124,7 @@ export function handleGuessLetter(room, seat, letter) {
         kind: "spa",
         subtitle: "Spa Getaway",
         name: room.game.spaPrize.display || room.game.spaPrize.label,
+        detail: formatTripSpaPrizeDetail(room.game.spaPrize),
         id: room.game.spaPrize.id,
       };
     } else if (room.game.pendingPrizeKind === "prize" && room.game.roundPrize) {

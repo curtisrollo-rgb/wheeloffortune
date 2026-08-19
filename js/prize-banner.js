@@ -17,18 +17,23 @@ export function prizeSubtitleForWedge(wedgeLabel, kind) {
 
 /**
  * @param {HTMLElement} el
- * @param {{ title?: string, subtitle?: string, name: string }} opts
+ * @param {{ title?: string, subtitle?: string, name: string, detail?: string }} opts
  * @returns {Promise<void>}
  */
-export function showPrizeBanner(el, { title = "You Won!", subtitle = "New Car", name }, { displayMs = 5200 } = {}) {
+export function showPrizeBanner(el, { title = "You Won!", subtitle = "New Car", name, detail = "" }, { displayMs = 5200 } = {}) {
   if (!el) return Promise.resolve();
 
   const titleEl = el.querySelector(".prize-banner-title");
   const subEl = el.querySelector(".prize-banner-subtitle");
   const nameEl = el.querySelector(".prize-banner-name");
+  const detailEl = el.querySelector(".prize-banner-detail");
   if (titleEl) titleEl.textContent = title;
   if (subEl) subEl.textContent = subtitle;
   if (nameEl) nameEl.textContent = name;
+  if (detailEl) {
+    detailEl.textContent = detail;
+    detailEl.classList.toggle("is-hidden", !detail);
+  }
 
   clearTimeout(hideTimer);
   el.classList.remove("is-hidden");

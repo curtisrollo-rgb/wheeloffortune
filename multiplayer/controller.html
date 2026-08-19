@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <title>Controller — Wheel of Fortune</title>
-  <link rel="stylesheet" href="css/multiplayer.css?v=8" />
+  <link rel="stylesheet" href="css/multiplayer.css?v=9" />
 </head>
 <body class="controller-page">
   <header class="controller-header">
@@ -15,6 +15,10 @@
   </header>
 
   <div id="turn-banner" class="turn-banner">Waiting for your turn…</div>
+  <div id="round-countdown" class="round-countdown controller-round-countdown is-hidden" aria-live="assertive">
+    <span class="round-countdown-label">Next round starts in</span>
+    <span class="round-countdown-seconds">10</span>
+  </div>
 
   <main class="controller-main">
     <section class="spin-panel" id="spin-panel">
@@ -69,6 +73,6 @@
     </div>
   </div>
 
-  <script type="module" src="../js/controller-app.js?v=14"></script>
+  <script type="module" src="../js/controller-app.js?v=15"></script>
 </body>
 </html>

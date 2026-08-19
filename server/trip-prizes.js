@@ -42,7 +42,7 @@ function loadTrips() {
 
 loadTrips();
 
-/** @returns {{ id: string, label: string, name: string, valueUsd: number }|null} */
+/** @returns {{ id: string, label: string, name: string, display: string, wording: string, valueUsd: number, congratsText: string }|null} */
 export function pickRandomTrip() {
   if (!trips.length) return null;
   const trip = trips[randomBytes(2).readUInt16BE(0) % trips.length];
@@ -51,6 +51,9 @@ export function pickRandomTrip() {
     id: trip.id,
     label,
     name: label,
+    display: trip.wording || label,
+    wording: trip.wording || "",
     valueUsd: trip.value_usd || 0,
+    congratsText: trip.congratsText || "",
   };
 }

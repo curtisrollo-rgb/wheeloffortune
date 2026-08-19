@@ -274,6 +274,20 @@ body.is-loading .top-bar {
   max-width: 92%;
 }
 
+.prize-banner-detail {
+  margin: 0.35rem 0 0;
+  font-size: clamp(0.82rem, 1.6vw, 1rem);
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.35;
+  color: #c8d8ef;
+  max-width: 92%;
+}
+
+.prize-banner-detail.is-hidden {
+  display: none;
+}
+
 .round-summary {
   position: absolute;
   inset: 0;
@@ -347,7 +361,8 @@ body.is-loading .top-bar {
   margin: 0.35rem 0 0;
   font-size: 0.88rem;
   color: #c8d8ef;
-  max-width: 28ch;
+  max-width: min(92%, 36rem);
+  line-height: 1.35;
 }
 
 .round-summary-detail.is-hidden {

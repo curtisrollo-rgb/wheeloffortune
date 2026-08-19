@@ -35,7 +35,7 @@ function loadSpas() {
 
 loadSpas();
 
-/** @returns {{ id: string, label: string, name: string, display: string, valueUsd: number }|null} */
+/** @returns {{ id: string, label: string, name: string, display: string, wording: string, valueUsd: number, congratsText: string }|null} */
 export function pickRandomSpa() {
   if (!spas.length) return null;
   const spa = spas[randomBytes(2).readUInt16BE(0) % spas.length];
@@ -45,6 +45,8 @@ export function pickRandomSpa() {
     label,
     name: label,
     display: spa.display || label,
+    wording: spa.wording || "",
     valueUsd: spa.value_usd || 0,
+    congratsText: spa.congratsText || "",
   };
 }

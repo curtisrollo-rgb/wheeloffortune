@@ -481,6 +481,43 @@ body.controller-page.is-tossup-mode .controller-main {
   background: rgba(0, 0, 0, 0.35);
 }
 
+.controller-round-countdown {
+  inset: auto;
+  top: 4.5rem;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translateX(-50%);
+  flex-direction: column;
+  gap: 0.1rem;
+  width: min(92vw, 18rem);
+  padding: 0.55rem 1rem 0.65rem;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 215, 0, 0.45);
+  background: rgba(0, 0, 0, 0.82);
+  font-size: inherit;
+  text-shadow: none;
+}
+
+.controller-round-countdown.is-hidden {
+  display: none;
+}
+
+.controller-round-countdown .round-countdown-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9eb4d0;
+}
+
+.controller-round-countdown .round-countdown-seconds {
+  font-size: clamp(1.8rem, 8vw, 2.4rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+}
+
 .final-timer {
   position: fixed;
   top: clamp(4.5rem, 12vh, 7rem);

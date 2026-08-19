@@ -176,6 +176,14 @@ body.is-spectator-mode .host-dock {
   gap: 2px;
 }
 
+.big-board-page .puzzle-tiles {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+}
+
 .big-board-page .board-row {
   gap: 2px;
 }
@@ -184,10 +192,15 @@ body.is-spectator-mode .host-dock {
   font-size: var(--tile-font-size);
 }
 
-.big-board-page .prize-banner,
-.big-board-page .round-summary {
+.big-board-page .puzzle-board .prize-banner,
+.big-board-page .puzzle-board .round-summary {
   border-radius: 4px;
   z-index: 25;
+  inset: 0;
+  margin: 0;
+  max-width: none;
+  width: auto;
+  height: auto;
 }
 
 /* ——— Called letters strip ——— */
@@ -358,8 +371,51 @@ body.big-board-page.is-wheel-active .big-board-main {
   justify-content: center;
 }
 
-.big-board-page .round-summary {
-  max-width: min(92vw, 28rem);
+.big-board-page .round-summary-detail,
+.big-board-page .prize-banner-detail {
+  max-width: min(92%, 36rem);
+  line-height: 1.35;
+}
+
+.big-board-page .round-countdown {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(5.5rem, 16vh, 9rem);
+  transform: translateX(-50%);
+  z-index: 48;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.65rem 1.35rem 0.75rem;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 215, 0, 0.55);
+  background: rgba(0, 0, 0, 0.82);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  text-align: center;
+}
+
+.big-board-page .round-countdown.is-hidden {
+  display: none;
+}
+
+.big-board-page .round-countdown-label {
+  margin: 0;
+  font-size: clamp(0.72rem, 1.6vw, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #9eb4d0;
+}
+
+.big-board-page .round-countdown-seconds {
+  margin: 0;
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--accent);
+  text-shadow: 0 0 18px rgba(255, 215, 0, 0.45);
 }
 
 .big-board-page .prize-banner-title {

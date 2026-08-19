@@ -47,7 +47,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.33";
+const VERSION = "0.2.34";
 
 const ROUND_ORDER = ["tossup", "round1", "round2", "final"];
 const ROUND_LABELS = {
@@ -396,6 +396,9 @@ wss.on("connection", (ws) => {
 
       appendLog(room, "Game started");
       broadcast(room, { op: "gameStarted", code: room.code, state: publicGameState(room), players: playerSummaries(room) });
+      if (room.game.roundType === "tossup") {
+        broadcast(room, { op: "beginTossUpReady" });
+      }
       broadcastGameState(room);
       broadcast(room, turnChangedPayload(room, room.game.activeSeat));
       return;

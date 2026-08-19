@@ -31,6 +31,9 @@ const els = {
   finalTimerDisplay: $("final-timer-display"),
   btnFinalSolve: $("btn-final-solve"),
   controllerStatus: $("controller-status"),
+  roundCountdown: $("round-countdown"),
+  roundCountdownLabel: document.querySelector(".controller-round-countdown .round-countdown-label"),
+  roundCountdownSeconds: document.querySelector(".controller-round-countdown .round-countdown-seconds"),
   solveModal: $("solve-modal"),
   solveInput: $("solve-input"),
   btnSolveSubmit: $("btn-solve-submit"),
@@ -76,6 +79,21 @@ function isVowel(letter) {
 
 function setStatus(text) {
   els.controllerStatus.textContent = text;
+}
+
+function showRoundCountdown(remaining, nextLabel) {
+  if (!els.roundCountdown) return;
+  els.roundCountdown.classList.remove("is-hidden");
+  if (els.roundCountdownLabel) {
+    els.roundCountdownLabel.textContent = `${nextLabel} starts in`;
+  }
+  if (els.roundCountdownSeconds) {
+    els.roundCountdownSeconds.textContent = String(remaining);
+  }
+}
+
+function hideRoundCountdown() {
+  els.roundCountdown?.classList.add("is-hidden");
 }
 
 function setVowelMode(on) {
@@ -554,8 +572,10 @@ function onMessage(msg) {
     case "roundCountdown":
       if (msg.remaining > 0) {
         const nextLabel = msg.nextLabel || msg.nextRound || "next round";
+        showRoundCountdown(msg.remaining, nextLabel);
         setStatus(`${nextLabel} starts in ${msg.remaining}…`);
       } else {
+        hideRoundCountdown();
         setStatus(`Starting ${msg.nextLabel || msg.nextRound || "next round"}…`);
       }
       break;

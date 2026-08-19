@@ -17,7 +17,7 @@ import { loadTripPrizeVo, playTripPrizeVo } from "./trip-prize-vo.js?v=1";
 import { loadSpaPrizeVo, playSpaPrizeVo } from "./spa-prize-vo.js?v=1";
 import { buildEnvelopeWedges, getFinalEnvelopePrizes, loadFinalEnvelopeAmounts } from "./final-envelope-wheel.js?v=3";
 import { showEnvelopeReveal } from "./final-envelope-ui.js?v=1";
-import { showPrizeBanner, prizeSubtitleForWedge } from "./prize-banner.js?v=2";
+import { showPrizeBanner, prizeSubtitleForWedge } from "./prize-banner.js?v=3";
 import { showRoundSummary } from "./round-summary.js?v=2";
 import { playRoundSummaryVo } from "./round-summary-vo.js?v=2";
 import { loadMilestoneVo, playOnlyVowelsRemainVo, playNoMoreVowelsVo } from "./milestone-vo.js?v=2";
@@ -221,6 +221,21 @@ function scheduleAutoAdvance(_state) {
   /* Server broadcasts roundCountdown and auto-advances after 10s. */
 }
 
+function showRoundCountdown(remaining, nextLabel) {
+  if (!els.roundCountdown) return;
+  els.roundCountdown.classList.remove("is-hidden");
+  if (els.roundCountdownLabel) {
+    els.roundCountdownLabel.textContent = `${nextLabel} starts in`;
+  }
+  if (els.roundCountdownSeconds) {
+    els.roundCountdownSeconds.textContent = String(remaining);
+  }
+}
+
+function hideRoundCountdown() {
+  els.roundCountdown?.classList.add("is-hidden");
+}
+
 function needsFinalEnvelopeReveal(state) {
   return (
     state?.roundType === "final" &&
@@ -244,6 +259,23 @@ function formatScoresLine(players = []) {
   return players.map((p) => `${p.name} $${(p.score || 0).toLocaleString()}`).join(" · ");
 }
 
+/** @param {{ label?: string, display?: string, wording?: string, valueUsd?: number }|null|undefined} prize */
+function formatTripSpaPrizeDetail(prize) {
+  if (!prize) return "";
+  const bits = [];
+  if (prize.valueUsd > 0) bits.push(`Approx. value: $${prize.valueUsd.toLocaleString()}`);
+  const wording = String(prize.wording || "").trim();
+  const headline = String(prize.display || prize.label || "").trim();
+  if (wording && wording !== headline) bits.push(wording);
+  return bits.join(" · ");
+}
+
+function formatBonusPrizeSummary(prize, kind) {
+  if (!prize) return { name: "", detail: "" };
+  const name = kind === "spa" ? (prize.display || prize.label || "") : (prize.label || prize.name || "");
+  return { name, detail: formatTripSpaPrizeDetail(prize) };
+}
+
 function buildRoundSummary(state, players = []) {
   const roundLabel = ROUND_LABELS[state?.roundType] || state?.roundType || "Round";
   const winner = players.find((p) => p.seat === state?.roundWinnerSeat);
@@ -255,7 +287,10 @@ function buildRoundSummary(state, players = []) {
     if (state.finalWon && state.finalEnvelopePrize?.kind === "car") {
       detail = `Bonus: ${state.finalEnvelopePrize.name}`;
     } else if (state.finalWon && state.finalEnvelopePrize?.kind === "trip") {
-      detail = `Bonus: ${state.finalEnvelopePrize.label}`;
+      const trip = state.finalEnvelopePrize;
+      detail = trip.detail || formatTripSpaPrizeDetail(trip);
+      if (detail) detail = `Bonus: ${trip.label} · ${detail}`;
+      else detail = `Bonus: ${trip.label}`;
     }
     return {
       roundLabel,
@@ -290,9 +325,13 @@ function buildRoundSummary(state, players = []) {
 
   let detail = "";
   if (state?.carPrize?.name) detail = `Plus: ${state.carPrize.name}`;
-  else if (state?.tripPrize?.label) detail = `Plus: ${state.tripPrize.label}`;
-  else if (state?.spaPrize?.label) detail = `Plus: ${state.spaPrize.display || state.spaPrize.label}`;
-  else if (state?.roundPrize) detail = `Prize: ${state.roundPrize}`;
+  else if (state?.tripPrize?.label) {
+    const { name, detail: tripDetail } = formatBonusPrizeSummary(state.tripPrize, "trip");
+    detail = tripDetail ? `Plus: ${name} · ${tripDetail}` : `Plus: ${name}`;
+  } else if (state?.spaPrize?.label || state?.spaPrize?.display) {
+    const { name, detail: spaDetail } = formatBonusPrizeSummary(state.spaPrize, "spa");
+    detail = spaDetail ? `Plus: ${name} · ${spaDetail}` : `Plus: ${name}`;
+  } else if (state?.roundPrize) detail = `Prize: ${state.roundPrize}`;
 
   return {
     roundLabel,
@@ -306,10 +345,12 @@ function buildRoundSummary(state, players = []) {
 
 async function revealSpaPrize(spa) {
   if (!spa?.label && !spa?.display) return;
+  const { name } = formatBonusPrizeSummary(spa, "spa");
   await revealPrizeFromLetter({
     kind: "spa",
     subtitle: "Spa Getaway",
-    name: spa.display || spa.label,
+    name,
+    detail: formatTripSpaPrizeDetail(spa),
     id: spa.id,
   });
 }
@@ -320,6 +361,7 @@ async function revealTripPrize(trip) {
     kind: "trip",
     subtitle: "Vacation Trip",
     name: trip.label,
+    detail: formatTripSpaPrizeDetail(trip),
     id: trip.id,
   });
 }
@@ -363,6 +405,7 @@ async function revealPrizeFromLetter(prizeReveal) {
       title: "You Won!",
       subtitle: prizeReveal.subtitle || prizeSubtitleForWedge(prizeReveal.wedgeLabel, prizeReveal.kind),
       name: displayName,
+      detail: prizeReveal.detail || "",
     },
     { displayMs: TV_BANNER_MS },
   );
@@ -915,7 +958,7 @@ const els = {
   turnBanner: $("turn-banner"),
   category: $("category-pill"),
   message: $("message-bar"),
-  board: $("puzzle-board"),
+  board: $("puzzle-tiles"),
   letterTrack: $("letter-track"),
   wheelSection: $("wheel-section"),
   wheelHost: $("wheel-host"),
@@ -930,6 +973,9 @@ const els = {
   btnFinal: $("btn-final"),
   btnNextRound: $("btn-next-round"),
   tossupCountdown: $("tossup-countdown"),
+  roundCountdown: $("round-countdown"),
+  roundCountdownLabel: document.querySelector(".round-countdown-label"),
+  roundCountdownSeconds: document.querySelector(".round-countdown-seconds"),
   finalTimer: $("final-timer"),
   prizeBanner: $("prize-banner"),
   roundSummary: $("round-summary"),
@@ -1148,6 +1194,7 @@ function onMessage(msg) {
       break;
     case "roundChanged":
       roundCountdownActive = false;
+      hideRoundCountdown();
       lastPuzzleLayout = "";
       envelopeRevealShown = false;
       clearAutoAdvance();
@@ -1171,10 +1218,18 @@ function onMessage(msg) {
       roundCountdownActive = msg.remaining > 0;
       if (msg.remaining > 0) {
         const nextLabel = msg.nextLabel || ROUND_LABELS[msg.nextRound] || msg.nextRound || "next round";
+        showRoundCountdown(msg.remaining, nextLabel);
         setMessage(`${nextLabel} starts in ${msg.remaining}…`, { holdMs: 1100 });
       } else {
         roundCountdownActive = false;
+        hideRoundCountdown();
         setMessage(`Starting ${msg.nextLabel || ROUND_LABELS[msg.nextRound] || "next round"}…`);
+      }
+      break;
+    case "beginTossUpReady":
+      if (latestGameState?.started && latestGameState?.roundType === "tossup") {
+        syncRoundTabs("tossup");
+        maybeAnnounceCategory(latestGameState);
       }
       break;
     case "turnChanged":
@@ -1352,6 +1407,7 @@ function onMessage(msg) {
       });
       break;
     case "gameStarted":
+      syncRoundTabs(msg.state?.roundType || "tossup");
       setMessage("Game started!");
       els.btnNewPuzzle.disabled = false;
       setRoundTabsEnabled(true);

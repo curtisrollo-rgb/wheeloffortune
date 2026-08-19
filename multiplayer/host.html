@@ -13,7 +13,7 @@
   </script>
   <link rel="stylesheet" href="css/game.css?v=45" />
   <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=8" />
-  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=9" />
+  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=10" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page big-board-page is-loading">
@@ -40,6 +40,10 @@
   </header>
 
   <div id="tossup-countdown" class="tossup-countdown is-hidden" aria-live="assertive">3</div>
+  <div id="round-countdown" class="round-countdown is-hidden" aria-live="assertive">
+    <p class="round-countdown-label">Next round starts in</p>
+    <p class="round-countdown-seconds">10</p>
+  </div>
   <div id="final-timer" class="final-timer is-hidden" aria-live="polite">0:30</div>
 
   <main class="big-board-main">
@@ -49,20 +53,23 @@
           <h1 id="category-pill" class="category-headline" aria-live="polite">—</h1>
         </div>
         <p id="message-bar" class="message-bar" aria-live="polite"></p>
-        <div id="prize-banner" class="prize-banner is-hidden" aria-live="polite">
-          <p class="prize-banner-subtitle">New Car</p>
-          <p class="prize-banner-title">You Won!</p>
-          <p class="prize-banner-name"></p>
+        <div id="puzzle-board" class="puzzle-board" aria-label="Puzzle board">
+          <div id="prize-banner" class="prize-banner is-hidden" aria-live="polite">
+            <p class="prize-banner-subtitle">New Car</p>
+            <p class="prize-banner-title">You Won!</p>
+            <p class="prize-banner-name"></p>
+            <p class="prize-banner-detail is-hidden"></p>
+          </div>
+          <div id="round-summary" class="round-summary is-hidden" aria-live="polite">
+            <p class="round-summary-round">Round 1</p>
+            <p class="round-summary-title">Round Winner!</p>
+            <p class="round-summary-winner">Player</p>
+            <p class="round-summary-amount">$0</p>
+            <p class="round-summary-detail"></p>
+            <p class="round-summary-scores is-hidden"></p>
+          </div>
+          <div id="puzzle-tiles" class="puzzle-tiles"></div>
         </div>
-        <div id="round-summary" class="round-summary is-hidden" aria-live="polite">
-          <p class="round-summary-round">Round 1</p>
-          <p class="round-summary-title">Round Winner!</p>
-          <p class="round-summary-winner">Player</p>
-          <p class="round-summary-amount">$0</p>
-          <p class="round-summary-detail"></p>
-          <p class="round-summary-scores is-hidden"></p>
-        </div>
-        <div id="puzzle-board" class="puzzle-board" aria-label="Puzzle board"></div>
       </section>
     </div>
 
@@ -120,7 +127,7 @@
   </div>
 
   <script type="module">
-    import("./js/host-app.js?v=33").catch((err) => {
+    import("./js/host-app.js?v=34").catch((err) => {
       console.error(err);
       document.body.classList.remove("is-loading");
       const bar = document.getElementById("message-bar");
