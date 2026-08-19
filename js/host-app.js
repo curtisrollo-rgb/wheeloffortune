@@ -1,7 +1,7 @@
-import { WofClient } from "./net/client.js?v=1";
+import { WofClient } from "./net/client.js?v=2";
 import { getWsUrl, getRoomFromUrl, getSpectateFromUrl, dataUrl } from "./net/config.js?v=3";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
-import { PuzzleBoard } from "./board.js?v=4";
+import { PuzzleBoard } from "./board.js?v=5";
 import { createWheel } from "./wheel.js?v=21";
 import { runInBackground } from "./progressive-load.js?v=1";
 import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
@@ -951,6 +951,21 @@ async function handleFinalFreeRevealInner(msg) {
 
 const $ = (id) => document.getElementById(id);
 
+/** Ensure a dedicated tile container so render() never wipes prize/summary overlays. */
+function resolveBoardContainer() {
+  let tiles = $("puzzle-tiles");
+  if (tiles) return tiles;
+
+  const board = $("puzzle-board");
+  if (!board) return null;
+
+  tiles = document.createElement("div");
+  tiles.id = "puzzle-tiles";
+  tiles.className = "puzzle-tiles";
+  board.appendChild(tiles);
+  return tiles;
+}
+
 const els = {
   loadingScreen: $("loading-screen"),
   loadingLabel: $("loading-label"),
@@ -958,7 +973,7 @@ const els = {
   turnBanner: $("turn-banner"),
   category: $("category-pill"),
   message: $("message-bar"),
-  board: $("puzzle-tiles"),
+  board: resolveBoardContainer(),
   letterTrack: $("letter-track"),
   wheelSection: $("wheel-section"),
   wheelHost: $("wheel-host"),
@@ -974,8 +989,8 @@ const els = {
   btnNextRound: $("btn-next-round"),
   tossupCountdown: $("tossup-countdown"),
   roundCountdown: $("round-countdown"),
-  roundCountdownLabel: document.querySelector(".round-countdown-label"),
-  roundCountdownSeconds: document.querySelector(".round-countdown-seconds"),
+  roundCountdownLabel: $("round-countdown")?.querySelector(".round-countdown-label"),
+  roundCountdownSeconds: $("round-countdown")?.querySelector(".round-countdown-seconds"),
   finalTimer: $("final-timer"),
   prizeBanner: $("prize-banner"),
   roundSummary: $("round-summary"),
@@ -1512,11 +1527,11 @@ function switchRound(roundType) {
   }
 }
 
-els.btnStartGame.addEventListener("click", () => {
+els.btnStartGame?.addEventListener("click", () => {
   client?.startGame();
 });
 
-els.btnNewPuzzle.addEventListener("click", () => {
+els.btnNewPuzzle?.addEventListener("click", () => {
   client?.newPuzzle();
 });
 
@@ -1543,6 +1558,9 @@ els.btnFullscreen?.addEventListener("click", () => {
 
 async function init() {
   stampVersion();
+  if (!els.board) {
+    throw new Error("Missing puzzle board markup (#puzzle-board / #puzzle-tiles). Hard refresh or redeploy host.html.");
+  }
   if (isSpectator) {
     document.body.classList.add("is-spectator-mode");
     els.spectatorBanner?.classList.remove("is-hidden");

@@ -198,6 +198,7 @@ body.is-loading .top-bar {
 }
 
 .puzzle-board {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;

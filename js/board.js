@@ -41,6 +41,12 @@ function finalizeTile(el, letter) {
 export class PuzzleBoard {
   /** @param {HTMLElement} container */
   constructor(container) {
+    if (!container) {
+      throw new Error("PuzzleBoard requires a render container (#puzzle-tiles).");
+    }
+    if (container.id === "puzzle-board") {
+      throw new Error("Render into #puzzle-tiles, not #puzzle-board — update host.html and redeploy.");
+    }
     this.container = container;
     this.tiles = [];
     this.rows = [];

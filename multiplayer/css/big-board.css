@@ -203,6 +203,14 @@ body.is-spectator-mode .host-dock {
   height: auto;
 }
 
+.big-board-page .puzzle-board .prize-banner.is-visible {
+  transform: scale(1);
+}
+
+.big-board-page .puzzle-board .round-summary.is-visible {
+  transform: scale(1);
+}
+
 /* ——— Called letters strip ——— */
 .letter-track {
   display: flex;

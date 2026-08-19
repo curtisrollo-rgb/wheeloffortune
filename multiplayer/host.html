@@ -4,16 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wheel of Fortune — TV Big Board</title>
-  <script>
-    (function () {
-      var base = document.createElement("base");
-      base.href = new URL("../", location.href).href;
-      document.head.appendChild(base);
-    })();
-  </script>
-  <link rel="stylesheet" href="css/game.css?v=45" />
-  <link rel="stylesheet" href="multiplayer/css/multiplayer.css?v=8" />
-  <link rel="stylesheet" href="multiplayer/css/big-board.css?v=10" />
+  <link rel="stylesheet" href="../css/game.css?v=46" />
+  <link rel="stylesheet" href="css/multiplayer.css?v=9" />
+  <link rel="stylesheet" href="css/big-board.css?v=11" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
 </head>
 <body class="host-page big-board-page is-loading">
@@ -127,7 +120,7 @@
   </div>
 
   <script type="module">
-    import("./js/host-app.js?v=34").catch((err) => {
+    import("../js/host-app.js?v=35").catch((err) => {
       console.error(err);
       document.body.classList.remove("is-loading");
       const bar = document.getElementById("message-bar");

@@ -11,15 +11,29 @@ export class WofClient {
     this.connected = false;
   }
 
-  connect(url) {
+  connect(url, { timeoutMs = 10000 } = {}) {
     return new Promise((resolve, reject) => {
       if (this.ws) this.ws.close();
+      let settled = false;
+      const finish = (fn) => {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timeoutId);
+        fn();
+      };
+
       this.ws = new WebSocket(url);
+      const timeoutId = setTimeout(() => {
+        if (this.ws?.readyState !== WebSocket.OPEN) {
+          this.ws?.close();
+          finish(() => reject(new Error("Connection timed out")));
+        }
+      }, timeoutMs);
 
       this.ws.onopen = () => {
         this.connected = true;
         this.hooks.onOpen?.();
-        resolve();
+        finish(resolve);
       };
 
       this.ws.onclose = () => {
@@ -29,7 +43,7 @@ export class WofClient {
 
       this.ws.onerror = (err) => {
         this.hooks.onError?.(err);
-        reject(err);
+        finish(() => reject(err instanceof Error ? err : new Error("WebSocket connection failed")));
       };
 
       this.ws.onmessage = (ev) => {
