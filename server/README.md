@@ -8,10 +8,13 @@ WebSocket server for Wheel of Fortune online play (TV host + up to 3 phone contr
 
 1. Push repo to GitHub
 2. Railway → New Project → Deploy from GitHub
-3. Set **Root Directory** to `server`
-4. Generate public domain
-5. WebSocket URL: `wss://YOUR-DOMAIN.up.railway.app`
-6. Test: `GET https://YOUR-DOMAIN.up.railway.app/health`
+3. Set **Root Directory** to `server` (no leading slash — not `/server`)
+4. Do **not** set `RAILPACK_STATIC_FILE_ROOT` on this service (that forces static-site mode)
+5. Generate public domain
+6. WebSocket URL: `wss://YOUR-DOMAIN.up.railway.app`
+7. Test: `GET https://YOUR-DOMAIN.up.railway.app/health`
+
+This service builds from `server/Dockerfile` (Node 20 + `npm ci`) so Railpack cannot misdetect it as a static HTML site.
 
 ## Puzzle bank
 

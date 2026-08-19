@@ -47,7 +47,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.32";
+const VERSION = "0.2.33";
 
 const ROUND_ORDER = ["tossup", "round1", "round2", "final"];
 const ROUND_LABELS = {
