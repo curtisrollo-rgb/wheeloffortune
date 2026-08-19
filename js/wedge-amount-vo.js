@@ -40,26 +40,29 @@ export async function loadWedgeAmountVo() {
   ready = true;
 }
 
-/** Fire-and-forget amount callout (non-blocking). */
+/** Cash wedge amount callout — returns a Promise so host narration can stay in order. */
 export function playWedgeAmountVo(value, { volume = 0.78 } = {}) {
-  if (!ready) return;
+  if (!ready) return Promise.resolve();
 
   const url = byValue.get(value);
-  if (!url) return;
+  if (!url) return Promise.resolve();
 
   stopAllVo();
   const gen = ++playGeneration;
 
-  const audio = new Audio(url);
-  currentVo = audio;
-  audio.volume = volume;
+  return new Promise((resolve) => {
+    const audio = new Audio(url);
+    currentVo = audio;
+    audio.volume = volume;
 
-  const finish = () => {
-    if (gen !== playGeneration) return;
-    if (currentVo === audio) currentVo = null;
-  };
+    const finish = () => {
+      if (gen !== playGeneration) return resolve();
+      if (currentVo === audio) currentVo = null;
+      resolve();
+    };
 
-  audio.addEventListener("ended", finish, { once: true });
-  audio.addEventListener("error", finish, { once: true });
-  audio.play().catch(finish);
+    audio.addEventListener("ended", finish, { once: true });
+    audio.addEventListener("error", finish, { once: true });
+    audio.play().catch(finish);
+  });
 }

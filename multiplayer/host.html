@@ -119,6 +119,16 @@
     </div>
   </div>
 
-  <script type="module" src="js/host-app.js?v=31"></script>
+  <script type="module">
+    import("./js/host-app.js?v=33").catch((err) => {
+      console.error(err);
+      document.body.classList.remove("is-loading");
+      const bar = document.getElementById("message-bar");
+      if (bar) {
+        bar.textContent = `Failed to load TV display (${err.message}). Hard refresh (⌘⇧R).`;
+        bar.classList.add("is-visible");
+      }
+    });
+  </script>
 </body>
 </html>

@@ -211,31 +211,45 @@ export async function createWheel(container, wedges, opts = {}) {
     },
   });
 
+  /** Hard snap — no animation. Keeps pointer aligned with a server wedge index. */
+  function alignToIndex(index) {
+    const target = Number(index);
+    if (!Number.isFinite(target) || target < 0 || target >= wedges.length) {
+      return wheel.getCurrentIndex();
+    }
+
+    spinPhase = "idle";
+    wheel.stop();
+    setSpinningClass(container, false);
+    restResolve = null;
+    wheel.spinToItem(target, 0, true, 0, 1, easeOutQuad);
+    return wheel.getCurrentIndex();
+  }
+
   /** @returns {Promise<{ index: number, wedge: object }>} */
   function runSpinTo(index, profile, { playStartSound = false, phase = "spinning" } = {}) {
+    const target = Number(index);
     const timeoutMs = Math.max(3500, Math.ceil((profile?.duration || 0) * (profile?.revolutions || 1)) + 2500);
     return new Promise((resolve) => {
       let settled = false;
-      const finish = (result) => {
+      const finish = (resultIndex = target) => {
         if (settled) return;
         settled = true;
         clearTimeout(timeoutId);
-        if (restResolve) restResolve = null;
-        resolve(result);
+        restResolve = null;
+        spinPhase = "idle";
+        setSpinningClass(container, false);
+        alignToIndex(resultIndex);
+        resolve({ index: resultIndex, wedge: wedges[resultIndex] });
       };
 
-      restResolve = (result) => finish(result);
+      restResolve = () => finish(target);
       spinPhase = phase;
       setSpinningClass(container, true);
       if (playStartSound) playSound("spin", { volume: MOBILE_WHEEL ? 0.35 : 0.45 });
-      wheel.spinToItem(index, profile.duration, true, profile.revolutions, 1, profile.easing);
+      wheel.spinToItem(target, profile.duration, true, profile.revolutions, 1, profile.easing);
 
-      const timeoutId = setTimeout(() => {
-        spinPhase = "idle";
-        setSpinningClass(container, false);
-        const safeIndex = wheel.getCurrentIndex();
-        finish({ index: safeIndex, wedge: wedges[safeIndex] });
-      }, timeoutMs);
+      const timeoutId = setTimeout(() => finish(target), timeoutMs);
     });
   }
 
@@ -256,15 +270,14 @@ export async function createWheel(container, wedges, opts = {}) {
       return { index: 0, wedge: wedges[0] };
     }
 
-    const result = await runSpinTo(target, pickServerSpinProfile(), {
+    await runSpinTo(target, pickServerSpinProfile(), {
       playStartSound: true,
       phase: "spinning",
     });
 
-    spinPhase = "idle";
-    setSpinningClass(container, false);
-    playLandSound(result.wedge);
-    return result;
+    alignToIndex(target);
+    playLandSound(wedges[target]);
+    return { index: target, wedge: wedges[target] };
   }
 
   async function spinRandom() {
@@ -302,5 +315,5 @@ export async function createWheel(container, wedges, opts = {}) {
     });
   }
 
-  return { wheel, spinToIndex, spinRandom, nudgeWedge, snapToIndex, getCurrentIndex, wedges };
+  return { wheel, spinToIndex, spinRandom, nudgeWedge, snapToIndex, alignToIndex, getCurrentIndex, wedges };
 }

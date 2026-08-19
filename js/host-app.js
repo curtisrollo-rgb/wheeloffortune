@@ -2,7 +2,7 @@ import { WofClient } from "./net/client.js?v=1";
 import { getWsUrl, getRoomFromUrl, getSpectateFromUrl, dataUrl } from "./net/config.js?v=3";
 import { createLoadingProgress, runLoadingTasks } from "./loading-progress.js?v=1";
 import { PuzzleBoard } from "./board.js?v=4";
-import { createWheel } from "./wheel.js?v=20";
+import { createWheel } from "./wheel.js?v=21";
 import { runInBackground } from "./progressive-load.js?v=1";
 import { preloadEssential, preloadRemaining, playSound } from "./audio.js?v=9";
 import { preloadBgm, fadeInBgm, fadeOutBgm, stopBgm } from "./bgm.js?v=1";
@@ -84,10 +84,15 @@ let spinAnimating = false;
 let spinStartedAt = 0;
 let pendingSpinWedge = null;
 let pendingGameState = null;
+let pendingTurnChanged = null;
+let pendingCategoryState = null;
+let categoryVoGeneration = 0;
+let solveCongratsPlayed = false;
 let currentRoundType = "tossup";
 let latestGameState = null;
 let wheelApi = null;
 let wheelLoading = null;
+let lastAuthoritativeWheelIndex = null;
 let envelopeRevealShown = false;
 let autoAdvanceTimer = null;
 let backgroundLoadsStarted = false;
@@ -200,7 +205,7 @@ async function animateFinalFreeLetter(msg) {
     if (msg.autoSolved) {
       await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Final auto solve");
       playSound("solve", { volume: 0.55 });
-      await playRandomSolveCongrats();
+      await playSolveCongratsOnce();
       stopBgm();
     }
   } finally {
@@ -321,7 +326,9 @@ async function revealTripPrize(trip) {
 
 async function handleRoundEnd(state, players = []) {
   const isFinalLoss = state?.roundType === "final" && state.finalWon === false;
-  await maybeRevealSolvedBoard(state.rows, state.message, { skipCongrats: isFinalLoss });
+  await maybeRevealSolvedBoard(state.rows, state.message, {
+    skipCongrats: isFinalLoss || solveCongratsPlayed,
+  });
 
   if (state.roundType === "final") {
     await maybeRevealFinalEnvelope(state);
@@ -406,11 +413,126 @@ function updateNextRoundButton(state) {
   }
 }
 
+function resetHostVoQueue() {
+  hostVoChain = Promise.resolve();
+  categoryVoGeneration += 1;
+  pendingCategoryState = null;
+  pendingTurnChanged = null;
+}
+
 function queueHostVo(task) {
   hostVoChain = hostVoChain
     .then(() => withTimeout(Promise.resolve().then(task), HOST_VO_TIMEOUT_MS, "Host VO"))
     .catch((err) => console.warn("Host VO:", err));
   return hostVoChain;
+}
+
+async function playTurnChangedVo(msg) {
+  if (msg.cue === "none") return;
+  if (msg.cue === "solve") {
+    await playSolveAttemptVo(msg.name || msg.seat);
+    return;
+  }
+  if (latestGameState?.roundType === "tossup") return;
+  await playTurnCueVo(msg.name || msg.seat);
+}
+
+function handleTurnChangedMsg(msg) {
+  renderScoreboard(msg.players || [], msg.seat);
+  setMessage(msg.message || `It's ${msg.name || msg.seat}'s turn.`);
+  if (spinAnimating) {
+    pendingTurnChanged = msg;
+    return;
+  }
+  queueHostVo(async () => {
+    await playTurnChangedVo(msg);
+  });
+}
+
+async function playSpinLandingVo(wedge) {
+  if (!wedge) return;
+  if (wedge.type === "bankrupt" || wedge.type === "loseTurn") {
+    await playPenaltyVo(wedge.type);
+    return;
+  }
+  if (wedge.type === "prize") {
+    if (wedge.prizeKind === "car") {
+      playSound("land", { volume: 0.45 });
+    } else if (wedge.prizeKind === "trip") {
+      playSound("solve", { volume: 0.4 });
+    } else {
+      playSound("solve", { volume: 0.35 });
+    }
+    return;
+  }
+  if (wedge.value > 0) {
+    await playWedgeAmountVo(wedge.value);
+    return;
+  }
+  if (wedge.type === "bonusEnvelope") {
+    playSound("land", { volume: 0.55 });
+  }
+}
+
+function queuePostSpinNarration(wedge) {
+  queueHostVo(async () => {
+    await playSpinLandingVo(wedge);
+    if (pendingTurnChanged) {
+      const turnMsg = pendingTurnChanged;
+      pendingTurnChanged = null;
+      await playTurnChangedVo(turnMsg);
+    }
+    flushPendingCategoryVo();
+  });
+}
+
+async function playSolveCongratsOnce(opts) {
+  if (solveCongratsPlayed) return;
+  solveCongratsPlayed = true;
+  await playRandomSolveCongrats(opts);
+}
+
+function flushPendingCategoryVo() {
+  if (!pendingCategoryState || spinAnimating || boardRevealBusy) return;
+  const state = pendingCategoryState;
+  pendingCategoryState = null;
+  queueCategoryAnnouncement(state);
+}
+
+function queueCategoryAnnouncement(state) {
+  if (!state?.started || !state?.category || !state?.puzzleId) return;
+  if (state.puzzleHidden) return;
+  if (state.puzzleId === lastAnnouncedPuzzleId) return;
+
+  const puzzleId = state.puzzleId;
+  const isTossUpAnnounce = state.roundType === "tossup" && state.phase === "tossUpAnnounce";
+  const isFinalReveal = state.roundType === "final" && state.phase === "finalPuzzleReveal";
+  const label = canonicalCategory(state.category);
+  const gen = categoryVoGeneration;
+
+  queueHostVo(async () => {
+    if (gen !== categoryVoGeneration) return;
+    if (puzzleId !== lastPuzzleId || puzzleId === lastAnnouncedPuzzleId) return;
+
+    lastAnnouncedPuzzleId = puzzleId;
+    const withWelcome = !welcomePlayed;
+    if (withWelcome) welcomePlayed = true;
+
+    if (withWelcome && !isFinalReveal) {
+      setMessage("Welcome to Wheel of Fortune!");
+      await playWelcomeVo();
+    }
+    await warmCategoryVo(state.category);
+    setMessage(
+      isFinalReveal
+        ? `The category is ${label}.`
+        : withWelcome
+          ? `Welcome to Wheel of Fortune! The category is ${label}.`
+          : `The category is ${label}.`,
+    );
+    await playCategoryVo(state.category, { intro: withWelcome && !isFinalReveal ? "first" : "next" });
+    if (isTossUpAnnounce) client?.beginTossUp();
+  });
 }
 
 function announceAction(msg) {
@@ -518,31 +640,11 @@ function maybeAnnounceCategory(state) {
   if (!state?.started || !state?.category || !state?.puzzleId) return;
   if (state.puzzleHidden) return;
   if (state.puzzleId === lastAnnouncedPuzzleId) return;
-
-  lastAnnouncedPuzzleId = state.puzzleId;
-  const withWelcome = !welcomePlayed;
-  if (withWelcome) welcomePlayed = true;
-
-  const isTossUpAnnounce = state.roundType === "tossup" && state.phase === "tossUpAnnounce";
-  const isFinalReveal = state.roundType === "final" && state.phase === "finalPuzzleReveal";
-  const label = canonicalCategory(state.category);
-
-  queueHostVo(async () => {
-    if (withWelcome && !isFinalReveal) {
-      setMessage("Welcome to Wheel of Fortune!");
-      await playWelcomeVo();
-    }
-    await warmCategoryVo(state.category);
-    setMessage(
-      isFinalReveal
-        ? `The category is ${label}.`
-        : withWelcome
-          ? `Welcome to Wheel of Fortune! The category is ${label}.`
-          : `The category is ${label}.`,
-    );
-    await playCategoryVo(state.category, { intro: withWelcome && !isFinalReveal ? "first" : "next" });
-    if (isTossUpAnnounce) client?.beginTossUp();
-  });
+  if (spinAnimating || boardRevealBusy) {
+    pendingCategoryState = state;
+    return;
+  }
+  queueCategoryAnnouncement(state);
 }
 
 function applyGameState(state, players = [], { skipSpinHud = false } = {}) {
@@ -576,6 +678,8 @@ function applyGameState(state, players = [], { skipSpinHud = false } = {}) {
     envelopeRevealShown = false;
     clearAutoAdvance();
     stopAllVo();
+    resetHostVoQueue();
+    solveCongratsPlayed = false;
   }
   maybeAnnounceCategory(state);
   if (state.message && !roundCountdownActive) setMessage(state.message);
@@ -646,7 +750,7 @@ async function handleLetterResult(msg) {
       if (msg.solved && msg.rows?.length) {
         await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Final solve reveal");
         playSound("solve", { volume: 0.55 });
-        await playRandomSolveCongrats();
+        await playSolveCongratsOnce();
         stopBgm();
       }
     } finally {
@@ -677,7 +781,7 @@ async function handleLetterResult(msg) {
       if (msg.solved && msg.rows?.length) {
         await board.revealAll(msg.rows);
         playSound("solve", { volume: 0.55 });
-        await playRandomSolveCongrats();
+        await playSolveCongratsOnce();
         if (msg.rows?.length) {
           board.rows = msg.rows;
           lastPuzzleLayout = puzzleLayoutKey(msg.rows);
@@ -698,8 +802,8 @@ async function handleLetterResult(msg) {
     return;
   }
 
-  await playMissVo(msg.letter);
   playSound("miss", { volume: 0.55 });
+  await playMissVo(msg.letter);
   if (msg.noMoreVowels) {
     await playNoMoreVowelsVo();
   }
@@ -720,7 +824,7 @@ async function maybeRevealSolvedBoard(rows, message, { skipCongrats = false } = 
     await withTimeout(board.revealAll(rows), BOARD_REVEAL_TIMEOUT_MS, "Solve reveal");
     playSound("solve", { volume: 0.55 });
     if (!skipCongrats) {
-      await playRandomSolveCongrats();
+      await playSolveCongratsOnce();
     }
     board.rows = rows;
     lastPuzzleLayout = puzzleLayoutKey(rows);
@@ -738,7 +842,7 @@ async function handleSolveResult(msg) {
     if (msg.message) setMessage(msg.message);
     await withTimeout(board.revealAll(msg.rows), BOARD_REVEAL_TIMEOUT_MS, "Solve result");
     playSound("solve", { volume: 0.55 });
-    await playRandomSolveCongrats();
+    await playSolveCongratsOnce();
     board.rows = msg.rows;
     lastPuzzleLayout = puzzleLayoutKey(msg.rows);
   } finally {
@@ -798,7 +902,7 @@ async function handleFinalFreeRevealInner(msg) {
     if (msg.autoSolved) {
       await board.revealAll(msg.rows);
       playSound("solve", { volume: 0.55 });
-      await playRandomSolveCongrats();
+      await playSolveCongratsOnce();
     }
 }
 
@@ -862,9 +966,23 @@ async function updateJoinQr(_code) {
   /* QR lives on lobby page only — big board is view-only. */
 }
 
+function realignWheelSilently(index = lastAuthoritativeWheelIndex) {
+  if (index == null || !wheelApi?.alignToIndex) return;
+  const aligned = wheelApi.alignToIndex(index);
+  if (aligned !== index) {
+    console.warn("Wheel realign:", { expected: index, actual: aligned });
+  }
+}
+
+function rememberWheelIndex(index) {
+  if (index == null || !Number.isFinite(Number(index))) return;
+  lastAuthoritativeWheelIndex = Number(index);
+}
+
 function showWheelDock() {
   if (latestGameState?.roundType === "tossup") return;
   clearTimeout(wheelHideTimer);
+  realignWheelSilently();
   document.body.classList.add("is-wheel-active");
   els.wheelSection?.classList.add("is-wheel-visible");
 }
@@ -875,6 +993,8 @@ function hideWheelDock(delayMs = WHEEL_HIDE_DELAY_MS) {
     if (spinAnimating && delayMs > 0) return;
     document.body.classList.remove("is-wheel-active");
     els.wheelSection?.classList.remove("is-wheel-visible");
+    // Wheel is translated off-screen — snap to the last server wedge before next spin.
+    realignWheelSilently();
   };
   if (delayMs <= 0) {
     hide();
@@ -967,6 +1087,7 @@ async function loadWheelForRound(roundType) {
     const wedges = buildEnvelopeWedges();
     els.wheelHost.innerHTML = "";
     wheelApi = await createWheel(els.wheelHost, wedges);
+    realignWheelSilently();
     return;
   }
 
@@ -975,6 +1096,7 @@ async function loadWheelForRound(roundType) {
   const wedges = await res.json();
   els.wheelHost.innerHTML = "";
   wheelApi = await createWheel(els.wheelHost, wedges);
+  realignWheelSilently();
 }
 
 function manifestMatchesWheel(manifest, wedges = []) {
@@ -992,6 +1114,7 @@ async function loadWheelFromManifest(manifest) {
     updateWheelSection(currentRoundType);
     els.wheelHost.innerHTML = "";
     wheelApi = await createWheel(els.wheelHost, manifest);
+    realignWheelSilently();
   })();
   wheelLoading = job;
   try {
@@ -1029,6 +1152,8 @@ function onMessage(msg) {
       envelopeRevealShown = false;
       clearAutoAdvance();
       stopAllVo();
+      resetHostVoQueue();
+      solveCongratsPlayed = false;
       stopBgm();
       hideFinalTimer();
       hideWheelDock(0);
@@ -1053,17 +1178,7 @@ function onMessage(msg) {
       }
       break;
     case "turnChanged":
-      renderScoreboard(msg.players || [], msg.seat);
-      setMessage(msg.message || `It's ${msg.name || msg.seat}'s turn.`);
-      queueHostVo(async () => {
-        if (msg.cue === "none") return;
-        if (msg.cue === "solve") {
-          await playSolveAttemptVo(msg.name || msg.seat);
-          return;
-        }
-        if (latestGameState?.roundType === "tossup") return;
-        await playTurnCueVo(msg.name || msg.seat);
-      });
+      handleTurnChangedMsg(msg);
       break;
     case "playerAction":
       queueHostVo(async () => {
@@ -1102,10 +1217,15 @@ function onMessage(msg) {
           if (!wheelApi?.spinToIndex) {
             console.warn("Spin animation: wheel not ready");
             finishSpinAnimation();
+            queuePostSpinNarration(msg.wedge);
             return;
           }
           await sleep(WHEEL_DOCK_OPEN_MS);
+          rememberWheelIndex(msg.index);
+          realignWheelSilently();
           await wheelApi.spinToIndex(msg.index);
+          rememberWheelIndex(msg.index);
+          wheelApi.alignToIndex?.(msg.index);
           const wedge = msg.wedge;
           const state = pendingGameState?.state ?? latestGameState;
           applySpinWedgeToHud(wedge, {
@@ -1114,27 +1234,14 @@ function onMessage(msg) {
             wedgeLabel: wedge?.label,
           });
           finishSpinAnimation();
-          if (wedge?.type === "bankrupt" || wedge?.type === "loseTurn") {
-            playPenaltyVo(wedge.type);
-          } else if (wedge?.type === "prize") {
-            if (wedge.prizeKind === "car") {
-              playSound("land", { volume: 0.45 });
-            } else if (wedge.prizeKind === "trip") {
-              playSound("solve", { volume: 0.4 });
-            } else {
-              playSound("solve", { volume: 0.35 });
-            }
-          } else if (wedge?.value > 0) {
-            playWedgeAmountVo(wedge.value);
-          } else if (wedge?.type === "bonusEnvelope") {
-            playSound("land", { volume: 0.55 });
-          }
+          queuePostSpinNarration(wedge);
         })(),
         SPIN_ANIMATION_TIMEOUT_MS,
         "Spin animation",
       ).catch((err) => {
         console.warn("Spin animation:", err);
         finishSpinAnimation();
+        queuePostSpinNarration(msg.wedge);
       });
       break;
     case "buzzWinner":
@@ -1145,6 +1252,7 @@ function onMessage(msg) {
     case "solveWrong":
       queueHostVo(async () => {
         if (msg.message) setMessage(msg.message);
+        playSound("miss", { volume: 0.5 });
         await playMissVo();
         if (msg.resumeFinalTimer) {
           setMessage(`${msg.name || msg.seat}'s solve was wrong — time still running!`);
@@ -1191,6 +1299,9 @@ function onMessage(msg) {
     case "finalRstlneStart":
       if (spinAnimating) finishSpinAnimation();
       setMessage(msg.message || "Let's get you R, S, T, L, N, and E!");
+      queueHostVo(async () => {
+        await playRandomFinalGoodLuckVo();
+      });
       break;
     case "finalFreeLetter":
       queueHostVo(async () => {
