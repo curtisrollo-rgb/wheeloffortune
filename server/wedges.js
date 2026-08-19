@@ -39,9 +39,28 @@ function loadWedges() {
 
 loadWedges();
 
+const ESCALATION_WEDGES = {
+  round2: [
+    { label: "$1500", backgroundColor: "#e70697", value: 1500 },
+    { label: "$2500", backgroundColor: "#fff200", value: 2500 },
+  ],
+};
+
+/** @param {object[]} wedges @param {object[]} extras */
+function insertBeforeLoseTurn(wedges, extras) {
+  if (!extras.length) return wedges;
+  const list = [...wedges];
+  const loseIdx = list.findIndex((w) => w.type === "loseTurn");
+  const at = loseIdx >= 0 ? loseIdx : list.length;
+  list.splice(at, 0, ...extras);
+  return list;
+}
+
 /** @param {"round1"|"round2"|"final"|"tossup"|string} roundType */
 export function getWedgesForRound(roundType) {
-  if (roundType === "round2") return round2;
+  if (roundType === "round2") {
+    return insertBeforeLoseTurn(round2, ESCALATION_WEDGES.round2);
+  }
   if (roundType === "final") return getEnvelopeWedges();
   return round1;
 }

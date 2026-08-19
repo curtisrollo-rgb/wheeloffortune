@@ -45,7 +45,7 @@ const ROUND_LABELS = {
   tossup: "Toss-Up",
 };
 
-const GAME_ORDER = ["tossup", "round1", "round2", "final"];
+const GAME_ORDER = ["tossup", "round1", "tossup", "round2", "final"];
 const LETTER_TRACK = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const MESSAGE_CLEAR_MS = 4200;
 const WHEEL_HIDE_DELAY_MS = 2200;
@@ -174,15 +174,21 @@ function formatFinalTimer(ms) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-function showFinalTimer(ms) {
+function showTurnTimer(ms, { slow = false } = {}) {
   if (!els.finalTimer) return;
   els.finalTimer.textContent = formatFinalTimer(ms);
   els.finalTimer.classList.remove("is-hidden");
   els.finalTimer.classList.toggle("is-low", ms <= 10000);
+  els.finalTimer.classList.toggle("is-slow", slow);
 }
 
 function hideFinalTimer() {
   els.finalTimer?.classList.add("is-hidden");
+  els.finalTimer?.classList.remove("is-slow");
+}
+
+function showFinalTimer(ms) {
+  showTurnTimer(ms);
 }
 
 async function animateFinalFreeLetter(msg) {
@@ -430,7 +436,9 @@ async function revealCarPrize(car) {
   });
 }
 
-function nextRoundType(roundType) {
+function nextRoundType(state) {
+  if (state?.nextRound) return state.nextRound;
+  const roundType = state?.roundType;
   const idx = GAME_ORDER.indexOf(roundType);
   if (idx < 0 || idx >= GAME_ORDER.length - 1) return null;
   return GAME_ORDER[idx + 1];
@@ -438,10 +446,11 @@ function nextRoundType(roundType) {
 
 function updateNextRoundButton(state) {
   if (!els.btnNextRound) return;
-  const next = state?.phase === "ended" ? nextRoundType(state.roundType) : null;
+  const next = state?.phase === "ended" ? nextRoundType(state) : null;
+  const nextLabel = next ? state?.nextRoundLabel || ROUND_LABELS[next] || next : null;
   if (next) {
     els.btnNextRound.disabled = false;
-    els.btnNextRound.textContent = `Next: ${ROUND_LABELS[next]}`;
+    els.btnNextRound.textContent = `Next: ${nextLabel || next}`;
     els.btnNextRound.dataset.nextRound = next;
     for (const btn of [els.btnTossUp, els.btnRound1, els.btnRound2, els.btnFinal]) {
       btn?.classList.toggle("is-suggested", btn?.dataset.round === next);
@@ -745,8 +754,13 @@ function applyGameState(state, players = [], { skipSpinHud = false } = {}) {
     }
   }
 
-  if (state.roundType === "final" && state.phase === "finalSolve" && state.finalTimerRemainingMs > 0) {
-    showFinalTimer(state.finalTimerRemainingMs);
+  const showTimer =
+    (state.roundType === "final" && state.phase === "finalSolve" && state.finalTimerRemainingMs > 0) ||
+    (state.timerKind === "turn" && state.timerRemainingMs > 0 && state.roundType !== "tossup");
+  if (showTimer) {
+    const ms =
+      state.timerKind === "turn" ? state.timerRemainingMs : state.finalTimerRemainingMs;
+    showTurnTimer(ms, { slow: !!state.timerSlow });
   } else if (state.phase !== "finalSolve") {
     hideFinalTimer();
   }
@@ -1383,10 +1397,20 @@ function onMessage(msg) {
       setMessage("Pick 3 consonants and 1 vowel!");
       break;
     case "finalTimerStart":
-      showFinalTimer(msg.remainingMs);
+      showTurnTimer(msg.remainingMs, { slow: !!msg.slow });
       break;
     case "finalTimerTick":
-      showFinalTimer(msg.remainingMs);
+      showTurnTimer(msg.remainingMs, { slow: !!msg.slow });
+      break;
+    case "turnTimerStart":
+      showTurnTimer(msg.remainingMs, { slow: !!msg.slow });
+      break;
+    case "turnTimerTick":
+      showTurnTimer(msg.remainingMs, { slow: !!msg.slow });
+      break;
+    case "turnTimerExpired":
+      hideFinalTimer();
+      if (msg.message) setMessage(msg.message);
       break;
     case "finalTimerExpired":
       stopBgm();

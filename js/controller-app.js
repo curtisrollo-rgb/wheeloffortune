@@ -139,6 +139,24 @@ function formatFinalTimer(ms) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+function applyTurnTimerStatus() {
+  const ms =
+    gameState?.timerKind === "turn"
+      ? gameState?.timerRemainingMs
+      : gameState?.finalTimerRemainingMs;
+  if (ms == null || ms <= 0) return;
+  const label = formatFinalTimer(ms);
+  const slow = !!gameState?.timerSlow;
+  if (gameState?.roundType === "final" && gameState?.phase === "finalSolve" && isMyTurn) {
+    if (els.finalTimerDisplay) els.finalTimerDisplay.textContent = label;
+    setStatus(slow ? "Enter your solve!" : `${label} — tap SOLVE when ready!`);
+    return;
+  }
+  if (gameState?.timerKind === "turn" && isMyTurn && gameState?.roundType !== "tossup") {
+    setStatus(slow ? "Enter your solve!" : `${label} left on your turn`);
+  }
+}
+
 function applyFinalLayout() {
   const isFinal = gameState?.roundType === "final";
   if (!isFinal) {
@@ -161,13 +179,7 @@ function applyFinalLayout() {
   els.finalSolvePanel?.classList.toggle("is-hidden", !solve || !mine);
 
   if (solve && mine && gameState?.finalTimerRemainingMs != null) {
-    const label = formatFinalTimer(gameState.finalTimerRemainingMs);
-    if (els.finalTimerDisplay) els.finalTimerDisplay.textContent = label;
-    if (gameState.finalTimerPaused) {
-      setStatus("Enter your solve!");
-    } else {
-      setStatus(`${label} — tap SOLVE when ready!`);
-    }
+    applyTurnTimerStatus();
   }
 
   if (els.btnFinalSolve) {
@@ -219,6 +231,9 @@ function updateControls() {
 
   applyTossUpLayout();
   applyFinalLayout();
+  if (!tossup && gameState?.timerKind === "turn" && isMyTurn) {
+    applyTurnTimerStatus();
+  }
 
   if (tossup) return;
 
@@ -645,9 +660,23 @@ function onMessage(msg) {
       break;
     case "finalTimerStart":
     case "finalTimerTick":
+    case "turnTimerStart":
+    case "turnTimerTick":
       if (gameState) {
-        gameState.finalTimerRemainingMs = msg.remainingMs;
+        gameState.timerRemainingMs = msg.remainingMs;
+        gameState.timerSlow = !!msg.slow;
+        if (msg.kind === "final" || gameState.timerKind === "final") {
+          gameState.finalTimerRemainingMs = msg.remainingMs;
+        }
+        if (msg.kind) gameState.timerKind = msg.kind;
         applyFinalLayout();
+        if (gameState.timerKind === "turn") applyTurnTimerStatus();
+      }
+      break;
+    case "turnTimerExpired":
+      if (msg.seat === mySeat) {
+        setStatus(msg.message || "Time's up!");
+        setTurnActive(false);
       }
       break;
     case "finalTimerExpired":

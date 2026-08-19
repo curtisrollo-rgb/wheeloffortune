@@ -1,8 +1,16 @@
 /** Shared round logic (ported from js/game-state.js for multiplayer server). */
 
 import { isVowel, revealWithMap, isSolved, revealAllRows } from "./puzzle-layout.js";
+import { getPlayerBySeat } from "./rooms.js";
+import { tossUpWinAmount } from "./round-sequence.js";
 
+/** Base toss-up value (1st toss-up); later toss-ups scale by ordinal. */
 export const TOSS_UP_WIN = 1000;
+
+/** @param {object} game */
+export function getTossUpWin(game) {
+  return game.tossUpWinAmount ?? tossUpWinAmount(game.roundSequenceIndex ?? 0);
+}
 export const FINAL_FREE_LETTERS = "RSTLNE";
 
 /** @param {object} game */
@@ -219,6 +227,9 @@ export function resetRoundFields(game) {
   game.finalRstlneIndex = 0;
   game.finalTimerRemainingMs = 0;
   game.finalTimerPaused = false;
+  game.timerRemainingMs = 0;
+  game.timerKind = null;
+  game.timerSlow = false;
   game.tossUpLockedOut = false;
   game.tossUpLockedSeats = new Set();
   game.tossUpRevealPaused = false;
@@ -226,12 +237,14 @@ export function resetRoundFields(game) {
   game.roundWinAmount = 0;
 }
 
-/** @param {object} game @param {import('./rooms.js').Room} room */
-export function setupRoundPhase(game, roundType, room) {
+/** @param {object} game @param {import('./rooms.js').Room} room @param {{ starterSeat?: import('./rooms.js').PlayerSeat|null }} [opts] */
+export function setupRoundPhase(game, roundType, room, { starterSeat = null } = {}) {
   if (roundType === "tossup") {
     game.phase = "tossUpAnnounce";
     game.activeSeat = null;
-    game.message = "Toss-Up — stand by for the category…";
+    const win = tossUpWinAmount(game.roundSequenceIndex ?? 0);
+    game.tossUpWinAmount = win;
+    game.message = `Toss-Up worth $${win.toLocaleString()} — stand by for the category…`;
     return;
   }
   if (roundType === "final") {
@@ -242,11 +255,16 @@ export function setupRoundPhase(game, roundType, room) {
     return;
   }
   game.phase = "idle";
-  game.activeSeat = room.players[0]?.seat ?? null;
-  game.message =
-    roundType === "round2"
-      ? "Round 2 — spin for cash or a prize wedge!"
-      : "Spin the wheel!";
+  const fallbackSeat = room.players[0]?.seat ?? null;
+  game.activeSeat = starterSeat ?? fallbackSeat;
+  const starter = game.activeSeat ? getPlayerBySeat(room, game.activeSeat) : null;
+  if (roundType === "round2") {
+    game.message = starter
+      ? `${starter.name}'s turn — Round 2! Spin for cash or a prize wedge!`
+      : "Round 2 — spin for cash or a prize wedge!";
+    return;
+  }
+  game.message = starter ? `${starter.name}'s turn — spin the wheel!` : "Spin the wheel!";
 }
 
 /** @param {import('./rooms.js').Room} room */

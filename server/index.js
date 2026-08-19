@@ -36,26 +36,22 @@ import {
   advanceFinalRstlne,
   scheduleFinalRoundIntro,
   startFinalRstlneSequence,
-  startFinalSolveTimer,
+  bindRoomEmit,
+  refreshTurnTimer,
+  refreshFinalSolveTimer,
   resumeFinalTimer,
   startTossUpRevealLoop,
   resumeTossUpReveal,
   startTossUpCountdown,
 } from "./wof-game.js";
+import { nextRoundEntry } from "./round-sequence.js";
 import { getWedgeManifestForRound } from "./wedges.js";
 import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.34";
+const VERSION = "0.2.35";
 
-const ROUND_ORDER = ["tossup", "round1", "round2", "final"];
-const ROUND_LABELS = {
-  tossup: "Toss-Up",
-  round1: "Round 1",
-  round2: "Round 2",
-  final: "Final Round",
-};
 const ROUND_ADVANCE_SEC = 10;
 
 /** @type {Map<string, { interval: NodeJS.Timeout, timeout: NodeJS.Timeout }>} */
@@ -111,18 +107,20 @@ function clearRoundCountdown(room) {
 }
 
 /** @param {import('./rooms.js').Room} room */
-function advanceRoundAutomatically(room, nextRound) {
+function advanceRoundAutomatically(room) {
+  const nextEntry = nextRoundEntry(room.game?.roundSequenceIndex ?? 0);
+  if (!nextEntry) return;
   clearRoundCountdown(room);
-  const result = setRound(room, nextRound);
+  const result = setRound(room, nextEntry.type, { sequenceIndex: nextEntry.index });
   if (result.error) return;
-  appendLog(room, `Auto-advanced to ${nextRound}`);
+  appendLog(room, `Auto-advanced to ${nextEntry.label}`);
   broadcast(room, {
     op: "roundChanged",
-    roundType: nextRound,
-    wedgeManifest: getWedgeManifestForRound(nextRound),
+    roundType: nextEntry.type,
+    wedgeManifest: getWedgeManifestForRound(nextEntry.type),
     state: publicGameState(room),
   });
-  if (nextRound === "tossup") {
+  if (nextEntry.type === "tossup") {
     broadcast(room, { op: "beginTossUpReady" });
   }
   if (room.game.activeSeat) {
@@ -138,12 +136,12 @@ function maybeScheduleRoundAdvance(room) {
     clearRoundCountdown(room);
     return;
   }
-  const idx = ROUND_ORDER.indexOf(g.roundType);
-  const next = idx >= 0 && idx < ROUND_ORDER.length - 1 ? ROUND_ORDER[idx + 1] : null;
-  if (!next || roundCountdownTimers.has(room.code)) return;
+  const nextEntry = nextRoundEntry(g.roundSequenceIndex ?? 0);
+  if (!nextEntry || roundCountdownTimers.has(room.code)) return;
 
   let remaining = ROUND_ADVANCE_SEC;
-  const nextLabel = ROUND_LABELS[next] || next;
+  const next = nextEntry.type;
+  const nextLabel = nextEntry.label;
 
   const tick = () => {
     broadcast(room, { op: "roundCountdown", remaining, nextRound: next, nextLabel });
@@ -159,7 +157,7 @@ function maybeScheduleRoundAdvance(room) {
     clearInterval(interval);
     roundCountdownTimers.delete(room.code);
     broadcast(room, { op: "roundCountdown", remaining: 0, nextRound: next, nextLabel });
-    advanceRoundAutomatically(room, next);
+    advanceRoundAutomatically(room);
   }, ROUND_ADVANCE_SEC * 1000);
 
   roundCountdownTimers.set(room.code, { interval, timeout });
@@ -167,6 +165,8 @@ function maybeScheduleRoundAdvance(room) {
 
 /** @param {import('./rooms.js').Room} room */
 function broadcastGameState(room) {
+  bindRoomEmit(room, broadcast);
+  refreshTurnTimer(room);
   const state = publicGameState(room);
   const payload = {
     op: "gameUpdate",
@@ -444,7 +444,8 @@ wss.on("connection", (ws) => {
       broadcast(room, playerActionPayload(room, info.seat, "pick", { letter: msg.letter }));
       broadcast(room, letterResultPayload(room, info.seat, result));
       if (result.finalReveal && !result.solved) {
-        startFinalSolveTimer(room, (r, payload) => broadcast(r, payload));
+        bindRoomEmit(room, broadcast);
+        refreshFinalSolveTimer(room);
       }
       if (result.solved && result.finalReveal) {
         const player = getPlayerBySeat(room, info.seat);
@@ -542,7 +543,7 @@ wss.on("connection", (ws) => {
           resumeFinalTimer: true,
           message: room.game.message,
         });
-        resumeFinalTimer(room, (r, payload) => broadcast(r, payload));
+        resumeFinalTimer(room);
       } else if (result.broadcastTurn) {
         broadcast(room, {
           op: "solveWrong",
