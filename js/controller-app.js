@@ -14,6 +14,7 @@ const els = {
   turnBanner: $("turn-banner"),
   turnTimerBar: $("turn-timer-bar"),
   turnTimerDisplay: $("turn-timer-display"),
+  actionsTop: $("actions-top"),
   spinPanel: $("spin-panel"),
   letterPanel: $("letter-panel"),
   actionPanel: $("action-panel"),
@@ -29,6 +30,7 @@ const els = {
   tossupSolvePanel: $("tossup-solve-panel"),
   tossupSolveInput: $("tossup-solve-input"),
   btnTossupSolveSubmit: $("btn-tossup-solve-submit"),
+  btnTossupGiveUp: $("btn-tossup-give-up"),
   finalSolvePanel: $("final-solve-panel"),
   finalTimerDisplay: $("final-timer-display"),
   btnFinalSolve: $("btn-final-solve"),
@@ -142,20 +144,24 @@ function formatFinalTimer(ms) {
 }
 
 function applyTurnTimerStatus() {
-  const ms =
-    gameState?.timerKind === "turn"
-      ? gameState?.timerRemainingMs
-      : gameState?.finalTimerRemainingMs;
+  const turnMs = gameState?.timerRemainingMs;
+  const finalMs = gameState?.finalTimerRemainingMs;
+  const tossUpSolve =
+    gameState?.roundType === "tossup" &&
+    gameState?.timerKind === "tossupSolve" &&
+    gameState?.activeSeat === mySeat;
   const showMainTurnTimer =
     isMyTurn &&
     gameState?.timerKind === "turn" &&
     gameState?.roundType !== "tossup" &&
     gameState?.roundType !== "final" &&
-    ms != null &&
-    ms > 0;
+    turnMs != null &&
+    turnMs > 0;
+  const showTossUpTimer = tossUpSolve && turnMs != null && turnMs > 0;
 
   if (els.turnTimerBar && els.turnTimerDisplay) {
-    if (showMainTurnTimer) {
+    if (showMainTurnTimer || showTossUpTimer) {
+      const ms = showTossUpTimer ? turnMs : turnMs;
       const label = formatFinalTimer(ms);
       els.turnTimerDisplay.textContent = label;
       els.turnTimerBar.classList.remove("is-hidden");
@@ -167,9 +173,14 @@ function applyTurnTimerStatus() {
     }
   }
 
+  const ms = showTossUpTimer ? turnMs : showMainTurnTimer ? turnMs : finalMs;
   if (ms == null || ms <= 0) return;
   const label = formatFinalTimer(ms);
   const slow = !!gameState?.timerSlow;
+  if (showTossUpTimer) {
+    setStatus(`${label} to solve the Toss-Up!`);
+    return;
+  }
   if (gameState?.roundType === "final" && gameState?.phase === "finalSolve" && isMyTurn) {
     if (els.finalTimerDisplay) els.finalTimerDisplay.textContent = label;
     setStatus(slow ? "Enter your solve!" : `${label} — tap SOLVE when ready!`);
@@ -197,8 +208,9 @@ function applyFinalLayout() {
   document.body.classList.toggle("is-final-solve-mode", solve && mine);
 
   els.spinPanel?.classList.toggle("is-hidden", !envelope);
+  els.actionsTop?.classList.toggle("is-hidden", !envelope);
+  els.actionPanel?.classList.toggle("is-hidden", envelope || pick || solve);
   els.letterPanel?.classList.toggle("is-hidden", !pick);
-  els.actionPanel?.classList.toggle("is-hidden", !isFinal ? false : pick || solve);
   els.finalSolvePanel?.classList.toggle("is-hidden", !solve || !mine);
 
   if (solve && mine && gameState?.finalTimerRemainingMs != null) {
@@ -212,7 +224,7 @@ function applyFinalLayout() {
 
 function applyTossUpLayout() {
   const tossup = isTossUpMode();
-  const countdown = gameState?.phase === "tossUpCountdown";
+  const countdown = gameState?.phase === "tossUpCountdown" || gameState?.phase === "tossUpIntermission";
   const reveal = gameState?.phase === "tossUpReveal";
   const locked = new Set(gameState?.tossUpLockedSeats || []);
   const canRing = client?.connected && !!gameState?.canRingIn && !locked.has(mySeat);
@@ -221,19 +233,24 @@ function applyTossUpLayout() {
   document.body.classList.toggle("is-tossup-mode", tossup);
 
   els.spinPanel?.classList.toggle("is-hidden", tossup);
+  els.actionsTop?.classList.toggle("is-hidden", tossup);
   els.letterPanel?.classList.toggle("is-hidden", tossup);
-  els.actionPanel?.classList.toggle("is-hidden", tossup);
   els.tossupPanel?.classList.toggle("is-hidden", !tossup || solving);
   els.tossupSolvePanel?.classList.toggle("is-hidden", !solving);
 
   if (els.btnBuzzLarge) els.btnBuzzLarge.disabled = !canRing;
 
   if (tossup && countdown) {
-    els.tossupHint.textContent = "Get ready…";
+    els.tossupHint.textContent =
+      gameState?.phase === "tossUpIntermission" ? "Get ready to ring in again…" : "Get ready…";
   } else if (tossup && reveal && !solving) {
     els.tossupHint.textContent = locked.has(mySeat)
       ? "You're locked out for this Toss-Up."
       : "Ring in when you know the answer!";
+  }
+
+  if (solving) {
+    applyTurnTimerStatus();
   }
 
   if (solving && els.tossupSolveInput && document.activeElement !== els.tossupSolveInput) {
@@ -247,7 +264,7 @@ function updateControls() {
   const mine = isMyTurn && connected;
   const locked = new Set(gameState?.tossUpLockedSeats || []);
   const canRing = connected && !!gameState?.canRingIn && !locked.has(mySeat);
-  const canSpin = mine && !!gameState?.canSpin && !vowelMode;
+  const canSpin = mine && !!gameState?.canSpin && !vowelMode && !spinRevealPending;
   const canBuy = mine && !!gameState?.canBuyVowel;
   const canGuess = mine && (!!gameState?.canGuess || !!gameState?.canPickFinal);
   const canSolve = mine && !!gameState?.canSolve;
@@ -255,6 +272,8 @@ function updateControls() {
   applyTossUpLayout();
   applyFinalLayout();
   if (!tossup && gameState?.timerKind === "turn" && isMyTurn) {
+    applyTurnTimerStatus();
+  } else if (tossup && gameState?.timerKind === "tossupSolve" && gameState?.activeSeat === mySeat) {
     applyTurnTimerStatus();
   }
 
@@ -266,6 +285,7 @@ function updateControls() {
   if (els.btnSpinHold) {
     els.btnSpinHold.textContent = finalEnvelopeSpin ? "Hold to Spin Envelope" : "Hold to Spin";
     els.btnSpinHold.disabled = !canSpin;
+    els.btnSpinHold.classList.toggle("is-spinning", spinRevealPending);
   }
   if (els.spinHint) {
     if (finalEnvelopeSpin) {
@@ -285,6 +305,7 @@ function updateControls() {
   if (vowelMode && !canBuy) setVowelMode(false);
 
   els.btnSpinHold.disabled = !canSpin;
+  els.btnSpinHold.classList.toggle("is-spinning", spinRevealPending);
   els.btnVowel.disabled = !mine || (!vowelMode && !canBuy);
   els.btnSolve.disabled = !canSolve;
 
@@ -496,7 +517,7 @@ function applyGameState(state) {
 }
 
 function startSpinGauge() {
-  if (!isMyTurn || spinAnim || vowelMode || !gameState?.canSpin) return;
+  if (!isMyTurn || spinAnim || vowelMode || !gameState?.canSpin || spinRevealPending) return;
   spinPower = 0;
   spinDirection = 1;
   els.btnSpinHold.classList.add("is-holding");
@@ -518,7 +539,7 @@ function stopSpinGauge() {
   window.clearInterval(spinAnim);
   spinAnim = null;
   els.btnSpinHold.classList.remove("is-holding");
-  if (!isMyTurn || !client?.connected || vowelMode) return;
+  if (!isMyTurn || !client?.connected || vowelMode || spinRevealPending) return;
   sfx("spin", { volume: 0.55 });
   client.spin(Number(spinPower.toFixed(3)));
   spinRevealPending = true;
@@ -557,6 +578,14 @@ function submitTossUpSolve() {
   client.solve(text);
   els.tossupSolveInput.value = "";
   setStatus("Answer submitted.");
+}
+
+function giveUpTossUp() {
+  if (!client?.connected || !gameState?.canSolve) return;
+  awaitingSolveResult = true;
+  client.solve("");
+  els.tossupSolveInput.value = "";
+  setStatus("Gave up — locked out.");
 }
 
 function ringIn() {
@@ -602,9 +631,9 @@ function onMessage(msg) {
       break;
     case "tossUpCountdown":
       if (msg.count > 0) {
-        setStatus(`Get ready… ${msg.count}`);
+        setStatus(msg.resume ? `Get ready… ${msg.count}` : `Get ready… ${msg.count}`);
       } else {
-        setStatus("Letters revealing — ring in when you know it!");
+        setStatus(msg.resume ? "Ring in when you're ready!" : "Letters revealing — ring in when you know it!");
       }
       break;
     case "roundCountdown":
@@ -693,7 +722,7 @@ function onMessage(msg) {
         }
         if (msg.kind) gameState.timerKind = msg.kind;
         applyFinalLayout();
-        if (gameState.timerKind === "turn") applyTurnTimerStatus();
+        if (gameState.timerKind === "turn" || gameState.timerKind === "tossupSolve") applyTurnTimerStatus();
       }
       break;
     case "turnTimerExpired":
@@ -786,6 +815,7 @@ els.btnSolveCancel.addEventListener("click", closeSolveModal);
 els.btnSolveSubmit.addEventListener("click", submitSolve);
 els.btnBuzzLarge?.addEventListener("click", ringIn);
 els.btnTossupSolveSubmit?.addEventListener("click", submitTossUpSolve);
+els.btnTossupGiveUp?.addEventListener("click", giveUpTossUp);
 
 els.tossupSolveInput?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") submitTossUpSolve();

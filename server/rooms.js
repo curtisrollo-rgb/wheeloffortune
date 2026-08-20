@@ -26,6 +26,7 @@ import { ROOM_CODES } from "./room-words.js";
 /** @typedef {object} Room
  * @property {string} code
  * @property {number} createdAt
+ * @property {number} [lastActivityAt]
  * @property {LobbyConn|null} lobby
  * @property {HostConn|null} host
  * @property {SpectatorConn[]} spectators
@@ -53,6 +54,7 @@ export function createRoom() {
   rooms.set(code, {
     code,
     createdAt: Date.now(),
+    lastActivityAt: Date.now(),
     lobby: null,
     host: null,
     spectators: [],
@@ -103,19 +105,38 @@ export function addSpectator(room, ws) {
   room.spectators.push({ ws });
 }
 
+/** @param {Room} room */
+export function touchRoom(room) {
+  room.lastActivityAt = Date.now();
+}
+
+const STARTED_ROOM_GRACE_MS = 30 * 60 * 1000;
+
+/** @param {Room} room */
+function shouldDeleteRoom(room) {
+  if (room.host || room.lobby || room.players.length > 0) return false;
+  if (room.game?.started) {
+    const idleMs = Date.now() - (room.lastActivityAt ?? room.createdAt);
+    return idleMs > STARTED_ROOM_GRACE_MS;
+  }
+  return true;
+}
+
 /** @param {import('ws').WebSocket} ws */
 export function removeConnection(ws) {
   for (const room of rooms.values()) {
     const specIdx = room.spectators?.findIndex((s) => s.ws === ws) ?? -1;
     if (specIdx >= 0) {
       room.spectators.splice(specIdx, 1);
+      touchRoom(room);
       return { room, seat: null, role: "spectator", name: null };
     }
 
     const idx = room.players.findIndex((p) => p.ws === ws);
     if (idx >= 0) {
       const [removed] = room.players.splice(idx, 1);
-      if (room.players.length === 0 && !room.host && !room.lobby) {
+      touchRoom(room);
+      if (shouldDeleteRoom(room)) {
         rooms.delete(room.code);
       }
       return { room, seat: removed.seat, role: "player", name: removed.name };
@@ -123,7 +144,8 @@ export function removeConnection(ws) {
 
     if (room.host?.ws === ws) {
       room.host = null;
-      if (room.players.length === 0 && !room.lobby) {
+      touchRoom(room);
+      if (shouldDeleteRoom(room)) {
         rooms.delete(room.code);
       }
       return { room, seat: null, role: "host", name: null };
@@ -131,7 +153,8 @@ export function removeConnection(ws) {
 
     if (room.lobby?.ws === ws) {
       room.lobby = null;
-      if (room.players.length === 0 && !room.host) {
+      touchRoom(room);
+      if (shouldDeleteRoom(room)) {
         rooms.delete(room.code);
       }
       return { room, seat: null, role: "lobby", name: null };

@@ -15,6 +15,7 @@ import {
   addPlayer,
   appendLog,
   addSpectator,
+  touchRoom,
 } from "./rooms.js";
 import {
   handleBuzz,
@@ -41,7 +42,7 @@ import {
   refreshFinalSolveTimer,
   resumeFinalTimer,
   startTossUpRevealLoop,
-  resumeTossUpReveal,
+  scheduleTossUpResumeCountdown,
   startTossUpCountdown,
 } from "./wof-game.js";
 import { nextRoundEntry } from "./round-sequence.js";
@@ -50,9 +51,17 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.36";
+const VERSION = "0.2.37";
 
+const SPIN_ANIMATION_MS = 7000;
 const ROUND_ADVANCE_SEC = 10;
+
+/** @param {import('./rooms.js').Room} room */
+function releaseSpinInFlightLater(room) {
+  setTimeout(() => {
+    if (room.game) room.game.spinInFlight = false;
+  }, SPIN_ANIMATION_MS);
+}
 
 /** @type {Map<string, { interval: NodeJS.Timeout, timeout: NodeJS.Timeout }>} */
 const roundCountdownTimers = new Map();
@@ -72,6 +81,7 @@ function error(ws, message) {
 
 /** @param {import('./rooms.js').Room} room */
 function broadcast(room, payload, exceptWs = null) {
+  touchRoom(room);
   if (room.lobby?.ws && room.lobby.ws !== exceptWs) {
     send(room.lobby.ws, payload);
   }
@@ -428,6 +438,7 @@ wss.on("connection", (ws) => {
       if (result.wedge?.type === "bonusEnvelope") {
         scheduleFinalRoundIntro(room, (r, payload) => broadcast(r, payload));
       }
+      releaseSpinInFlightLater(room);
       broadcastGameState(room);
       return;
     }
@@ -525,7 +536,7 @@ wss.on("connection", (ws) => {
           roundWin: result.roundWin,
           message: result.message,
         });
-      } else if (result.resumeTossUp) {
+      } else if (result.scheduleResumeCountdown) {
         broadcast(room, {
           op: "solveWrong",
           seat: info.seat,
@@ -533,7 +544,7 @@ wss.on("connection", (ws) => {
           lockedOut: !!result.lockedOut,
           message: room.game.message,
         });
-        resumeTossUpReveal(room, (r, payload) => broadcast(r, payload));
+        scheduleTossUpResumeCountdown(room, (r, payload) => broadcast(r, payload));
       } else if (result.resumeFinalTimer) {
         broadcast(room, {
           op: "solveWrong",
@@ -565,6 +576,7 @@ wss.on("connection", (ws) => {
       const room = getRoom(info.code);
       if (!room) return error(ws, "Room not found");
 
+      bindRoomEmit(room, broadcast);
       const result = handleBuzz(room, info.seat);
       if (result.error) return error(ws, result.error);
 

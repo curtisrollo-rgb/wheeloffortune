@@ -2,6 +2,7 @@
 
 export const TURN_TIMER_MS = 30000;
 export const FINAL_SOLVE_MS = 30000;
+export const TOSSUP_SOLVE_MS = 30000;
 const TIMER_TICK_MS = 500;
 
 /** @type {Map<string, NodeJS.Timeout>} */
@@ -37,7 +38,9 @@ function broadcastTimer(room, emit, op) {
 export function startGameTimer(room, emit, { remainingMs, kind, slow = false, onExpire }) {
   if (!room.game) return;
   stopGameTimer(room.code);
-  room.game.timerRemainingMs = remainingMs ?? (kind === "final" ? FINAL_SOLVE_MS : TURN_TIMER_MS);
+  room.game.timerRemainingMs =
+    remainingMs ??
+    (kind === "final" ? FINAL_SOLVE_MS : kind === "tossupSolve" ? TOSSUP_SOLVE_MS : TURN_TIMER_MS);
   room.game.timerKind = kind;
   room.game.timerSlow = slow;
   room.game.finalTimerRemainingMs = kind === "final" ? room.game.timerRemainingMs : 0;
@@ -103,6 +106,16 @@ export function startTurnTimer(room, emit, onExpire, remainingMs = TURN_TIMER_MS
 export function resetTurnTimer(room, emit, onExpire, remainingMs = TURN_TIMER_MS) {
   clearGameTimer(room);
   startTurnTimer(room, emit, onExpire, remainingMs);
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit @param {() => void} onExpire @param {number} [remainingMs] */
+export function startTossUpSolveTimer(room, emit, onExpire, remainingMs = TOSSUP_SOLVE_MS) {
+  startGameTimer(room, emit, {
+    remainingMs,
+    kind: "tossupSolve",
+    slow: false,
+    onExpire,
+  });
 }
 
 /** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit @param {() => void} onExpire @param {number} [remainingMs] */

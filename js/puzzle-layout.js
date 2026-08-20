@@ -186,7 +186,13 @@ export function countLetterInAnswer(answer, letter) {
 }
 
 export function normalizeGuess(text) {
-  return text.toUpperCase().trim().replace(/\s+/g, " ");
+  return String(text || "")
+    .toUpperCase()
+    .trim()
+    .replace(/-/g, " ")
+    .replace(/[^A-Z0-9 ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export function guessesMatch(guess, answer) {

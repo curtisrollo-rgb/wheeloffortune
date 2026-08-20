@@ -24,6 +24,7 @@ import { beginTossUpReveal } from "./round-helpers.js";
 import { nextRoundEntry, tossUpWinAmount, ROUND_SEQUENCE } from "./round-sequence.js";
 import { getWedgeManifestForRound } from "./wedges.js";
 import { puzzleCount } from "./puzzles.js";
+import { guessesMatch } from "./puzzle-layout.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -295,6 +296,22 @@ await test("Full sequence indices advance correctly", () => {
     idx = next.index;
   }
   assert(room.game.roundType === "final", "Ends on Final Round");
+});
+
+await test("Punctuation-agnostic solve matching", () => {
+  assert(guessesMatch("COAT OF PAINT BY NUMBERS", "COAT-OF-PAINT-BY-NUMBERS"), "Hyphens ignored");
+  assert(guessesMatch("WHEEL OF FORTUNE", "WHEEL OF FORTUNE!"), "Trailing punctuation ignored");
+});
+
+await test("Cannot spin again before picking a letter", () => {
+  const room = setupRoom();
+  startGame(room);
+  setRound(room, "round1", { sequenceIndex: 1 });
+  const spin = handleSpin(room, room.game.activeSeat, 0.5);
+  assert(spin.ok, spin.error);
+  assert(room.game.phase === "guess", "Should be in guess phase after spin");
+  const again = handleSpin(room, room.game.activeSeat, 0.5);
+  assert(again.error, "Second spin before letter should fail");
 });
 
 console.log("\nLive WebSocket smoke test");

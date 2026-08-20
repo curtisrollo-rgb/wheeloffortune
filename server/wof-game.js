@@ -22,6 +22,7 @@ import {
   FINAL_FREE_LETTERS,
   onlyVowelsRemain,
   hasHiddenConsonants,
+  hasHiddenVowels,
   getHiddenTossUpSlots,
   revealTossUpTile,
   beginTossUpReveal,
@@ -41,6 +42,7 @@ import {
   FINAL_SOLVE_MS,
   startTurnTimer,
   startFinalSolveTimer,
+  startTossUpSolveTimer,
   setTimerSlowMode,
   clearGameTimer,
   stopGameTimer,
@@ -62,6 +64,23 @@ export function bindRoomEmit(room, emit) {
 /** @param {import('./rooms.js').Room} room @param {object} payload */
 function roomEmit(room, payload) {
   roomEmitters.get(room)?.(room, payload);
+}
+
+function handleTossUpSolveExpired(room) {
+  const seat = room.game?.activeSeat;
+  if (!seat || room.game.phase !== "tossUpReveal") return;
+  const player = getPlayerBySeat(room, seat);
+  const name = player?.name ?? seat;
+  const result = failTossUpSolve(room, seat, name, `${name} ran out of time — locked out.`);
+  roomEmit(room, {
+    op: "solveWrong",
+    seat,
+    name,
+    lockedOut: !!result.lockedOut,
+    message: room.game.message,
+  });
+  scheduleTossUpResumeCountdown(room, roomEmit);
+  roomEmit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
 }
 
 function handleTurnTimerExpired(room) {
@@ -114,6 +133,9 @@ function handleFinalTimerExpiredLocal(room) {
 export function refreshTurnTimer(room) {
   if (!room.game?.started || room.game.phase === "ended") {
     clearGameTimer(room);
+    return;
+  }
+  if (room.game.timerKind === "tossupSolve") {
     return;
   }
   if (room.game.roundType === "tossup" || room.game.roundType === "final") {
@@ -379,6 +401,43 @@ export function pauseTossUpReveal(room, emit) {
 }
 
 /** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
+export function scheduleTossUpResumeCountdown(room, emit) {
+  stopTossUpTimer(room.code);
+  if (!room.game || room.game.roundType !== "tossup") return;
+
+  room.game.phase = "tossUpIntermission";
+  room.game.tossUpRevealPaused = true;
+  room.game.activeSeat = null;
+  let step = 0;
+  const counts = [3, 2, 1];
+
+  const advance = () => {
+    if (!room.game || room.game.roundType !== "tossup") {
+      stopTossUpTimer(room.code);
+      return;
+    }
+    if (step < counts.length) {
+      const count = counts[step];
+      room.game.message = `Get ready to ring in… ${count}`;
+      emit(room, { op: "tossUpCountdown", count, resume: true });
+      emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+      step += 1;
+      return;
+    }
+    stopTossUpTimer(room.code);
+    room.game.phase = "tossUpReveal";
+    room.game.tossUpRevealPaused = false;
+    room.game.message = "Toss-Up! Ring in when you know it!";
+    emit(room, { op: "tossUpCountdown", count: 0, resume: true });
+    emit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
+  };
+
+  advance();
+  const timer = setInterval(advance, 1000);
+  tossUpTimers.set(room.code, timer);
+}
+
+/** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit */
 export function resumeTossUpReveal(room, emit) {
   if (!room.game || room.game.roundType !== "tossup") return;
   room.game.tossUpRevealPaused = false;
@@ -493,6 +552,8 @@ export function createInitialGame() {
     timerRemainingMs: 0,
     timerKind: null,
     timerSlow: false,
+    spinInFlight: false,
+    spunThisTurn: false,
   };
 }
 
@@ -548,6 +609,8 @@ export function ensurePreviewBoard(room) {
 
 /** @param {import('./rooms.js').Room} room */
 function advanceTurn(room) {
+  room.game.spinInFlight = false;
+  room.game.spunThisTurn = false;
   if (room.players.length <= 1) {
     room.game.phase = room.game.roundType === "final" && room.game.phase === "finalEnvelope"
       ? "finalEnvelope"
@@ -718,14 +781,18 @@ export function playerActionFlags(room) {
 
   if (g.roundType === "tossup") {
     const hiddenLeft = getHiddenTossUpSlots(g).length > 0;
+    const solving = g.phase === "tossUpReveal" && g.activeSeat != null;
     return {
       canSpin: false,
       canGuess: false,
       canBuyVowel: false,
-      canSolve: g.phase === "tossUpReveal" && g.activeSeat != null,
-      canRingIn: isTossUpReveal(room) && !g.activeSeat && hiddenLeft,
+      canSolve: solving,
+      canRingIn: g.phase === "tossUpReveal" && !g.activeSeat && hiddenLeft,
       canPickFinal: false,
       tossUpLockedSeats: [...g.tossUpLockedSeats],
+      timerRemainingMs: solving && g.timerKind === "tossupSolve" ? g.timerRemainingMs ?? 0 : 0,
+      timerKind: solving ? g.timerKind ?? null : null,
+      timerSlow: false,
     };
   }
 
@@ -748,17 +815,18 @@ export function playerActionFlags(room) {
   }
 
   const canSpin =
-    (g.phase === "idle" || g.phase === "guess") &&
+    g.phase === "idle" &&
     !onlyVowelsRemain(g) &&
-    g.phase !== "ended";
+    g.phase !== "ended" &&
+    !g.spinInFlight;
   const canGuess =
     g.phase === "guess" &&
     (g.roundMoney > 0 || g.roundPrize || g.pendingPrizeKind) &&
     hasHiddenConsonants(g);
   const canBuyVowel =
-    (g.phase === "guess" || (g.phase === "idle" && onlyVowelsRemain(g))) &&
+    (g.phase === "idle" || g.phase === "guess") &&
     g.roundBank >= VOWEL_COST &&
-    "AEIOU".split("").some((letter) => !g.called.has(letter));
+    hasHiddenVowels(g);
   const canSolve =
     !g.solveBlocked &&
     (g.phase === "guess" || g.phase === "idle") &&
@@ -936,8 +1004,14 @@ export function handleSpin(room, seat, _power) {
     };
   }
 
-  if (room.game.phase !== "idle" && room.game.phase !== "guess") {
+  if (room.game.phase !== "idle") {
+    if (room.game.phase === "guess") {
+      return { error: "Pick a letter before spinning again." };
+    }
     return { error: "You cannot spin right now." };
+  }
+  if (room.game.spinInFlight) {
+    return { error: "Wait for the wheel to stop." };
   }
   if (onlyVowelsRemain(room.game)) {
     return { error: "Only vowels remain — buy a vowel or solve." };
@@ -948,6 +1022,9 @@ export function handleSpin(room, seat, _power) {
   const wedge = wedges[index];
   const player = getPlayerBySeat(room, seat);
   const name = player?.name ?? seat;
+
+  room.game.spinInFlight = true;
+  room.game.spunThisTurn = true;
 
   if (wedge.type === "bankrupt") {
     const lost = room.game.roundBank || 0;
@@ -1262,6 +1339,8 @@ export function handleGuessLetter(room, seat, letter) {
         : `${count} ${upper}'s revealed. Spin, buy a vowel, or solve.`;
     room.game.roundMoney = 0;
     clearGameTimer(room);
+    room.game.spinInFlight = false;
+    room.game.spunThisTurn = false;
     room.game.phase = onlyVowels ? "guess" : "idle";
 
     if (isSolved(room.game.rows)) {
@@ -1299,7 +1378,7 @@ export function handleBuyVowel(room, seat, letter) {
   if (room.game.roundType === "final" || room.game.roundType === "tossup") {
     return { error: "Cannot buy vowels in this round." };
   }
-  if (room.game.phase !== "guess" && !(room.game.phase === "idle" && onlyVowelsRemain(room.game))) {
+  if (room.game.phase !== "guess" && room.game.phase !== "idle") {
     return { error: "You cannot buy a vowel right now." };
   }
 
@@ -1313,13 +1392,11 @@ export function handleBuyVowel(room, seat, letter) {
     return { error: `Need $${VOWEL_COST} in your round bank (you have $${room.game.roundBank}).` };
   }
 
-  if (room.game.phase === "idle" && onlyVowelsRemain(room.game)) {
+  if (room.game.phase === "idle") {
     room.game.phase = "guess";
   }
 
   room.game.roundBank -= VOWEL_COST;
-  room.game.phase = "guess";
-  armLetterPickTimer(room);
   room.game.called.add(upper);
   const { rows, indices, count } = revealWithMap(room.game.rows, room.game.letterMap, upper);
   room.game.rows = rows;
@@ -1329,6 +1406,8 @@ export function handleBuyVowel(room, seat, letter) {
     room.game.message = `${count} ${upper}'s. Spin, buy another vowel, or solve.`;
     room.game.roundMoney = 0;
     clearGameTimer(room);
+    room.game.spinInFlight = false;
+    room.game.spunThisTurn = false;
     room.game.phase = onlyVowelsRemain(room.game) ? "guess" : "idle";
     if (isSolved(room.game.rows)) {
       finishSolveByLetters(room, seat);
@@ -1349,18 +1428,19 @@ export function handleBuyVowel(room, seat, letter) {
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {string} name @param {string} lockedMessage */
 function failTossUpSolve(room, seat, name, lockedMessage) {
+  clearGameTimer(room);
   room.game.activeSeat = null;
-  room.game.tossUpRevealPaused = false;
+  room.game.tossUpRevealPaused = true;
 
   // Solo play: no lockout pool — the only player can ring in again.
   if (room.players.length <= 1) {
-    room.game.message = `${name}'s solve was wrong — ring in again when you're ready!`;
-    return { ok: true, correct: false, lockedOut: false, resumeTossUp: true };
+    room.game.message = `${name}'s solve was wrong — get ready to ring in again!`;
+    return { ok: true, correct: false, lockedOut: false, scheduleResumeCountdown: true };
   }
 
   room.game.tossUpLockedSeats.add(seat);
   room.game.message = lockedMessage;
-  return { ok: true, correct: false, lockedOut: true, resumeTossUp: true };
+  return { ok: true, correct: false, lockedOut: true, scheduleResumeCountdown: true };
 }
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {string} text */
@@ -1376,10 +1456,11 @@ export function handleSolve(room, seat, text) {
     const name = player?.name ?? seat;
 
     if (!trimmed) {
-      return failTossUpSolve(room, seat, name, `${name} locked out — letters keep revealing.`);
+      return failTossUpSolve(room, seat, name, `${name} gave up — locked out.`);
     }
 
     if (guessesMatch(trimmed, room.game.puzzle.answer)) {
+      clearGameTimer(room);
       stopTossUpTimer(room.code);
       room.game.rows = revealAllRows(room.game.rows, room.game.puzzle.answer);
       const tossWin = getTossUpWin(room.game);
@@ -1489,7 +1570,9 @@ export function handleSolveIntent(room, seat) {
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
 export function handleBuzz(room, seat) {
   if (!room.game?.started) return { error: "Game not started." };
-  if (room.game.phase === "tossUpCountdown") return { error: "Wait for the countdown." };
+  if (room.game.phase === "tossUpCountdown" || room.game.phase === "tossUpIntermission") {
+    return { error: "Wait for the countdown." };
+  }
   if (!isTossUpReveal(room)) return { error: "Buzz only during Toss-Up." };
   if (room.game.activeSeat) return { error: "Someone already rang in." };
   if (room.game.tossUpLockedSeats.has(seat)) return { error: "You are locked out." };
@@ -1503,6 +1586,7 @@ export function handleBuzz(room, seat) {
   room.game.activeSeat = seat;
   room.game.tossUpRevealPaused = true;
   room.game.message = `${player.name} is attempting to solve!`;
+  startTossUpSolveTimer(room, roomEmit, () => handleTossUpSolveExpired(room));
   return { ok: true, seat, name: player.name, pauseTossUp: true };
 }
 

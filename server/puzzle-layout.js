@@ -165,8 +165,19 @@ export function isSolved(rows) {
   return !rows.some((r) => r.includes("_"));
 }
 
+/** Strip punctuation/hyphens so guesses match the board answer loosely. */
+export function normalizeGuess(text) {
+  return String(text || "")
+    .toUpperCase()
+    .trim()
+    .replace(/-/g, " ")
+    .replace(/[^A-Z0-9 ]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 export function guessesMatch(guess, answer) {
-  return guess.toUpperCase().trim().replace(/\s+/g, " ") === answer.toUpperCase().trim().replace(/\s+/g, " ");
+  return normalizeGuess(guess) === normalizeGuess(answer);
 }
 
 /** Return rows with every letter revealed (for solve animation). */

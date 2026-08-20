@@ -26,6 +26,19 @@ export function onlyVowelsRemain(game) {
 }
 
 /** @param {object} game */
+export function hasHiddenVowels(game) {
+  for (const letter of "AEIOU") {
+    if (game.called.has(letter)) continue;
+    for (const slot of game.letterMap) {
+      if (slot.letter === letter && game.rows[slot.row][slot.col] === "_") {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/** @param {object} game */
 export function hasHiddenConsonants(game) {
   for (const slot of game.letterMap) {
     if (!isVowel(slot.letter) && game.rows[slot.row][slot.col] === "_") {
@@ -235,6 +248,8 @@ export function resetRoundFields(game) {
   game.tossUpRevealPaused = false;
   game.roundWinnerSeat = null;
   game.roundWinAmount = 0;
+  game.spinInFlight = false;
+  game.spunThisTurn = false;
 }
 
 /** @param {object} game @param {import('./rooms.js').Room} room @param {{ starterSeat?: import('./rooms.js').PlayerSeat|null }} [opts] */

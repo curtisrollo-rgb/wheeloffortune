@@ -6,7 +6,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <title>Controller — Wheel of Fortune</title>
-  <link rel="stylesheet" href="css/multiplayer.css?v=10" />
+  <link rel="stylesheet" href="css/multiplayer.css?v=11" />
 </head>
 <body class="controller-page">
   <header class="controller-header">
@@ -24,9 +24,9 @@
     <span class="round-countdown-seconds">10</span>
   </div>
 
-  <main class="controller-main">
+  <div id="actions-top" class="actions-top">
     <section class="spin-panel" id="spin-panel">
-      <h2>Spin</h2>
+      <h2>Spin the Wheel</h2>
       <div class="spin-gauge" aria-hidden="true">
         <div id="spin-gauge-fill" class="spin-gauge-fill"></div>
       </div>
@@ -36,6 +36,13 @@
       <p id="spin-hint" class="controller-status">Release to set your spin strength.</p>
     </section>
 
+    <section class="action-panel" id="action-panel">
+      <button id="btn-vowel" type="button" class="btn btn-secondary" disabled>Buy Vowel ($250)</button>
+      <button id="btn-solve" type="button" class="btn btn-secondary" disabled>Solve</button>
+    </section>
+  </div>
+
+  <main class="controller-main">
     <section class="letter-panel" id="letter-panel">
       <h2 style="margin:0 0 0.65rem;font-size:0.75rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted)">Guess a letter</h2>
       <div id="letter-grid" class="controller-letter-grid" aria-label="Letter keyboard"></div>
@@ -49,17 +56,15 @@
     <section id="tossup-solve-panel" class="tossup-solve-panel is-hidden">
       <h2 class="tossup-solve-title">Solve the Toss-Up!</h2>
       <input id="tossup-solve-input" type="text" autocomplete="off" autocapitalize="characters" placeholder="Type the full phrase…" />
-      <button id="btn-tossup-solve-submit" type="button" class="btn btn-primary tossup-submit-btn">Submit Answer</button>
+      <div class="tossup-solve-actions">
+        <button id="btn-tossup-solve-submit" type="button" class="btn btn-primary tossup-submit-btn">Submit Answer</button>
+        <button id="btn-tossup-give-up" type="button" class="btn btn-secondary tossup-give-up-btn">Give Up</button>
+      </div>
     </section>
 
     <section id="final-solve-panel" class="final-solve-panel is-hidden">
       <p id="final-timer-display" class="final-timer-display">0:30</p>
       <button id="btn-final-solve" type="button" class="btn btn-primary final-solve-btn" disabled>SOLVE</button>
-    </section>
-
-    <section class="action-panel" id="action-panel">
-      <button id="btn-vowel" type="button" class="btn btn-secondary" disabled>Buy Vowel ($250)</button>
-      <button id="btn-solve" type="button" class="btn btn-secondary" disabled>Solve</button>
     </section>
 
     <p id="controller-status" class="controller-status" aria-live="polite"></p>
@@ -77,6 +82,6 @@
     </div>
   </div>
 
-  <script type="module" src="../js/controller-app.js?v=17"></script>
+  <script type="module" src="../js/controller-app.js?v=18"></script>
 </body>
 </html>
