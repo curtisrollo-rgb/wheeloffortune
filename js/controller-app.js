@@ -12,6 +12,8 @@ const els = {
   playerTitle: $("player-title"),
   controllerMeta: $("controller-meta"),
   turnBanner: $("turn-banner"),
+  turnTimerBar: $("turn-timer-bar"),
+  turnTimerDisplay: $("turn-timer-display"),
   spinPanel: $("spin-panel"),
   letterPanel: $("letter-panel"),
   actionPanel: $("action-panel"),
@@ -144,6 +146,27 @@ function applyTurnTimerStatus() {
     gameState?.timerKind === "turn"
       ? gameState?.timerRemainingMs
       : gameState?.finalTimerRemainingMs;
+  const showMainTurnTimer =
+    isMyTurn &&
+    gameState?.timerKind === "turn" &&
+    gameState?.roundType !== "tossup" &&
+    gameState?.roundType !== "final" &&
+    ms != null &&
+    ms > 0;
+
+  if (els.turnTimerBar && els.turnTimerDisplay) {
+    if (showMainTurnTimer) {
+      const label = formatFinalTimer(ms);
+      els.turnTimerDisplay.textContent = label;
+      els.turnTimerBar.classList.remove("is-hidden");
+      els.turnTimerBar.classList.toggle("is-low", ms <= 10000);
+      els.turnTimerBar.classList.toggle("is-slow", !!gameState?.timerSlow);
+    } else {
+      els.turnTimerBar.classList.add("is-hidden");
+      els.turnTimerBar.classList.remove("is-low", "is-slow");
+    }
+  }
+
   if (ms == null || ms <= 0) return;
   const label = formatFinalTimer(ms);
   const slow = !!gameState?.timerSlow;
@@ -152,8 +175,8 @@ function applyTurnTimerStatus() {
     setStatus(slow ? "Enter your solve!" : `${label} — tap SOLVE when ready!`);
     return;
   }
-  if (gameState?.timerKind === "turn" && isMyTurn && gameState?.roundType !== "tossup") {
-    setStatus(slow ? "Enter your solve!" : `${label} left on your turn`);
+  if (showMainTurnTimer) {
+    setStatus(slow ? "Enter your solve!" : `${label} left — pick a letter or solve`);
   }
 }
 
@@ -677,7 +700,10 @@ function onMessage(msg) {
       if (msg.seat === mySeat) {
         setStatus(msg.message || "Time's up!");
         setTurnActive(false);
+      } else if (msg.nextName) {
+        setStatus(`${msg.name || "Player"} ran out of time — ${msg.nextName}'s turn.`);
       }
+      els.turnTimerBar?.classList.add("is-hidden");
       break;
     case "finalTimerExpired":
       if (msg.seat === mySeat) {

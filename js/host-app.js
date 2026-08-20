@@ -864,6 +864,9 @@ async function handleLetterResult(msg) {
   if (msg.noMoreVowels) {
     await playNoMoreVowelsVo();
   }
+  if (msg.turnLost && msg.nextName) {
+    await playTurnCueVo(msg.nextName);
+  }
 }
 
 function boardHasHiddenTiles() {
@@ -1340,6 +1343,8 @@ function onMessage(msg) {
         await playMissVo();
         if (msg.resumeFinalTimer) {
           setMessage(`${msg.name || msg.seat}'s solve was wrong — time still running!`);
+        } else if (msg.nextName) {
+          await playTurnCueVo(msg.nextName);
         }
       });
       break;
@@ -1411,6 +1416,10 @@ function onMessage(msg) {
     case "turnTimerExpired":
       hideFinalTimer();
       if (msg.message) setMessage(msg.message);
+      queueHostVo(async () => {
+        await playMissVo();
+        if (msg.nextName) await playTurnCueVo(msg.nextName);
+      });
       break;
     case "finalTimerExpired":
       stopBgm();

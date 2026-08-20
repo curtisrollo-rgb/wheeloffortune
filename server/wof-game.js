@@ -44,6 +44,7 @@ import {
   setTimerSlowMode,
   clearGameTimer,
   stopGameTimer,
+  resetTurnTimer,
 } from "./game-timers.js";
 
 export const VOWEL_COST = 250;
@@ -69,15 +70,18 @@ function handleTurnTimerExpired(room) {
   const player = seat ? getPlayerBySeat(room, seat) : null;
   const name = player?.name ?? seat ?? "Player";
   room.game.message = `Time's up — ${name} loses their turn.`;
+  advanceTurn(room);
+  const next = room.game.activeSeat ? getPlayerBySeat(room, room.game.activeSeat) : null;
   roomEmit(room, {
     op: "turnTimerExpired",
     seat,
     name,
+    nextSeat: room.game.activeSeat,
+    nextName: next?.name ?? room.game.activeSeat,
     message: room.game.message,
   });
-  advanceTurn(room);
   if (room.game.activeSeat) {
-    roomEmit(room, turnChangedPayload(room, room.game.activeSeat));
+    roomEmit(room, turnChangedPayload(room, room.game.activeSeat, { cue: "none" }));
   }
   roomEmit(room, { op: "gameUpdate", state: publicGameState(room), players: playerSummaries(room) });
   refreshTurnTimer(room);
@@ -120,12 +124,39 @@ export function refreshTurnTimer(room) {
     clearGameTimer(room);
     return;
   }
-  if (room.game.phase !== "idle" && room.game.phase !== "guess") {
+  if (room.game.phase === "idle") {
+    clearGameTimer(room);
+    return;
+  }
+  if (room.game.phase !== "guess") {
     clearGameTimer(room);
     return;
   }
   if (room.game.timerKind === "turn" && room.game.timerRemainingMs > 0) return;
   startTurnTimer(room, roomEmit, () => handleTurnTimerExpired(room));
+}
+
+function armLetterPickTimer(room) {
+  if (room.game?.phase === "guess") {
+    resetTurnTimer(room, roomEmit, () => handleTurnTimerExpired(room));
+  }
+}
+
+/** @param {import('./rooms.js').Room} room @param {string} letter */
+function turnLossLetterResult(room, letter) {
+  advanceTurn(room);
+  const next = room.game.activeSeat ? getPlayerBySeat(room, room.game.activeSeat) : null;
+  return {
+    ok: true,
+    hit: false,
+    count: 0,
+    letter,
+    indices: [],
+    turnLost: true,
+    broadcastTurn: true,
+    nextSeat: room.game.activeSeat,
+    nextName: next?.name ?? room.game.activeSeat,
+  };
 }
 
 /** @param {import('./rooms.js').Room} room @param {number} [remainingMs] */
@@ -864,6 +895,8 @@ export function letterResultPayload(room, seat, result) {
     indices: result.indices,
     rows: room.game.rows,
     turnLost: !!result.turnLost,
+    nextSeat: result.nextSeat ?? null,
+    nextName: result.nextName ?? null,
     solved: !!result.solved,
     roundType: room.game.roundType,
     onlyVowelsRemain: !!result.onlyVowelsRemain,
@@ -917,6 +950,10 @@ export function handleSpin(room, seat, _power) {
   const name = player?.name ?? seat;
 
   if (wedge.type === "bankrupt") {
+    const lost = room.game.roundBank || 0;
+    if (player && lost > 0) {
+      player.score = Math.max(0, (player.score || 0) - lost);
+    }
     room.game.roundBank = 0;
     room.game.roundMoney = 0;
     room.game.roundPrize = null;
@@ -990,6 +1027,7 @@ export function handleSpin(room, seat, _power) {
       room.game.roundPrize = wedge.prize || wedge.label;
       room.game.message = `${name} landed on ${wedge.label}! Call a consonant to claim ${room.game.roundPrize}!`;
     }
+    armLetterPickTimer(room);
     return {
       ok: true,
       index,
@@ -1010,6 +1048,7 @@ export function handleSpin(room, seat, _power) {
   room.game.roundMoney = wedge.value;
   room.game.wedgeLabel = wedge.label;
   room.game.message = `${name} spun ${wedge.label}. Guess a consonant.`;
+  armLetterPickTimer(room);
 
   return {
     ok: true,
@@ -1148,16 +1187,7 @@ export function handleGuessLetter(room, seat, letter) {
 
   if (room.game.called.has(upper)) {
     room.game.message = `${upper} was already called.`;
-    advanceTurn(room);
-    return {
-      ok: true,
-      hit: false,
-      count: 0,
-      letter: upper,
-      indices: [],
-      turnLost: true,
-      broadcastTurn: true,
-    };
+    return turnLossLetterResult(room, upper);
   }
 
   room.game.called.add(upper);
@@ -1230,7 +1260,9 @@ export function handleGuessLetter(room, seat, letter) {
       earned > 0
         ? `${count} ${upper}'s — $${earned.toLocaleString()}! Spin, buy a vowel, or solve.`
         : `${count} ${upper}'s revealed. Spin, buy a vowel, or solve.`;
-    room.game.phase = "guess";
+    room.game.roundMoney = 0;
+    clearGameTimer(room);
+    room.game.phase = onlyVowels ? "guess" : "idle";
 
     if (isSolved(room.game.rows)) {
       finishSolveByLetters(room, seat);
@@ -1239,6 +1271,7 @@ export function handleGuessLetter(room, seat, letter) {
 
     if (onlyVowels) {
       room.game.message = `${count} ${upper}'s. Only vowels left — buy a vowel or solve.`;
+      armLetterPickTimer(room);
     }
 
     return {
@@ -1256,16 +1289,7 @@ export function handleGuessLetter(room, seat, letter) {
   }
 
   room.game.message = `Sorry, no ${upper}.`;
-  advanceTurn(room);
-  return {
-    ok: true,
-    hit: false,
-    count: 0,
-    letter: upper,
-    indices: [],
-    turnLost: true,
-    broadcastTurn: true,
-  };
+  return turnLossLetterResult(room, upper);
 }
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {string} letter */
@@ -1282,23 +1306,20 @@ export function handleBuyVowel(room, seat, letter) {
   const upper = String(letter || "").toUpperCase();
   if (!isVowel(upper)) return { error: "Pick a vowel: A, E, I, O, or U." };
   if (room.game.called.has(upper)) {
-    advanceTurn(room);
-    return {
-      ok: true,
-      hit: false,
-      count: 0,
-      letter: upper,
-      indices: [],
-      turnLost: true,
-      broadcastTurn: true,
-    };
+    room.game.message = `${upper} was already called.`;
+    return turnLossLetterResult(room, upper);
   }
   if (room.game.roundBank < VOWEL_COST) {
     return { error: `Need $${VOWEL_COST} in your round bank (you have $${room.game.roundBank}).` };
   }
 
+  if (room.game.phase === "idle" && onlyVowelsRemain(room.game)) {
+    room.game.phase = "guess";
+  }
+
   room.game.roundBank -= VOWEL_COST;
   room.game.phase = "guess";
+  armLetterPickTimer(room);
   room.game.called.add(upper);
   const { rows, indices, count } = revealWithMap(room.game.rows, room.game.letterMap, upper);
   room.game.rows = rows;
@@ -1306,6 +1327,9 @@ export function handleBuyVowel(room, seat, letter) {
   if (count > 0) {
     room.game.solveBlocked = false;
     room.game.message = `${count} ${upper}'s. Spin, buy another vowel, or solve.`;
+    room.game.roundMoney = 0;
+    clearGameTimer(room);
+    room.game.phase = onlyVowelsRemain(room.game) ? "guess" : "idle";
     if (isSolved(room.game.rows)) {
       finishSolveByLetters(room, seat);
       return { ok: true, hit: true, count, letter: upper, indices, solved: true, rows: room.game.rows };
@@ -1316,21 +1340,11 @@ export function handleBuyVowel(room, seat, letter) {
   if (onlyVowelsRemain(room.game)) {
     room.game.solveBlocked = true;
     room.game.message = `No ${upper} in the puzzle. Buy another vowel.`;
-    advanceTurn(room);
-    return { ok: true, hit: false, count: 0, letter: upper, indices: [], turnLost: true, broadcastTurn: true };
+    return turnLossLetterResult(room, upper);
   }
 
   room.game.message = `Sorry, no ${upper}.`;
-  advanceTurn(room);
-  return {
-    ok: true,
-    hit: false,
-    count: 0,
-    letter: upper,
-    indices: [],
-    turnLost: true,
-    broadcastTurn: true,
-  };
+  return turnLossLetterResult(room, upper);
 }
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat @param {string} name @param {string} lockedMessage */
@@ -1431,7 +1445,15 @@ export function handleSolve(room, seat, text) {
   setTimerSlowMode(room, false);
   room.game.message = `${name}'s solve was wrong.`;
   advanceTurn(room);
-  return { ok: true, correct: false, turnLost: true, broadcastTurn: true };
+  const next = room.game.activeSeat ? getPlayerBySeat(room, room.game.activeSeat) : null;
+  return {
+    ok: true,
+    correct: false,
+    turnLost: true,
+    broadcastTurn: true,
+    nextSeat: room.game.activeSeat,
+    nextName: next?.name ?? room.game.activeSeat,
+  };
 }
 
 /** @param {import('./rooms.js').Room} room @param {import('./rooms.js').PlayerSeat} seat */
@@ -1451,7 +1473,15 @@ export function handleSolveIntent(room, seat) {
     (room.game.timerKind === "turn" && (room.game.phase === "guess" || room.game.phase === "idle")) ||
     (room.game.roundType === "final" && room.game.phase === "finalSolve")
   ) {
-    setTimerSlowMode(room, true);
+    if (room.game.roundType !== "final") {
+      if (room.game.timerKind !== "turn" || room.game.timerRemainingMs <= 0) {
+        room.game.phase = "guess";
+        resetTurnTimer(room, roomEmit, () => handleTurnTimerExpired(room));
+      }
+      setTimerSlowMode(room, true);
+    } else {
+      setTimerSlowMode(room, true);
+    }
   }
   return { ok: true, seat, name: player.name };
 }

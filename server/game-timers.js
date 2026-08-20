@@ -90,12 +90,19 @@ export function clearGameTimer(room) {
 export function startTurnTimer(room, emit, onExpire, remainingMs = TURN_TIMER_MS) {
   if (!room.game || room.game.roundType === "tossup" || room.game.roundType === "final") return;
   if (!room.game.activeSeat) return;
+  if (room.game.phase !== "guess") return;
   startGameTimer(room, emit, {
     remainingMs,
     kind: "turn",
     slow: false,
     onExpire,
   });
+}
+
+/** Fresh 30s timer after a spin or when entering letter-pick phase. */
+export function resetTurnTimer(room, emit, onExpire, remainingMs = TURN_TIMER_MS) {
+  clearGameTimer(room);
+  startTurnTimer(room, emit, onExpire, remainingMs);
 }
 
 /** @param {import('./rooms.js').Room} room @param {(room: import('./rooms.js').Room, payload: object) => void} emit @param {() => void} onExpire @param {number} [remainingMs] */

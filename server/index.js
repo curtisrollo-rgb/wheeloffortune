@@ -50,7 +50,7 @@ import { puzzleCount, getPuzzleSource } from "./puzzles.js";
 
 const PORT = Number(process.env.PORT || 8080);
 const HOST = process.env.HOST || "0.0.0.0";
-const VERSION = "0.2.35";
+const VERSION = "0.2.36";
 
 const ROUND_ADVANCE_SEC = 10;
 
@@ -460,7 +460,7 @@ wss.on("connection", (ws) => {
         });
       }
       if (result.broadcastTurn) {
-        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat, { cue: "none" }));
       }
       broadcastGameState(room);
       return;
@@ -478,7 +478,7 @@ wss.on("connection", (ws) => {
       broadcast(room, playerActionPayload(room, info.seat, "buyVowel", { letter: msg.letter }));
       broadcast(room, letterResultPayload(room, info.seat, result));
       if (result.broadcastTurn) {
-        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat, { cue: "none" }));
       }
       broadcastGameState(room);
       return;
@@ -551,8 +551,9 @@ wss.on("connection", (ws) => {
           name: result.name,
           lockedOut: false,
           message: room.game.message,
+          nextName: result.nextName ?? null,
         });
-        broadcast(room, turnChangedPayload(room, room.game.activeSeat));
+        broadcast(room, turnChangedPayload(room, room.game.activeSeat, { cue: "none" }));
       }
       broadcastGameState(room);
       return;
